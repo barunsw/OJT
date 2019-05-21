@@ -18,17 +18,17 @@ public class StringTest {
 		LOGGER.debug("onePerson:" + onePerson);
 		
 		final String aaa = "Start with End";
-		//aaa가 Hello로 시작하는지 검사한다.
+		//aaa가 Start로 시작하는지 검사한다.
 		if (aaa.startsWith("Start")) {
 			LOGGER.debug("Start로 시작");
 		}
-		//aaa가 World로 끝나는지 검사한다.
+		//aaa가 End로 끝나는지 검사한다.
 		if (aaa.endsWith("End")) {
 			LOGGER.debug("End로 끝");
 		}
 		
 		//String bbb = "Start with End"를 선언하면 Heap 영역에 이미 생성된
-		// Hello World에 bbb가  가리키게 되어 aaa와 bbb는 같은 객체가 된다.
+		// Start with End에 bbb가  가리키게 되어 aaa와 bbb는 같은 객체가 된다.
 		final String bbb = "Start with End";
 		
 		//String bbb = new String("Start with End")를 선언하면 Heap 영역에
@@ -179,7 +179,7 @@ public class StringTest {
 		char ch[] = new char[10];
 		ch[0]='h'; ch[1]='i'; ch[2]='b'; ch[3]='a'; ch[4]='r'; ch[5]='u'; ch[6]='n';
 		LOGGER.debug("원본 문자열 : " + str);
-		//hibrun이 출력된다.
+		//hibarun이 출력된다.
 		LOGGER.debug(String.copyValueOf(ch));
 		//0부터 2까지의 문자열을 복사한다.
 		LOGGER.debug(String.copyValueOf(ch, 0, 2));
@@ -195,7 +195,7 @@ public class StringTest {
 		}
 		
 		//intern() 메서드는 만들어진 객체를 상수화 시켜준다.
-		//str2도 새로운 객체를 만들엇지만 intern을 호출하여 
+		//str2도 새로운 객체를 만들었지만 intern을 호출하여 
 		//기존의 Hello를 가리키게 한다.
 		String str1 = "Hello"; 
 		str2 = new String("Hello").intern();
@@ -212,7 +212,7 @@ public class StringTest {
 		LOGGER.debug("원본 문자열 : " + str);
 		LOGGER.debug(str.regionMatches(0, "barunsw", 0, 5));
 		
-		//replace() 메서드는 oldChar를 newChar로 바꿔준다.
+		//replace() 메서드는 해당 문자열을 원하는 문자열로 바꿔준다.
 		LOGGER.debug("원본 문자열 : " + str);
 		LOGGER.debug(str.replace("barun", "nurab"));
 		
@@ -232,8 +232,8 @@ public class StringTest {
 		//toCharArray() 메서드는 해당 문자열을 char형 배열로 반환한다.
 		LOGGER.debug("원본 문자열 : " + replaceAll);
 		char toChar[] = replaceAll.toCharArray();
-		for(char toch:toChar) {
-			LOGGER.debug(toch);
+		for(char tochar:toChar) {
+			LOGGER.debug(tochar);
 		}
 		
 		//toString() 메서드는 그 객체 자신을 반환한다
@@ -255,12 +255,12 @@ public class StringTest {
 		/*
 		   String, StringBuilder, StringBuffer
 		 * 모두 문자열을 저장하고 관리하는 클래스들이다.
-		 * String은 불변하고 StringBuffer,String Builder은 가변하다.
+		 * String은 불변하고 StringBuffer,StringBuilder은 가변하다.
 		 * 
 		 * StringBuilder와 StringBuffer의 차이점은
 		 * StringBuffer는 멀티쓰레드 환경에서 synchronized키워드가 가능하므로 동기화가 가능하다.
 		 * StringBuilder는 동기화를 지원하지 않기 때문에 멀티쓰레드 환경에서는 적합하지 않다.
-		 * 하지만 싱글 쓰레드 환경에서 StringBuufer에 비해 연산처리가 빠르다. 
+		 * 하지만 싱글 쓰레드 환경에서 StringBuffer에 비해 연산처리가 빠르다. 
 		 * 
 		 * Overriding, Overloading
 		 * Overriding은 상위 클래스를 상속받아 상위 클래스의 메소드를 재정의 하여 사용하는 것이다.
@@ -288,6 +288,8 @@ public class StringTest {
 		FireEngine f = new FireEngine();
 		Ambulance a = new Ambulance();
 		StringTest test = new StringTest();
+		
+		
 		test.doWork(f);
 		test.doWork(a);
 	

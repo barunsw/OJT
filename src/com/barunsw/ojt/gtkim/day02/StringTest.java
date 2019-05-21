@@ -15,38 +15,38 @@ public class StringTest {
 		final String equalTest2 = "Hello World";
 
 		if (equalTest1 == equalTest2) {
-			LOG.debug("¼­·Î °°Àº °´Ã¼ÀÔ´Ï´Ù.");
+			LOG.debug("ì„œë¡œ ê°™ì€ ê°ì²´ìž…ë‹ˆë‹¤.");
 		}
 
-		final String string1 = "³ªµéÀÌ °¡±â µü ÁÁÀº ³¯";
-		LOG.debug("string1 Ã¹¹øÂ° ÀÎµ¦½º : " + string1.charAt(0));
+		final String string1 = "ë‚˜ë“¤ì´ ê°€ê¸° ë”± ì¢‹ì€ ë‚ ";
+		LOG.debug("string1 ì²«ë²ˆì§¸ ì¸ë±ìŠ¤ : " + string1.charAt(0));
 
-		LOG.debug("string1 Ã¹¹øÂ° ÄÚµå°ª(10) : " + string1.codePointAt(0));
-		LOG.debug("string1 Ã¹¹øÂ° ÄÚµå°ª(16) : " + String.format("%X", string1.codePointAt(0)));
+		LOG.debug("string1 ì²«ë²ˆì§¸ ì½”ë“œê°’(10) : " + string1.codePointAt(0));
+		LOG.debug("string1 ì²«ë²ˆì§¸ ì½”ë“œê°’(16) : " + String.format("%X", string1.codePointAt(0)));
 		final char ch = '\uB098';
-		LOG.debug("ch´Â ¹«½¼±ÛÀÚ? : " + ch);
+		LOG.debug("chëŠ” ë¬´ìŠ¨ê¸€ìž? : " + ch);
 
 		LOG.debug("codePointBefore : " + string1.codePointBefore(1));
 
 		LOG.debug("codePointCount : " + string1.codePointCount(0, string1.length()));
-		final String string2 = "³ªµéÀÌ °¡±â µü ½ÈÀº ³¯";
+		final String string2 = "ë‚˜ë“¤ì´ ê°€ê¸° ë”± ì‹«ì€ ë‚ ";
 		LOG.debug("codePointCount : " + string2.codePointCount(0, string2.length()));
 
 		if (string1.compareTo(string2) == 0) {
-			LOG.debug("string1 °ú string2´Â °°½À´Ï´Ù.");
+			LOG.debug("string1 ê³¼ string2ëŠ” ê°™ìŠµë‹ˆë‹¤.");
 		}
 
 		final String string3 = "Hello World!";
 		final String string4 = "hello world!";
 		if (string3.compareToIgnoreCase(string4) == 0) {
-			LOG.debug("string3 °ú string4´Â ´ë,¼Ò¹®ÀÚ ±¸º° ÇÏÁö ¾ÊÀ¸¸é °°½À´Ï´Ù.");
+			LOG.debug("string3 ê³¼ string4ëŠ” ëŒ€,ì†Œë¬¸ìž êµ¬ë³„ í•˜ì§€ ì•Šìœ¼ë©´ ê°™ìŠµë‹ˆë‹¤.");
 		}
 
 		final String string5 = string1.concat(string3);
 		LOG.debug("concat : " + string5);
 
-		if (string5.contains("ÁÁÀº ³¯")) {
-			LOG.debug("ÁÁÀº ³¯ ÀÔ´Ï´Ù.");
+		if (string5.contains("ì¢‹ì€ ë‚ ")) {
+			LOG.debug("ì¢‹ì€ ë‚  ìž…ë‹ˆë‹¤.");
 		}
 
 		char[] array = { 'S', 'U', 'P', 'E', 'R', ' ', 'C', 'O', 'F', 'F', 'E', 'E' };
@@ -54,33 +54,33 @@ public class StringTest {
 
 		LOG.debug("copyValueOf : " + string6);
 		if (string6.toLowerCase().endsWith("coffee")) {
-			LOG.debug("Ä¿ÇÇ·Î ³¡³³´Ï´Ù.");
+			LOG.debug("ì»¤í”¼ë¡œ ëë‚©ë‹ˆë‹¤.");
 		} else {
-			LOG.debug("Ä¿ÇÇ·Î ³¡³ªÁö ¾Ê½À´Ï´Ù.");
+			LOG.debug("ì»¤í”¼ë¡œ ëë‚˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 
 		if (string6.toLowerCase().startsWith("coffee")) {
-			LOG.debug("Ä¿ÇÇ·Î ½ÃÀÛÇÕ´Ï´Ù.");
+			LOG.debug("ì»¤í”¼ë¡œ ì‹œìž‘í•©ë‹ˆë‹¤.");
 		} else {
-			LOG.debug("Ä¿ÇÇ·Î ½ÃÀÛÇÏÁö ¾Ê½À´Ï´Ù.");
+			LOG.debug("ì»¤í”¼ë¡œ ì‹œìž‘í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 
 		if (string6.equals("house coffee")) {
-			LOG.debug("°°Àº Ä¿ÇÇÀÔ´Ï´Ù.");
+			LOG.debug("ê°™ì€ ì»¤í”¼ìž…ë‹ˆë‹¤.");
 		} else {
-			LOG.debug("¼­·Î ´Ù¸¥ Ä¿ÇÇÀÔ´Ï´Ù.");
+			LOG.debug("ì„œë¡œ ë‹¤ë¥¸ ì»¤í”¼ìž…ë‹ˆë‹¤.");
 		}
 
-		LOG.debug(String.format("¿À´ÃÀÇ Ä¿ÇÇ´Â %s ÀÔ´Ï´Ù.", string6));
+		LOG.debug(String.format("ì˜¤ëŠ˜ì˜ ì»¤í”¼ëŠ” %s ìž…ë‹ˆë‹¤.", string6));
 		final byte[] by = string6.getBytes();
 		for (byte b : by) {
 			LOG.debug(String.format("%c ", b));
 		}
 
 		int codeValue = "".hashCode();
-		LOG.debug("ºó ¹®ÀÚ¿­ÀÇ ÇØ½ÃÄÚµå °ª : " + codeValue);
+		LOG.debug("ë¹ˆ ë¬¸ìžì—´ì˜ í•´ì‹œì½”ë“œ ê°’ : " + codeValue);
 
-		LOG.debug("indexOf : string6ÀÇ Ä¿ÇÇÀÎµ¦½º " + string6.indexOf("COFFEE"));
+		LOG.debug("indexOf : string6ì˜ ì»¤í”¼ì¸ë±ìŠ¤ " + string6.indexOf("COFFEE"));
 
 		LOG.debug("-- intern test --");
 		final String string7 = "Summer";
@@ -100,24 +100,24 @@ public class StringTest {
 		}
 
 		if (string7.isEmpty()) {
-			LOG.debug("ºó ¹®ÀÚ¿­ ÀÔ´Ï´Ù.");
+			LOG.debug("ë¹ˆ ë¬¸ìžì—´ ìž…ë‹ˆë‹¤.");
 		} else {
-			LOG.debug(string7 + "´Â ºó ¹®ÀÚ¿­ÀÌ ¾Æ´Õ´Ï´Ù");
+			LOG.debug(string7 + "ëŠ” ë¹ˆ ë¬¸ìžì—´ì´ ì•„ë‹™ë‹ˆë‹¤");
 		}
 
-		LOG.debug(String.format("%sÀÇ ¸¶Áö¸· m ÀÎµ¦½º´Â %d ÀÔ´Ï´Ù.", string7, string7.lastIndexOf("m")));
-		LOG.debug(String.format("%sÀÇ ±æÀÌ´Â %d ÀÔ´Ï´Ù.", string7, string7.length()));
+		LOG.debug(String.format("%sì˜ ë§ˆì§€ë§‰ m ì¸ë±ìŠ¤ëŠ” %d ìž…ë‹ˆë‹¤.", string7, string7.lastIndexOf("m")));
+		LOG.debug(String.format("%sì˜ ê¸¸ì´ëŠ” %d ìž…ë‹ˆë‹¤.", string7, string7.length()));
 		String reg = "([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})";
 		String ip = "59.7.123.342";
 		if (ip.matches(reg)) {
-			LOG.debug("°°Àº Á¤±Ô½Ä Ç¥ÇöÀÔ´Ï´Ù.");
+			LOG.debug("ê°™ì€ ì •ê·œì‹ í‘œí˜„ìž…ë‹ˆë‹¤.");
 		}
 
 		String string10 = "LG all day new LG Gram";
 		String string11 = string10.replace("LG", "SAMSUNG");
-		LOG.debug(String.format("replace -> ¹Ù²Ù±â Àü : %s, ¹Ù²Û ÈÄ : %s", string10, string11));
+		LOG.debug(String.format("replace -> ë°”ê¾¸ê¸° ì „ : %s, ë°”ê¾¼ í›„ : %s", string10, string11));
 		string11 = string10.replaceAll("[A-Z]", "SAMSUNG");
-		LOG.debug(String.format("replaceAll -> ¹Ù²Ù±â Àü : %s, ¹Ù²Û ÈÄ : %s", string10, string11));
+		LOG.debug(String.format("replaceAll -> ë°”ê¾¸ê¸° ì „ : %s, ë°”ê¾¼ í›„ : %s", string10, string11));
 
 		String[] splitList = string10.split(" ");
 		int length = splitList.length;
@@ -134,7 +134,7 @@ public class StringTest {
 			LOG.debug(String.format("array[%2d] : %c ", i, array[i]));
 		}
 
-		Person saram = new Person(26, "±è±ÕÅÂ");
+		Person saram = new Person(26, "ê¹€ê· íƒœ");
 		LOG.debug(saram);
 
 		final String string12 = "\t\t\n\n\n\n\tHow are\tyou today?\n\n\n\n   ";
