@@ -140,7 +140,7 @@ public class StringTest {
 		final String string12 = "\t\t\n\n\n\n\tHow are\tyou today?\n\n\n\n   ";
 		LOG.debug(string12.trim());
 		LOG.debug(string12.trim().replace("\t", " "));
-		
+
 		final String string13 = null;
 		LOG.debug("valueOf : " + String.valueOf(string13));
 	}
