@@ -143,6 +143,7 @@ public class StringTest {
 
 		final String string13 = null;
 		LOG.debug("valueOf : " + String.valueOf(string13));
+		//String.format(format, args)
 	}
 
 	@Override
