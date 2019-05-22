@@ -178,38 +178,41 @@ public class StringTest {
 		// valueOf() 문자열로 반환한다. null일경우 nullPointerException을 발생하지 않고 null문자열을 만들어 반환
 		final String string13 = null;
 		LOG.debug("valueOf : " + String.valueOf(string13));
-		
-		
+
 		// String + 연산자 사용시 속도 비교
 		long start, end;
 		final int max = 300000;
 		String test1 = "1";
 		StringBuilder test2 = new StringBuilder("1");
 		StringBuffer test3 = new StringBuffer("1");
-		
+
+		// String class
 		start = System.currentTimeMillis();
 		for (int i = 0; i < max; i++) {
 			test1 += "1";
 		}
 		end = System.currentTimeMillis();
-		LOG.debug("time String : " + ((end-start)/1000.0));
-		
+		LOG.debug("time String : " + ((end - start) / 1000.0));
+
+		// StringBuilder class
 		start = System.currentTimeMillis();
 		for (int i = 0; i < max; i++) {
 			test2.append("1");
 		}
 		end = System.currentTimeMillis();
-		LOG.debug("time StringBuilder : " + ((end-start)/1000.0));
-		
+		LOG.debug("time StringBuilder : " + ((end - start) / 1000.0));
+
+		// StringBuffer class
 		start = System.currentTimeMillis();
 		for (int i = 0; i < max; i++) {
 			test3.append("1");
 		}
 		end = System.currentTimeMillis();
-		LOG.debug("time StringBuffer : " + ((end-start)/1000.0));
+		LOG.debug("time StringBuffer : " + ((end - start) / 1000.0));
 
 	}
 
+	// 어노테이션을 쓰면 컴파일시 오류를 잡아줌
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
