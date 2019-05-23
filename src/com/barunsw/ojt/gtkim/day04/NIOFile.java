@@ -13,6 +13,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
@@ -52,21 +53,22 @@ public class NIOFile {
 			LOG.debug("서로 같은 오브젝트입니다.");
 		}
 
-		// String으로 확인할때는 Path도 String으로 해줘야 된다.
+		// endsWith : String으로 확인할때는 Path도 String으로 해줘야 된다.
 		if (path.toString().endsWith("txt")) {
 			LOG.debug(path.getFileName() + "은 txt로 끝납니다.");
 		} else {
 			LOG.debug(path.getFileName() + "은 txt로 끝나지 않습니다.");
 		}
-
+		// startsWith
 		if (path.toString().startsWith("data")) {
 			LOG.debug(path.getParent() + "은 data로 시작합니다.");
 		}
 
+		// getFileName, getParent, getRoot -> 상대일땐 null?
 		LOG.debug("파일명 : " + path.getFileName());
 		LOG.debug("부모 디렉토리 명 : " + path.getParent());
 
-		// resolve
+		// resolve 경로를 합칠때 주로 사용함
 		Path base = Paths.get(dir);
 		Path resolve1 = base.resolve("resolve1.txt");
 		LOG.debug("경로 조합 : " + resolve1.toString());
@@ -82,11 +84,13 @@ public class NIOFile {
 			LOG.error(e.getMessage(), e);
 		}
 
+		// getNameCount, getName(i), toAbsolutePath
 		int count = path.getNameCount();
 		for (int i = 0; i < count; i++) {
 			LOG.debug(String.format("상대 경로[%d] : %s", i, path.getName(i)));
 		}
 		LOG.debug("Path의 절대 경로 : " + path.toAbsolutePath());
+
 		// Files로 파일 속성 읽고 쓰기 버퍼라이터, Files 직접 쓰기, 채널이용해서 쓰기
 		Path newFile = Paths.get(dir + "propertiesAddress.txt");
 		try (BufferedWriter bw = Files.newBufferedWriter(newFile, StandardCharsets.UTF_8);
@@ -114,8 +118,8 @@ public class NIOFile {
 			// 파일 정보 읽기
 			LOG.debug("파일 크기 : " + Files.size(path));
 			LOG.debug("소유자 : " + Files.getOwner(path) + "Bytes");
-			LOG.debug(String.format("파일권한 실행여부 : %s, 쓰기여부 : %s, 읽기여부 : %s, 숨김파일여부 : %s", Files.isExecutable(path),
-					Files.isWritable(path), Files.isReadable(path), Files.isHidden(path)));
+			LOG.debug(String.format("파일권한 실행여부 : %s, 쓰기여부 : %s, 읽기여부 : %s, 숨김파일여부 : %s",
+					Files.isExecutable(path), Files.isWritable(path), Files.isReadable(path), Files.isHidden(path)));
 			LOG.debug("마지막 수정 날짜 : " + Files.getLastModifiedTime(path));
 			sb.append("파일크기 : ").append(Files.size(path)).append("Bytes").append("\n소유자 : ")
 					.append(Files.getOwner(path)).append("파일권한 Excute : ").append(Files.isExecutable(path))
@@ -141,7 +145,7 @@ public class NIOFile {
 			LOG.error(ioe.getMessage(), ioe);
 		}
 
-		// input
+		// input방법 기존에 사용하던 버퍼리더, Files를 통해 바로 읽기, 채널을 통해 읽기
 		try (FileChannel channel = FileChannel.open(Paths.get(dir + "FileCopyMain.txt"));
 				BufferedReader br = Files.newBufferedReader(Paths.get(dir + "FileCopyMain.txt"),
 						StandardCharsets.UTF_8)) {
@@ -171,12 +175,19 @@ public class NIOFile {
 			LOG.error(ioe.getMessage(), ioe);
 		}
 
-		// 복사
 		try {
+			//파일 복사
 			Path copySource = Paths.get("data/day04/gtkim/FileCopyMain.txt");
 			Path copyTarget = Paths.get("data/day04/gtkim/today/FileCopyMain.txt");
-			Files.copy(copySource, copyTarget);
+			Files.copy(copySource, copyTarget, StandardCopyOption.REPLACE_EXISTING);
 			LOG.debug("Files.copy 수행");
+			
+			//파일 삭제
+			if(Files.exists(copyTarget)) {
+				Files.delete(copyTarget);
+				LOG.debug("파일이 삭제 되었습니다.");
+			}
+			
 		} catch (FileNotFoundException fnfe) {
 			LOG.error(fnfe.getMessage(), fnfe);
 		} catch (IOException ioe) {
