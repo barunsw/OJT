@@ -118,8 +118,8 @@ public class NIOFile {
 			// 파일 정보 읽기
 			LOG.debug("파일 크기 : " + Files.size(path));
 			LOG.debug("소유자 : " + Files.getOwner(path) + "Bytes");
-			LOG.debug(String.format("파일권한 실행여부 : %s, 쓰기여부 : %s, 읽기여부 : %s, 숨김파일여부 : %s",
-					Files.isExecutable(path), Files.isWritable(path), Files.isReadable(path), Files.isHidden(path)));
+			LOG.debug(String.format("파일권한 실행여부 : %s, 쓰기여부 : %s, 읽기여부 : %s, 숨김파일여부 : %s", Files.isExecutable(path),
+					Files.isWritable(path), Files.isReadable(path), Files.isHidden(path)));
 			LOG.debug("마지막 수정 날짜 : " + Files.getLastModifiedTime(path));
 			sb.append("파일크기 : ").append(Files.size(path)).append("Bytes").append("\n소유자 : ")
 					.append(Files.getOwner(path)).append("파일권한 Excute : ").append(Files.isExecutable(path))
@@ -135,7 +135,7 @@ public class NIOFile {
 			Files.write(directWrite, buf);
 			LOG.debug("Files 메소드를 이용한 파일 출력 수행");
 
-			// 채널을 통한 입출력 바이트 버퍼를 사용한다.
+			// 채널을 통한 출력 바이트 버퍼를 사용한다.
 			ByteBuffer byteBuffer = Charset.defaultCharset().encode(sb.toString());
 			channel.write(byteBuffer);
 			LOG.debug("채널을 통한 파일 출력 수행");
@@ -176,22 +176,52 @@ public class NIOFile {
 		}
 
 		try {
-			//파일 복사
+			// 파일 복사
 			Path copySource = Paths.get("data/day04/gtkim/FileCopyMain.txt");
 			Path copyTarget = Paths.get("data/day04/gtkim/today/FileCopyMain.txt");
 			Files.copy(copySource, copyTarget, StandardCopyOption.REPLACE_EXISTING);
 			LOG.debug("Files.copy 수행");
-			
-			//파일 삭제
-			if(Files.exists(copyTarget)) {
+
+			// 파일 삭제
+			if (Files.exists(copyTarget)) {
 				Files.delete(copyTarget);
 				LOG.debug("파일이 삭제 되었습니다.");
 			}
-			
+
 		} catch (FileNotFoundException fnfe) {
 			LOG.error(fnfe.getMessage(), fnfe);
 		} catch (IOException ioe) {
 			LOG.error(ioe.getMessage(), ioe);
+		}
+
+		// 채널 입출력을 통한 복사
+		FileChannel fcSend = null;
+		FileChannel fcRecv = null;
+		try {
+			fcSend = FileChannel.open(path, StandardOpenOption.READ);
+			fcRecv = FileChannel.open(Paths.get(dir + "/today/copy.txt"), StandardOpenOption.WRITE);
+
+			fcSend.transferTo(0, Files.size(path), fcRecv);
+			LOG.debug("채널복사가 수행되었습니다.");
+
+		} catch (FileNotFoundException fnfe) {
+			LOG.error(fnfe.getMessage(), fnfe);
+		} catch (IOException ioe) {
+			LOG.error(ioe.getMessage(), ioe);
+		} finally {
+			if (fcSend != null) {
+				try {
+					fcSend.close();
+				} catch (Exception e) {
+				}
+			}
+			if (fcRecv != null) {
+				try {
+					fcRecv.close();
+				} catch (Exception e) {
+				}
+
+			}
 		}
 	}
 }
