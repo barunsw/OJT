@@ -42,6 +42,7 @@ public class FileTest {
 		// 절대경로
 		//File addressFile = new File("D:\\git\\OJT\\data\\day03\\yjkim\\address.txt");
 		
+		
 		//파일이 존재하는지 체크한다. 있으면 true, 없으면 false를 반환한다.
 		LOGGER.debug("addressFile exists:" + addressFile.exists());
 		
