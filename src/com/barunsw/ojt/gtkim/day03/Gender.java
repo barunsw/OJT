@@ -1,7 +1,6 @@
 package com.barunsw.ojt.gtkim.day03;
 
 public enum Gender {
-
 	MAN("남"),
 	WOMAN("여");
 

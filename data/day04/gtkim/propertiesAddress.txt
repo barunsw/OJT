@@ -1,0 +1,4 @@
+파일입니다.
+파일크기 : 196Bytes
+소유자 : DESKTOP-636TPMV\user (User)파일권한 Excute : true Write : true Read : true
+마지막 수정 날짜 : 2019-05-23T04:39:40.425478Z
