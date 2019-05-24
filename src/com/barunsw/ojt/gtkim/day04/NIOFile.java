@@ -59,6 +59,7 @@ public class NIOFile {
 		} else {
 			LOG.debug(path.getFileName() + "은 txt로 끝나지 않습니다.");
 		}
+		
 		// startsWith
 		if (path.toString().startsWith("data")) {
 			LOG.debug(path.getParent() + "은 data로 시작합니다.");
@@ -134,7 +135,7 @@ public class NIOFile {
 			Path directWrite = Paths.get(dir + "directWrite.txt");
 			Files.write(directWrite, buf);
 			LOG.debug("Files 메소드를 이용한 파일 출력 수행");
-
+			
 			// 채널을 통한 출력 바이트 버퍼를 사용한다.
 			ByteBuffer byteBuffer = Charset.defaultCharset().encode(sb.toString());
 			channel.write(byteBuffer);
@@ -203,7 +204,6 @@ public class NIOFile {
 
 			fcSend.transferTo(0, Files.size(path), fcRecv);
 			LOG.debug("채널복사가 수행되었습니다.");
-
 		} catch (FileNotFoundException fnfe) {
 			LOG.error(fnfe.getMessage(), fnfe);
 		} catch (IOException ioe) {
@@ -220,7 +220,6 @@ public class NIOFile {
 					fcRecv.close();
 				} catch (Exception e) {
 				}
-
 			}
 		}
 	}
