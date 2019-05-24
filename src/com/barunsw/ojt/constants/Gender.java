@@ -22,9 +22,13 @@ public enum Gender {
 			return MAN;
 		case "남":
 			return MAN;
+		case "MAN":
+			return MAN;
 		case "여자":
 			return WOMAN;
 		case "여":
+			return WOMAN;
+		case "WOMAN":
 			return WOMAN;
 		default:
 			throw new Exception(String.format("적절하지 않은 value(%s)입니다.", value));
