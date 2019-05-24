@@ -19,6 +19,8 @@ public class DBTestMybatis {
 		SqlSessionFactory sqlSessionFactory = SqlSessionFactoryManager.getSqlSesstionFactory();
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			PersonDao mapper = session.getMapper(PersonDao.class);
+			//어노테이션을 이용한 방법 
+		//	PersonDaoAnnotation mapper = session.getMapper(PersonDaoAnnotation.class);
 			
 			//select 
 			List<Person> personList = mapper.selectPersonList();

@@ -26,9 +26,9 @@
 		</environment>
 	</environments>
 	<mappers>
-	<!-- 
+	
 		 <mapper resource="com/barunsw/ojt/gtkim/day05/PersonDao.xml" />	
-		 -->
 		 <mapper class="com.barunsw.ojt.gtkim.day05.PersonDao"/>
+		 <mapper class="com.barunsw.ojt.gtkim.day05.PersonDaoAnnotation"/>
 	</mappers>
 </configuration>
