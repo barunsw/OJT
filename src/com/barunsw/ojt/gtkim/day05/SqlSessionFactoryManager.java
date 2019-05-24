@@ -23,7 +23,7 @@ public class SqlSessionFactoryManager {
 		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		
+
 		sqlMapper = new SqlSessionFactoryBuilder().build(reader,"development",System.getProperties());
 		LOGGER.debug("SqlSessionFactoryManager created!");
 	}

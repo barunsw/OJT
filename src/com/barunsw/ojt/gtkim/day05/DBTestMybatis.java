@@ -62,7 +62,9 @@ public class DBTestMybatis {
 			deletePerson.setName("KyunTaeKim");
 			result = mapper.deletePersonByName(deletePerson);
 			
+			//create
 			mapper.createTestTable();
+			
 			session.commit();
 		}catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
