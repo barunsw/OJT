@@ -45,8 +45,7 @@ public class FileTest {
 		
 		//파일이 존재하는지 체크한다. 있으면 true, 없으면 false를 반환한다.
 		LOGGER.debug("addressFile exists:" + addressFile.exists());
-		
-		
+	
         //InputStream을 이용한 파일 읽기
 		byte[] data = new byte[1024];
 		InputStream inputStream = null;
@@ -85,6 +84,7 @@ public class FileTest {
 		//바이트 단위로 데이터를 처리한다.
 		//FileOutputStream에 값을 쓸 때는 byte배열로 써야 하므로 아래와 같이
 		//String을 byte배열로 바꾸어 주는 getBytes() 메서드를 사용해야 한다. 
+	
 		 OutputStream ops=null;
 		try {
 			//data/day03/yjkim 아래에 있는 address2.txt파일을 연다. 
@@ -160,6 +160,7 @@ public class FileTest {
 
 		//PrintWriter을 이용한 파일 쓰기
 		//PrintWriter을 이용하면 \r\n를 덧붙이는 대신 println이라는 메소드를 사용할 수 있다.
+		
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter("data/day03/yjkim/address4.txt");
@@ -178,6 +179,7 @@ public class FileTest {
 	
 		//BufferedReader를 이용한 파일 읽기 & auto close
 		//auto close 방식을 이용하면 파입 입출력 시 입출력이 끝난 후 스트림을 닫지 않아도 자동으로 닫힌다.
+		
 		try(BufferedReader br = new BufferedReader(new FileReader("data/day03/yjkim/address4.txt"))){
 			String br_line = null;
 			while((br_line = br.readLine()) != null) {
@@ -262,6 +264,7 @@ public class FileTest {
 		
 		
 		//BufferedInputStream을 이용한 파일 읽기
+	
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream("data/day03/yjkim/address.txt");
@@ -277,8 +280,6 @@ public class FileTest {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		
-		
-		//BufferedOutputStream을 이용한 파일 쓰기
 		BufferedOutputStream bos = null;
 		try {
 			bos = new BufferedOutputStream(new FileOutputStream("data/day03/yjkim/address5.txt"));

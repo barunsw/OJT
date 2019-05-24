@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <properties resource = "com/barunsw/ojt/yjkim/day05/db.properties"/>
+
+  <!-- 환경을 설정하는 방법을 정의한다. -->
+  <!-- default 환경 id=development -->
+  <environments default="development">
+  <!-- 각각의 환경을 정의한 환경 id=development -->
+    <environment id="development">
+    <!-- jdbc 커밋과 롤백을 처리하기 위해 사용된다. 
+    	트랜잭션의 스코프를 관리하기 위해 dataSource로 부터 커넥션을 가져온다. -->
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <!-- mapper  -->
+  <mappers>
+    <mapper resource="com/barunsw/ojt/yjkim/day05/PersonDao.xml"/>
+  </mappers>
+</configuration>
