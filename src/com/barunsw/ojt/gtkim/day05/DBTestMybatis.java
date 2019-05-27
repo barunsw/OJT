@@ -20,14 +20,13 @@ public class DBTestMybatis {
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			PersonDao mapper = session.getMapper(PersonDao.class);
 			//어노테이션을 이용한 방법 
-		//	PersonDaoAnnotation mapper = session.getMapper(PersonDaoAnnotation.class);
-			
+			//PersonDaoAnnotation mapper = session.getMapper(PersonDaoAnnotation.class);
 			//select 
 			List<Person> personList = mapper.selectPersonList();
 			for(Person p : personList) {
 				LOGGER.debug(p);
 			}
-			
+		
 			Person onePerson = new Person();
 			onePerson.setName("KyunTaeKim");
 			onePerson.setAge(29);
@@ -68,9 +67,9 @@ public class DBTestMybatis {
 			mapper.createTestTable();
 			
 			session.commit();
-		}catch (Exception e) {
+		}
+		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 	}
-
 }
