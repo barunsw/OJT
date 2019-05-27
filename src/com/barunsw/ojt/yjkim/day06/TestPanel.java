@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -52,6 +53,10 @@ public class TestPanel extends JPanel{
 	//cardLayout
 	private CardLayout cardLayout		= new CardLayout();
 	
+	//폰트 설정
+	private Font f1 = new Font("돋움", Font.PLAIN, 15);
+	private Font f2 = new Font("궁서", Font.BOLD, 20);
+	private Font f3 = new Font("바탕", Font.ITALIC, 30);
 	
 	public TestPanel() {
 		try {
@@ -75,7 +80,12 @@ public class TestPanel extends JPanel{
 		jLabel_Name.setPreferredSize(LABEL_SIZE);
 		jLabel_Gender.setPreferredSize(LABEL_SIZE);
 		jLabel_Address.setPreferredSize(LABEL_SIZE);
-
+		
+		//LABEL 폰트 설정
+		jLabel_Name.setFont(f1);
+		jLabel_Gender.setFont(f2);
+		jLabel_Address.setFont(f3);
+			
 		jTextField_Name.setPreferredSize(new Dimension(120,22));
 		jRadioButton_Man.setPreferredSize(new Dimension(60,22));
 		jRadioButton_Woman.setPreferredSize(new Dimension(60,22));
