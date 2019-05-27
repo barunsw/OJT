@@ -45,7 +45,7 @@ public class TestPanel extends JPanel {
 	private JPasswordField jPasswd_Pwd		= new JPasswordField();
 	private JScrollPane jScrollPane_Address = null;
 	private JComboBox jComboBox_Fruit 		= null;
-//	private JTable	jTable_Maria 	        = null;
+	private JTable	jTable_Maria 	        = null;
 	
 	private CardLayout cardLayout = new CardLayout();
 
