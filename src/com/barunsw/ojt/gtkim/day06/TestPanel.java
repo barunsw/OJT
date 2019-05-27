@@ -6,6 +6,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -21,9 +25,16 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.gtkim.day05.*;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -45,7 +56,7 @@ public class TestPanel extends JPanel {
 	private JPasswordField jPasswd_Pwd		= new JPasswordField();
 	private JScrollPane jScrollPane_Address = null;
 	private JComboBox jComboBox_Fruit 		= null;
-	private JTable	jTable_Maria 	        = null;
+//	private JTable	jTable_Maria 	        = null;
 	
 	private CardLayout cardLayout = new CardLayout();
 
@@ -69,6 +80,19 @@ public class TestPanel extends JPanel {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		jComboBox_Fruit = new JComboBox<String>(FRUITS);
+		
+		//버튼 리스너 추가 
+		jButton_Add.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String getText = jTextArea_Address.getText();
+				StringBuffer sb = new StringBuffer();		
+				sb.append(getText);
+				sb.append("\n안녕~\n");
+				sb.append("만나서 반갑습니다");
+				jTextArea_Address.setText(sb.toString());			
+			}
+		});
 		
 		//컴포넌트 크기 초기화
 		initComponentSize();
@@ -108,7 +132,8 @@ public class TestPanel extends JPanel {
 		jTextField_Name.setPreferredSize(new Dimension(150, 22));
 		jRadioButton_Man.setPreferredSize(new Dimension(80, 22));
 		jRadioButton_Woman.setPreferredSize(new Dimension(80, 22));
-		jTextArea_Address.setPreferredSize(new Dimension(150, 60));
+		//JTextArea 사이즈를 고정하면 ScrollPane의 스크롤이 동작하지 않음
+	    //jTextArea_Address.setPreferredSize(new Dimension(150, 60));
 		jComboBox_Fruit.setPreferredSize(new Dimension(150, 22));
 		jPasswd_Pwd.setPreferredSize(new Dimension(150, 22));
 	}
