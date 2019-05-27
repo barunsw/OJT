@@ -12,7 +12,8 @@
   </select>
   
   <insert id="insertPerson">
-  	INSERT INTO TB_PERSON(NAME, GENDER, AGE, PHONE, ADDRESS) VALUES (#{name},#{gender},#{age},#{phone},#{address})
+  	INSERT INTO TB_PERSON(NAME, GENDER, AGE, PHONE, ADDRESS) 
+  	VALUES (#{name},#{gender},#{age},#{phone},#{address})
   </insert>
   
   <update id="updatePerson">
