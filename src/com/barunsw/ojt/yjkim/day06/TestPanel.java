@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,10 +39,14 @@ public class TestPanel extends JPanel{
 	private JTextField jTextField_Name 		= new JTextField();
 	private JRadioButton jRadioButton_Man	= new JRadioButton("남");
 	private JRadioButton jRadioButton_Woman = new JRadioButton("여");
-	private JTextArea jTextArea_Address 	= new JTextArea();
+	//private JTextArea jTextArea_Address 	= new JTextArea();
 	
+	
+	//jscrollPane
+	//private JScrollPane jScrollPane 	= new JScrollPane(jTextArea_Address);
+
 	//Button 
-	private JButton jButton_Add   = new JButton("추가");
+	private JButton jButton_Add  	    = new JButton("추가");
 
 	//flowLayout
 	private FlowLayout flowLayout 		= new FlowLayout();
@@ -67,6 +73,13 @@ public class TestPanel extends JPanel{
 	}
 	
 	private void initComponent() throws Exception{
+		JTextArea txt = new JTextArea(10,20);
+		JScrollPane scroll = new JScrollPane(txt);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+
+		
 		
 		//Layout 설정 - FlowLayout 
 		//흐름대로 가로 순서로 배치가 된다.
@@ -89,12 +102,13 @@ public class TestPanel extends JPanel{
 		jTextField_Name.setPreferredSize(new Dimension(120,22));
 		jRadioButton_Man.setPreferredSize(new Dimension(60,22));
 		jRadioButton_Woman.setPreferredSize(new Dimension(60,22));
-		jTextArea_Address.setPreferredSize(new Dimension(120,60));
+		//jTextArea_Address.setPreferredSize(new Dimension(120,60));
 		
 		jRadioButton_Man.setBackground(Color.white);
 		jRadioButton_Woman.setBackground(Color.white);
-	
 		
+		//jScrollPane
+
 		//버튼 클릭 리스너 
 		jButton_Add.addActionListener(new ActionListener() {
 
@@ -117,7 +131,7 @@ public class TestPanel extends JPanel{
 		this.add(jRadioButton_Man);
 		this.add(jRadioButton_Woman);
 		this.add(jLabel_Address);
-		this.add(jTextArea_Address);
+		this.add(scroll);
 		this.add(jButton_Add);
 		
 	}
