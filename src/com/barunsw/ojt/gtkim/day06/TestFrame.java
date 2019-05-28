@@ -37,9 +37,9 @@ public class TestFrame extends JFrame {
 		
 		// 패널 붙이기 
 		// 1.컨텐트 펜을 알아내어 직접 부착
-		contentPane.add(testPanel);
+		//contentPane.add(testPanel);
 		// 2.프레임에 부착하면 프레임이 대신 컨텐트펜에 부착 
-		this.add(testPanel);
+		//this.add(testPanel);
 		// 3.프레임의 컨텐트펜에 바로 부착
 		this.setContentPane(testPanel);
 		
