@@ -1,5 +1,6 @@
 package com.barunsw.ojt.day07;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -69,7 +70,7 @@ public class TestPanel extends JPanel {
 		jButton_Add.setPreferredSize(BUTTON_SIZE);
 		jButton_Delete.setPreferredSize(BUTTON_SIZE);
 		jButton_Reload.setPreferredSize(BUTTON_SIZE);
-
+		jLabel_Name.setBackground(Color.green);
 		this.add(jLabel_Name, 
 				new GridBagConstraints(0, 0, 1, 1, 
 						0.0, 0.0,
@@ -111,7 +112,7 @@ public class TestPanel extends JPanel {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(5, 0, 5, 5),
 						0, 0));
-		
+	
 		this.add(jPanel_Command, 
 				new GridBagConstraints(0, 3, 2, 1, 
 						1.0, 0.0,
@@ -177,6 +178,6 @@ public class TestPanel extends JPanel {
 						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(0, 0, 5, 5),
 						0, 0));
-*/		
+*/
 	}
 }

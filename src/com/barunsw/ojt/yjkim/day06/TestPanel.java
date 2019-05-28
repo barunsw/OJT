@@ -78,9 +78,6 @@ public class TestPanel extends JPanel{
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-
-		
-		
 		//Layout 설정 - FlowLayout 
 		//흐름대로 가로 순서로 배치가 된다.
 		this.setLayout(new FlowLayout());
