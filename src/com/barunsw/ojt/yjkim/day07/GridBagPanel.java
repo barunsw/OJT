@@ -1,5 +1,6 @@
 package com.barunsw.ojt.yjkim.day07;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +21,9 @@ import org.apache.logging.log4j.Logger;
 
 public class GridBagPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(GridBagPanel.class);
+	
+	private final Dimension SIZE = new Dimension(120,30);
+	
 	
 	GridBagLayout gridBagLayout = new GridBagLayout();
 	
@@ -77,6 +81,17 @@ public class GridBagPanel extends JPanel {
 		jPanel_Gender.setLayout(gridBagLayout);
 		jPanel_Command.setLayout(gridBagLayout);
 		
+		jTextField_Id.setPreferredSize(SIZE);
+		jPasswordField_Pw.setPreferredSize(SIZE);
+		jTextField_Name.setPreferredSize(SIZE);
+		jTextField_Phone1.setPreferredSize(SIZE);
+		jTextField_Phone2.setPreferredSize(SIZE);
+		jTextField_Phone3.setPreferredSize(SIZE);
+		jTextField_Year.setPreferredSize(SIZE);
+		jTextField_Month.setPreferredSize(SIZE);
+		jTextField_Date.setPreferredSize(SIZE);
+		jTextField_Email.setPreferredSize(SIZE);
+		
 		//아이디  GridBagLayout에 추가
 		this.add(jLabel_Id, 
 				new GridBagConstraints(0, 0, 1, 1, 
@@ -87,7 +102,7 @@ public class GridBagPanel extends JPanel {
 		this.add(jTextField_Id, 
 				new GridBagConstraints(1, 0, 1, 1, 
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(5, 5, 5, 5),
 						0, 0));
 		
@@ -101,7 +116,7 @@ public class GridBagPanel extends JPanel {
 		this.add(jPasswordField_Pw, 
 				new GridBagConstraints(1, 1, 1, 1, 
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(5, 5, 5, 5),
 						0, 0));
 		
@@ -116,7 +131,7 @@ public class GridBagPanel extends JPanel {
 		this.add(jTextField_Name,
 				new GridBagConstraints(1, 2, 1, 1, 
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(5, 5, 5, 5),
 						0, 0));
 		//전화 GridLayout에 추가
@@ -144,7 +159,7 @@ public class GridBagPanel extends JPanel {
 		//주소 GridLayout에 추가
 		this.add(jLabel_Address,
 				new GridBagConstraints(0, 4, 1, 1, 
-						0.0, 0.0,
+						0.0, 0.3,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(5, 5, 5, 5),
 						0, 0));
@@ -193,7 +208,7 @@ public class GridBagPanel extends JPanel {
 		this.add(jComboBox_Work,
 				new GridBagConstraints(1, 6, 1, 1, 
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(5, 5, 5, 5),
 						0, 0));
 		
@@ -235,7 +250,7 @@ public class GridBagPanel extends JPanel {
 		this.add(jTextField_Email,
 				new GridBagConstraints(1, 8, 1, 1,
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
 						new Insets(5, 0, 5, 5),
 						0,0));	
 		
@@ -269,18 +284,17 @@ public class GridBagPanel extends JPanel {
 		//가입 버튼을 패널에 넣는다.
 		jPanel_Command.add(jButton_Insert,
 				new GridBagConstraints(0, 0, 1, 1, 
-						0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						1.0, 0.0,
+						GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
 						new Insets(0, 5, 5, 5),
 						0, 0));	
 		//취소 버튼을 패널에 넣는다.
 		jPanel_Command.add(jButton_Cancle,
 				new GridBagConstraints(1, 0, 1, 1, 
 						0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
 						new Insets(0, 0, 5, 5),
 						0, 0));	
-
 		
 
 	}

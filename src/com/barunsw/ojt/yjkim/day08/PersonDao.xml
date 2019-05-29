@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.barunsw.ojt.yjkim.day08.PersonDao">
+ 	<insert id="insert_Person">
+ 		INSERT INTO TB_ADDRESSBOOK(NAME, AGE, ADDRESS) VALUES (#{name}, #{age}, #{address}) 
+ 	</insert>
+ 	
+ 	<select id="select_Person" resultType="Map">
+ 		SELECT * FROM TB_ADDRESSBOOK
+ 	</select>
+ 	
+ 	<delete id="delete_Person">
+ 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{Param}
+ 	</delete>
+ 	
+ 	<update id="update_Person">
+ 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
+ 	</update>
+ 	
+ 	<select id="select_Particular_Person" resultType="Map" parameterType="String">
+	<![CDATA[
+		select * from TB_ADDRESSBOOK 
+	]]> 
+	<if test="'s'.equals(param)">
+	<![CDATA[
+		where NAME rlike '^(ㄱ)' or (NAME >='가' and NAME < '나') 
+	]]>
+	</if>
+	
+	</select>
+	
+</mapper>
