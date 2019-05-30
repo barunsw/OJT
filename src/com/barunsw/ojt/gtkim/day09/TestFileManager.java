@@ -3,8 +3,10 @@ package com.barunsw.ojt.gtkim.day09;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +37,9 @@ public class TestFileManager {
 				Files.createFile(filePath);
 				LOGGER.debug("파일이 생성 되었습니다 " + filePath);
 			} 
-			Files.write(filePath, Files.getLastModifiedTime(filePath).toString().getBytes());
+			
+			String time = Files.getLastModifiedTime(filePath).toString() + "\n";
+			Files.write(filePath, time.getBytes(), StandardOpenOption.APPEND);
 			LOGGER.debug("파일 쓰기 완료");
 	
 			Process notepad = Runtime.getRuntime().exec(
@@ -47,7 +51,5 @@ public class TestFileManager {
 		catch (IOException ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		} 
-
-	}
-	
+	}	
 }

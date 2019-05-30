@@ -658,7 +658,7 @@ class TestPanel_this_Tree_MouseListener extends MouseAdapter {
 		JTree getTree 				= (JTree) e.getSource();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) getTree.getLastSelectedPathComponent();
 		if(e.getClickCount() == 2) {
-			TestPanel.LOGGER.debug("더블 클릭 됨: " +  node);
+			//TestPanel.LOGGER.debug("더블 클릭 됨: " +  node);
 			new TestFileManager(node.toString()).fileOpen();;	
 		}
 	}
