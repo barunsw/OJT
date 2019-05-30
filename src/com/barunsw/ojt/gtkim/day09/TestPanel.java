@@ -1,15 +1,17 @@
-package com.barunsw.ojt.gtkim.day08;
+package com.barunsw.ojt.gtkim.day09;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -32,6 +34,9 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.constants.Gender;
+
 
 public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -66,23 +71,27 @@ public class TestPanel extends JPanel {
 
 	private JButton jButton_Add    = new JButton("추가");
 	private JButton jButton_Delete = new JButton("삭제");
-	private JButton jButton_Reload = new JButton("재조회");
+	private JButton jButton_Update = new JButton("수정");
+	private JButton jButton_Reload = new JButton("전체조회");
 	
 	private JTable jTable_Result 	      = new JTable();
 	private DefaultTableModel tableModel  = new DefaultTableModel();
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	
 	private JTree jTree_Result			 = new JTree();
-	private DefaultMutableTreeNode root  = new DefaultMutableTreeNode("색인");		
+	private DefaultMutableTreeNode root  = new DefaultMutableTreeNode("Index");		
 	private DefaultTreeModel treeModel   = new DefaultTreeModel(root);
 	private JScrollPane jScrollPane_Tree = new JScrollPane();
-		
+	
+	private DBConnector connDB = new DBConnector();
+	
 	public TestPanel() {
 		try {
 			initComponent();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
+			connDB.closeSession();
 		}
 	}
 	
@@ -91,6 +100,207 @@ public class TestPanel extends JPanel {
 		initTree();
 		initLayout();
 		initActionListener();
+		viewData();
+	}
+
+	private DefaultMutableTreeNode searchNode(String name) {
+		DefaultMutableTreeNode node    	   = null;
+		DefaultMutableTreeNode defaultNode = null;
+		// Iterator 대신 Enumeration 으로 사용 
+		Enumeration e = root.breadthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) e.nextElement();
+			if (name.equals(node.getUserObject().toString())) {
+				return node;
+			}
+			
+			if(node.getUserObject().toString().equals("기타")) {
+				defaultNode = node;
+			}
+		}
+		return defaultNode;
+	}
+	
+	void insertTreeData(String nodeName) {	
+		String parentName 			  = getChosung(nodeName);
+		DefaultMutableTreeNode parent = searchNode(parentName);
+		DefaultMutableTreeNode node   = new DefaultMutableTreeNode(nodeName);
+		
+		treeModel.insertNodeInto(node, parent, parent.getChildCount());	
+		//LOGGER.debug(parent.getUserObject().toString() + "에 노드가 추가 되었습니다 : "
+		//		+ node.getUserObject().toString());
+	}
+	
+	void autoExpendTree(JTree tree, int index, int rowCount) {
+		for(int i = index; i < rowCount; i++) {
+			tree.expandRow(i);
+		}
+		
+		if(tree.getRowCount() != rowCount) {
+			autoExpendTree(tree, rowCount, tree.getRowCount());
+		}
+	}
+	
+	void insertData() {
+		Vector insertData = new Vector();
+
+		insertData = getComponentData();
+		if (insertData != null) {
+			try {
+				// Mapper 가져오기
+				connDB.setMapper(PersonDao.class);
+				PersonDao mapper = (PersonDao) connDB.getMapper();
+
+				PersonVO onePerson = new PersonVO();
+				Vector inputdata = getComponentData();
+
+				onePerson.setName(inputdata.get(0).toString());
+				onePerson.setGender(Gender.toGender(inputdata.get(1).toString()));
+				onePerson.setAge(Integer.parseInt(inputdata.get(2).toString()));
+				onePerson.setPhone(inputdata.get(3).toString());
+				onePerson.setAddress(inputdata.get(4).toString());
+
+				mapper.insertPerson(onePerson);
+				LOGGER.debug("DB에 입력되었습니다");
+				connDB.commit();
+
+				// JTable과 JTree view 생성
+				viewData();
+				// 컴포넌트 필드 초기화
+				initText();
+			} catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+				connDB.closeSession();
+			}
+		}
+	}
+	
+	void deleteData() {
+		int row = jTable_Result.getSelectedRow();
+		if(row > -1) {			
+			try {
+				connDB.setMapper(PersonDao.class);
+				PersonDao mapper = (PersonDao) connDB.getMapper();
+				
+				PersonVO deletePerson = new PersonVO();
+				deletePerson.setName(jTable_Result.getValueAt(row, 0).toString());
+				deletePerson.setGender(Gender.toGender(jTable_Result.getValueAt(row, 1).toString()));
+				deletePerson.setAge(Integer.parseInt(jTable_Result.getValueAt(row, 2).toString()));
+				deletePerson.setPhone(jTable_Result.getValueAt(row, 3).toString());
+				deletePerson.setAddress(jTable_Result.getValueAt(row, 4).toString());
+				
+				mapper.deletePerson(deletePerson);
+				LOGGER.debug("테이블 삭제 성공");
+				connDB.commit();
+				// JTree, JTable view
+				viewData();
+			}
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+				connDB.closeSession();
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(this, "테이블에서 삭제할 행을 선택하세요", "Warning", JOptionPane.WARNING_MESSAGE);
+			LOGGER.debug("삭제에 실패하였습니다");
+		}		
+	}
+	
+	void updateData() {
+		try {
+			connDB.setMapper(PersonDao.class);
+			PersonDao mapper	= (PersonDao) connDB.getMapper();
+			Vector updateDate	= tableModel.getDataVector();
+			Iterator<Vector> it = updateDate.iterator();
+		
+			//List<PersonVO> updateList = new ArrayList<>();
+			
+			while(it.hasNext()) {
+				Vector v= it.next();
+				PersonVO onePerson = new PersonVO();
+				
+				onePerson.setName(v.get(0).toString());
+				onePerson.setGender(Gender.toGender(v.get(1).toString()));
+				onePerson.setAge(Integer.parseInt(v.get(2).toString()));
+				onePerson.setPhone(v.get(3).toString());
+				onePerson.setAddress(v.get(4).toString());
+				onePerson.setSeq(Integer.parseInt(v.get(5).toString()));
+				mapper.updatePerson(onePerson);
+				//updateList.add(onePerson);
+			}
+			//mapper.updatePersonList(updateList);
+			connDB.commit();
+			LOGGER.debug("수정 완료");
+			viewData();
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+			connDB.closeSession();
+		}
+	}
+	
+	void viewData() {
+		try {
+			connDB.setMapper(PersonDao.class);
+			PersonDao mapper = (PersonDao) connDB.getMapper();
+			
+			// 테이블, 트리 초기화
+			tableModel.setNumRows(0);
+			root.removeAllChildren();
+			initTree();
+			
+			List<PersonVO> personList = mapper.selectPersonList();
+			for (PersonVO p : personList) {
+				Vector getData = new Vector();
+				getData.add(p.getName());
+				getData.add(p.getGender());
+				getData.add(p.getAge());
+				getData.add(p.getPhone());
+				getData.add(p.getAddress());
+				getData.add(p.getSeq());
+				
+				tableModel.addRow(getData);
+				insertTreeData(p.getName());
+			}
+			LOGGER.debug("조회 완료");
+			autoExpendTree(jTree_Result, 0, jTree_Result.getRowCount());
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+			connDB.closeSession();
+		}
+	}
+	
+	private Vector getComponentData() {
+		Vector data = new Vector();
+		try {
+			String name    = jTextField_Name.getText();
+			String gender  = jRadioButton_Man.isSelected() ? new String("남자") : new String("여자");
+			int age 	   = jTextField_Age.getText().equals("") ? null : Integer.parseInt(jTextField_Age.getText());
+			String phone   = jComboBox_Phone_Pre.getSelectedItem().toString() + "-" 
+								+ jTextField_Phone_Mid.getText() + "-" 
+								+ jTextField_Phone_Suf.getText();	
+			String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
+			String address = jTextArea_Adress.getText();
+			
+			if(phone.matches(regPhone)) {
+				data = new Vector();
+				data.add(name);
+				data.add(gender);
+				data.add(age);
+				data.add(phone);
+				data.add(address);
+			}
+			else {
+				throw new Exception();
+			}
+		}
+		catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "잘못된 입력이 있습니다.", "Error", JOptionPane.ERROR_MESSAGE);
+			LOGGER.error("데이터 읽기 실패");
+			return null;
+		}
+		return data;
 	}
 	
 	private String getChosung(String name) {
@@ -150,114 +360,11 @@ public class TestPanel extends JPanel {
 		return chosung;
 	}
 	
-	private DefaultMutableTreeNode searchNode(String name) {
-		DefaultMutableTreeNode node = null;
-		
-		// Iterator 대신 Enumeration 으로 사용 
-		Enumeration e = root.breadthFirstEnumeration();
-		while (e.hasMoreElements()) {
-			node = (DefaultMutableTreeNode) e.nextElement();
-			if (name.equals(node.getUserObject().toString())) {
-				return node;
-			}
-		}
-		return null;
-	}
-	
-	void insertTreeData() {
-		String nodeName 			  = jTextField_Name.getText();	
-		String parentName 			  = getChosung(nodeName);
-		DefaultMutableTreeNode parent = searchNode(parentName);
-		DefaultMutableTreeNode node   = new DefaultMutableTreeNode(nodeName);
-		
-		treeModel.insertNodeInto(node, parent, parent.getChildCount());	
-		LOGGER.debug(parent.getUserObject().toString() + "에 노드가 추가 되었습니다 : "
-				+ node.getUserObject().toString());
-	}
-	
-	void deleteTreeData(String deleteNodeName) {
-		DefaultMutableTreeNode deleteNode = searchNode(deleteNodeName);
-		
-		// other은 따로 처리가 필요함 
-		if(deleteNode.getUserObject().toString().equals("기타")) {
-			
-		}
-		else {
-			treeModel.removeNodeFromParent(deleteNode);
-		}
-		LOGGER.debug(deleteNodeName + " 노드를 삭제합니다.");
-	}
-	
-	void insertTableData() {
-		Vector insertData = new Vector();
-		try {
-			insertData = getComponentData();			
-			if(insertData != null) {
-				insertTreeData();
-				tableModel.addRow(insertData);
-				LOGGER.debug("테이블 입력 성공" + insertData.toString());
-				initText();
-			}
-		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
-			JOptionPane.showMessageDialog(this, "추가에 실패하였습니다!\n(한글 이름만 지원합니다)", "Insert Error", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-	
-	void deleteTableData() {
-		int row = jTable_Result.getSelectedRow();
-		if(row > -1) {		
-			// 트리에서 삭제
-			String deleteNodeName = jTable_Result.getValueAt(row, 0).toString();
-			deleteTreeData(deleteNodeName);
-			
-			// 테이블에서 삭제
-			tableModel.removeRow(row);	
-			LOGGER.debug("테이블에서 삭제 되었습니다.");
-		}
-		else {
-			JOptionPane.showMessageDialog(this, "테이블에서 삭제할 행을 선택하세요", "Warning", JOptionPane.WARNING_MESSAGE);
-			LOGGER.debug("삭제에 실패하였습니다");
-		}		
-	}
-	
-	private Vector getComponentData() {
-		Vector data = new Vector();
-		try {
-			String name    = jTextField_Name.getText();
-			String gender  = jRadioButton_Man.isSelected() ? new String("남자") : new String("여자");
-			int age 	   = jTextField_Age.getText().equals("") ? null : Integer.parseInt(jTextField_Age.getText());
-			String phone   = jComboBox_Phone_Pre.getSelectedItem().toString() + "-" 
-								+ jTextField_Phone_Mid.getText() + "-" 
-								+ jTextField_Phone_Suf.getText();	
-			String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
-			String address = jTextArea_Adress.getText();
-			
-			if(phone.matches(regPhone)) {
-				data = new Vector();
-				data.add(name);
-				data.add(gender);
-				data.add(age);
-				data.add(phone);
-				data.add(address);
-			}
-			else {
-				throw new Exception();
-			}
-		}
-		catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "잘못된 입력이 있습니다.", "Error", JOptionPane.ERROR_MESSAGE);
-			LOGGER.error("데이터 읽기 실패");
-			return null;
-		}
-		return data;
-	}
-	
 	private void initText() {
 		jTextField_Name.setText("");
 		jTextField_Age.setText("");
 		jRadioButton_Man.setSelected(true);
+		jComboBox_Phone_Pre.setSelectedIndex(0);
 		jTextField_Phone_Mid.setText("");
 		jTextField_Phone_Suf.setText("");
 		jTextArea_Adress.setText("");
@@ -266,8 +373,10 @@ public class TestPanel extends JPanel {
 	private void initActionListener() {
 		jButton_Add.addActionListener(new TestPanel_this_Button_ActionListener(this));
 		jButton_Delete.addActionListener(new TestPanel_this_Button_ActionListener(this));
+		jButton_Update.addActionListener(new TestPanel_this_Button_ActionListener(this));
 		jButton_Reload.addActionListener(new TestPanel_this_Button_ActionListener(this));
 		
+		jTree_Result.addMouseListener(new TestPanel_this_Tree_MouseListener(this));
 		//addComponentListener(new TestPanel_this_AutoReSize(this));
 		//jTable_Result.addMouseListener(new TestPanel_this_Mouse_ActionListener(this));
 	}
@@ -280,13 +389,17 @@ public class TestPanel extends JPanel {
 		columnData.add("나이");
 		columnData.add("휴대폰");
 		columnData.add("주소");
+		columnData.add("Seq");
 
-		tableModel.setColumnIdentifiers(columnData);		
+		tableModel.setColumnIdentifiers(columnData);
 		jTable_Result.setModel(tableModel);
 		
 		jTable_Result.getColumn("이름").setMaxWidth(150);
 		jTable_Result.getColumn("성별").setMaxWidth(60);
 		jTable_Result.getColumn("나이").setMaxWidth(60);
+		
+		// seq는 안보이게 처리 
+		jTable_Result.removeColumn(jTable_Result.getColumn("Seq"));
 		
 		jTable_Result.getTableHeader().setReorderingAllowed(false);
 	}
@@ -338,6 +451,8 @@ public class TestPanel extends JPanel {
 		jLabel_Age.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel_Phone.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabel_Address.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		jScrollPane_Tree.setPreferredSize(new Dimension(150, 30));
 		
 		// 컴포넌트 배치
 		jPanel_Gender.setLayout(new GridBagLayout());
@@ -483,14 +598,21 @@ public class TestPanel extends JPanel {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(5, 0, 5, 5),
 						0, 0));
-/*		
-		jPanel_Command.add(jButton_Reload,
+		
+		jPanel_Command.add(jButton_Update,
 				new GridBagConstraints(2, 0, 1, 1,
 						0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(5, 0, 5, 5),
 						0, 0));		
-*/
+
+		jPanel_Command.add(jButton_Reload,
+				new GridBagConstraints(3, 0, 1, 1,
+						0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(5, 0, 5, 5),
+						0, 0));		
+
 	}
 }
 
@@ -507,18 +629,37 @@ class TestPanel_this_Button_ActionListener implements ActionListener {
 		
 		switch(event) {
 		case "추가" :
-			adaptee.insertTableData();
+			adaptee.insertData();
 			break;
 		case "삭제" : 
-			adaptee.deleteTableData();
+			adaptee.deleteData();
 			break;
-/*	
-     	case "재조회" :
-			adaptee.reloadTableData();
+     	case "전체조회" :
+			adaptee.viewData();
 			break;
-*/
+     	case "수정" :
+     		adaptee.updateData();
+     		break;
 		default :
 			TestPanel.LOGGER.debug("발생 할 수 없는 이벤트 입니다.");
+		}
+	}
+}
+
+class TestPanel_this_Tree_MouseListener extends MouseAdapter {
+	private TestPanel adaptee;
+	
+	public TestPanel_this_Tree_MouseListener(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		JTree getTree 				= (JTree) e.getSource();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) getTree.getLastSelectedPathComponent();
+		if(e.getClickCount() == 2) {
+			TestPanel.LOGGER.debug("더블 클릭 됨: " +  node);
+			new TestFileManager(node.toString()).fileOpen();;	
 		}
 	}
 }
