@@ -10,8 +10,8 @@ import javax.swing.UIManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TestSwing3 {
-	private static final Logger LOGGER = LogManager.getLogger(TestSwing3.class);
+public class TestSwingMain {
+	private static final Logger LOGGER = LogManager.getLogger(TestSwingMain.class);
 
 	public static void main(String[] args) {
 		LOGGER.debug("Test Swing3!");
