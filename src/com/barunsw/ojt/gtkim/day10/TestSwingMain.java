@@ -1,4 +1,4 @@
-package com.barunsw.ojt.gtkim.day09;
+package com.barunsw.ojt.gtkim.day10;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
