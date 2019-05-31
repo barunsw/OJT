@@ -2,24 +2,24 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.barunsw.ojt.yjkim.day08.PersonDao">
- 	<insert id="insert_Person">
- 		INSERT INTO TB_ADDRESSBOOK(NAME, AGE, ADDRESS) VALUES (#{name}, #{age}, #{address}) 
+<mapper namespace="com.barunsw.ojt.yjkim.day10.AddressDao">
+ 	<insert id="insert_Address">
+ 		INSERT INTO TB_ADDRESSBOOK(NAME,GENDER,AGE, ADDRESS) VALUES (#{name}, #{gender}, #{age}, #{address}) 
  	</insert>
  	
- 	<select id="select_Person" resultType="Map">
+ 	<select id="select_Address" resultType="Map">
  		SELECT * FROM TB_ADDRESSBOOK
  	</select>
  	
- 	<delete id="delete_Person">
- 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{Param}
+ 	<delete id="delete_Address">
+ 		DELETE FROM TB_ADDRESSBOOK WHERE NAME = #{name}
  	</delete>
  	
- 	<update id="update_Person">
- 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
+ 	<update id="update_Address">
+ 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, GENDER = #{gender}, AGE = #{age}, ADDRESS = #{address} where name = #{name}
  	</update>
  	
- 	<select id="select_Particular_Person" resultType="Map" parameterType="String">
+ 	<select id="select_Particular_Address" resultType="Map" parameterType="String">
 	<![CDATA[
 		select * from TB_ADDRESSBOOK 
 	]]> 

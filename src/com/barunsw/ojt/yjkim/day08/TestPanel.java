@@ -316,9 +316,17 @@ public class TestPanel extends JPanel implements ActionListener,TreeSelectionLis
 					}
 					LOGGER.debug(map.get("param")+"은?");
 					List<Map<String,Object>> list = mapper.select_Particular_Person(map);
-					
+					tableModel.setNumRows(0);
 					LOGGER.debug(list+"리스트");
-					
+					for(int i = 0; i < list.size(); i++) {
+						Vector oneData = new Vector();
+						oneData.add(list.get(i).get("SEQ"));
+						oneData.add(list.get(i).get("NAME"));
+						oneData.add(list.get(i).get("AGE"));
+						oneData.add(list.get(i).get("ADDRESS"));
+						tableModel.addRow(oneData);
+					}
+				
 					
 					}	
 					
@@ -428,6 +436,7 @@ public class TestPanel extends JPanel implements ActionListener,TreeSelectionLis
 				jTextField_Name.setText("");
 				jTextField_Age.setText("");
 				jTextField_Address.setText("");
+				
 				
 			}else {
 				JOptionPane.showMessageDialog(this, "정보를 입력해주세요");
