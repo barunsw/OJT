@@ -254,6 +254,7 @@ public class TestPanel extends JPanel {
 					insertTreeData(address.getName());
 					autoExpendTree(jTree_Result, 0, jTree_Result.getRowCount());
 				}		
+				seq = seqnumber;
 			}
 			else { 
 				LOGGER.debug("데이터를 읽을 수 없습니다" + addressList);
