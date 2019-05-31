@@ -3,12 +3,15 @@ package com.barunsw.ojt.day08;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,13 +19,19 @@ import org.apache.logging.log4j.Logger;
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
 
+	private int columnIdx = 0;
+	private final int TABLE_COLUMN_SEQ 		= columnIdx++; 
+	private final int TABLE_COLUMN_NAME 	= columnIdx++; 
+	private final int TABLE_COLUMN_AGE 		= columnIdx++; 
+	private final int TABLE_COLUMN_ADDRESS 	= columnIdx++; 
+	private final int TABLE_COLUMN_REMARKS 	= columnIdx++; 
+	
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 	
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	
 	private JTable jTable_Result = new JTable();
-	private DefaultTableModel tableModel = new DefaultTableModel();
-	private CommonTableModel commonTableModel = new CommonTableModel();
+	private CommonTableModel tableModel = new CommonTableModel();
 	
 	public TestPanel() {
 		try {
@@ -54,10 +63,20 @@ public class TestPanel extends JPanel {
 		columnData.add("이름");
 		columnData.add("나이");
 		columnData.add("주소");
+		//columnData.add("비고");
 		
-		tableModel.setColumnIdentifiers(columnData);
-
+		tableModel.setColumn(columnData);
+		tableModel.setCellEditable(TABLE_COLUMN_NAME);
+		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
+		
 		jTable_Result.setModel(tableModel);
+		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
+			.setCellRenderer(new AgeCellRenderer());
+	
+		jTable_Result.setRowHeight(32);
+			
+		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));
 	}
 	
 	private void initData() {
@@ -66,8 +85,53 @@ public class TestPanel extends JPanel {
 		oneData.add("홍길동");
 		oneData.add(30);
 		oneData.add("서울시");
+		//oneData.add(Boolean.TRUE);
 		
-		tableModel.addRow(oneData);
+		Person onePerson = new Person();
+		onePerson.setAge(1);
+		onePerson.setName("홍길동");
 		
+		oneData.add(onePerson);
+		
+		tableModel.addData(oneData);
+
+		oneData = new Vector();
+		oneData.add("2");
+		oneData.add("유관순");
+		oneData.add(20);
+		oneData.add("경기도");
+		//oneData.add(Boolean.FALSE);
+
+		onePerson = new Person();
+		onePerson.setAge(1);
+		onePerson.setName("홍길동");
+		
+		oneData.add(onePerson);
+		
+		tableModel.addData(oneData);		
+	}
+	
+	void jTable_Result_mouseReleased(MouseEvent e) {
+		int selectedRow = jTable_Result.getSelectedRow();
+		if (selectedRow >= 0) {
+			String name = (String)tableModel.getValueAt(selectedRow, TABLE_COLUMN_NAME);
+			LOGGER.debug(String.format("--- selectedRow:%s, name:%s", selectedRow, name));
+
+			Person onePerson = (Person)tableModel.getValueAt(selectedRow, TABLE_COLUMN_REMARKS);
+			LOGGER.debug(String.format("--- selectedRow:%s, person:%s", selectedRow, onePerson));
+		}
+	}
+}
+
+class TestPanel_jTable_Result_MouseAdapter extends MouseAdapter {
+	private TestPanel adaptee;
+	
+	public TestPanel_jTable_Result_MouseAdapter(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		adaptee.jTable_Result_mouseReleased(e);
 	}
 }
