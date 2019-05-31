@@ -103,8 +103,11 @@ public class FileAddressBookImpl implements AddressBookInterface{
 
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
-		int index = addressVo.getSeq();		
-		addressList.remove(index-1);
+		int index = addressVo.getSeq() - 1;
+		for(AddressVo v : addressList) {
+			if(v.getSeq() == index) {
+				addressList.remove(v);			}
+		}
 		int ret = writeObject();
 		
 		return ret;
