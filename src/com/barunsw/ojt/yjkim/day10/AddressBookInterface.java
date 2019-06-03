@@ -6,5 +6,5 @@ public interface AddressBookInterface {
 	public List<AddressVo> selectAddressList() throws Exception;
 	public int insertAddress(AddressVo addressVo) throws Exception;
 	public int updateAddress(int index, AddressVo addressVo) throws Exception;
-	public int deleteAddress(int index, AddressVo addressVo) throws Exception;
+	public int deleteAddress(int index) throws Exception;
 }
