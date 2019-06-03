@@ -19,7 +19,7 @@
  		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, GENDER = #{gender}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
  	</update>
  	
- 	<select id="select_Particular_Address" resultType="Map" parameterType="String">
+ 	<select id="selectParticularAddress" resultType="com.barunsw.ojt.yjkim.day10.AddressVo" parameterType="Map">
 	<![CDATA[
 		select * from TB_ADDRESSBOOK 
 	]]> 

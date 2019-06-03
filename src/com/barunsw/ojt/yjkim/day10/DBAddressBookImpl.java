@@ -60,6 +60,13 @@ public class DBAddressBookImpl implements AddressBookInterface {
 		}
 	}
 
+	@Override
+	public List<AddressVo> selectParticularAddress(Map<String, Object> map) throws Exception {
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			return session.selectList(namespace + ".selectParticularAddress", map);
+		}
+	}
+
 
 
 }

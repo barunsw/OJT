@@ -5,7 +5,14 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.yjkim.day08.TestPanel;
+
 public class CommonTableModel extends AbstractTableModel {
+	private static final Logger LOGGER = LogManager.getLogger(CommonTableModel.class);
+
     protected Vector columnInfo;
     protected Vector dataInfo;
     protected Vector cellEditableInfo = new Vector();
@@ -71,6 +78,8 @@ public class CommonTableModel extends AbstractTableModel {
         }
         dataInfo.setSize(rowCount);
         if (rowCount <= old) {
+            LOGGER.debug(String.format("old[%d] rowCount[%d]", old, rowCount));
+
             fireTableRowsDeleted(rowCount, old-1);
         }
         else {

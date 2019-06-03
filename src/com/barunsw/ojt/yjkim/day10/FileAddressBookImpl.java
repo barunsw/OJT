@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -112,5 +113,11 @@ public class FileAddressBookImpl implements AddressBookInterface {
 			}
 		}
 		
+	}
+
+	@Override
+	public List<AddressVo> selectParticularAddress(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

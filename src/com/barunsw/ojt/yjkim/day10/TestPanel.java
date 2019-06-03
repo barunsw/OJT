@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 
 
-public class TestPanel extends JPanel implements ActionListener{
+public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
 	
 	private int columnIdx = 0;
@@ -88,6 +88,11 @@ public class TestPanel extends JPanel implements ActionListener{
 	private AddressBookInterface DBaddressbookInter  = new DBAddressBookImpl();
 	private String selected_Name ="";
 	private int selectedRow = 9999999;
+	
+	private final String[] hangleList	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
+			"ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",  
+			"ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
+	
 	Enumeration<AbstractButton> enums;
 	public TestPanel() {
 		try {
@@ -270,9 +275,9 @@ public class TestPanel extends JPanel implements ActionListener{
 		
 	}
 	private void initButtonEvent() {
-		jButton_Update.addActionListener(this);
-		jButton_Add.addActionListener(this);
-		jButton_Cancle.addActionListener(this);
+		jButton_Update.addActionListener(new Button_this_ActionListener(this));
+		jButton_Add.addActionListener(new Button_this_ActionListener(this));
+		jButton_Cancle.addActionListener(new Button_this_ActionListener(this));
 	}
 	private void initTable() {
 		Vector<String> columnData = new Vector<>();
@@ -333,8 +338,28 @@ public class TestPanel extends JPanel implements ActionListener{
 			case "ㅎ":
 				map.put("param",selectedNode.toString());break;
 			default :
-				break;
+				break;	
 		}
+		try {
+			List<AddressVo> list = DBaddressbookInter.selectParticularAddress(map);
+			LOGGER.debug(list.size()+"리스트 사이즈");
+			tableModel.setNumRows(0);
+		
+			for(int i = 0; i < list.size(); i++) {
+				
+				Vector oneData = new Vector();
+				oneData.add(list.get(i).getSeq());
+				oneData.add(list.get(i).getName());
+				oneData.add(list.get(i).getGender());
+				oneData.add(list.get(i).getAge());
+				oneData.add(list.get(i).getAddress());
+				tableModel.addData(oneData);
+			}
+			tableModel.fireTableDataChanged();
+		} catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+
 	}
 	
 	void jTable_Result_mouseReleased(MouseEvent e) {
@@ -359,91 +384,33 @@ public class TestPanel extends JPanel implements ActionListener{
 			//Person onePerson = (Person)tableModel.getValueAt(selectedRow, TABLE_COLUMN_REMARKS);
 			//LOGGER.debug(String.format("--- selectedRow:%s, person:%s", selectedRow, onePerson));
 		}
+	}
+	
+	private String insertgetChosung(String name) {
+		char ch = name.charAt(0);
 		
+		String str = new String();
 		
+		str = hangleList[(ch-44032)/(21*28)];
 		
-		
-		
-		
-		
-		
+		return str;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(((JButton)e.getSource()).getText() == "추가") {
-			LOGGER.debug("추가");
-			if(	!(jTextField_Name.getText().equals("")) 
-					&& !(jTextField_Age.getText().equals("")) 
-					&& !(jTextField_Address.getText().equals(""))) {
-				
-				Vector oneData = new Vector();
-				AddressVo addressvo = new AddressVo();
-				addressvo.setName(jTextField_Name.getText());
+	void dataInsert() {
+		if(	!(jTextField_Name.getText().equals("")) 
+				&& !(jTextField_Age.getText().equals("")) 
+				&& !(jTextField_Address.getText().equals(""))) {
 			
-				addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
-				
-				oneData.add(jTable_Result.getRowCount()+1);
-				oneData.add(jTextField_Name.getText());
-				enums = Gender_Group.getElements();
-				
-				while(enums.hasMoreElements()) {
-					AbstractButton ab = enums.nextElement();
-					JRadioButton jb = (JRadioButton)ab;
-					
-					if(jb.isSelected()) {
-						LOGGER.debug(jb.getText());
-						try {
-							addressvo.setGender(Gender.toGender(jb.getText()));
-							oneData.add(Gender.toGender(jb.getText()));
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-				oneData.add(Integer.parseInt(jTextField_Age.getText()));
-
-				addressvo.setAddress(jTextField_Address.getText());
-				oneData.add(jTextField_Address.getText());
-				tableModel.addData(oneData);
-				tableModel.fireTableDataChanged();
-				jTextField_Num.setText("");
-				jTextField_Name.setText("");
-				jTextField_Age.setText("");
-				jTextField_Address.setText("");
-				Gender_Group.clearSelection();
-				try {
-					
-					addressbookInter.insertAddress(addressvo);
-					DBaddressbookInter.insertAddress(addressvo);
-				} catch (Exception ex) {
-					LOGGER.error(ex.getMessage(), ex);
-				}
-				JOptionPane.showMessageDialog(this, "추가 되었습니다.");
-
-			}else {
-				JOptionPane.showMessageDialog(this, "정보를 입력해주세요");
-			}
-		}
-		if(((JButton)e.getSource()).getText() == "삭제"){
+			String str = insertgetChosung(jTextField_Name.getText());
 			
-			try {
-				DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
-
-				addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
-				tableModel.removeData(jTable_Result.getSelectedRow());
-				tableModel.fireTableDataChanged();
-				JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
-				
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		
-		if(((JButton)e.getSource()).getText() == "수정") {
+			Vector oneData = new Vector();
 			AddressVo addressvo = new AddressVo();
 			addressvo.setName(jTextField_Name.getText());
+		
+			addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
+			
+			oneData.add(jTable_Result.getRowCount()+1);
+			oneData.add(jTextField_Name.getText());
 			enums = Gender_Group.getElements();
 			
 			while(enums.hasMoreElements()) {
@@ -454,29 +421,110 @@ public class TestPanel extends JPanel implements ActionListener{
 					LOGGER.debug(jb.getText());
 					try {
 						addressvo.setGender(Gender.toGender(jb.getText()));
-						tableModel.setValueAt(Gender.toGender(jb.getText()), jTable_Result.getSelectedRow(), TABLE_COLUMN_GENDER);
-
+						oneData.add(Gender.toGender(jb.getText()));
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
 			}
-			addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
-			addressvo.setAddress(jTextField_Address.getText());
-			try {
-				DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
-				addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
-				tableModel.setValueAt(jTextField_Name.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_NAME);
-				tableModel.setValueAt(jTextField_Age.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_AGE);
-				tableModel.setValueAt(jTextField_Address.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_ADDRESS);
-				tableModel.fireTableDataChanged();
-				JOptionPane.showMessageDialog(this, "수정 되었습니다.");
+			oneData.add(Integer.parseInt(jTextField_Age.getText()));
 
+			addressvo.setAddress(jTextField_Address.getText());
+			oneData.add(jTextField_Address.getText());
+			tableModel.addData(oneData);
+			tableModel.fireTableDataChanged();
+			jTextField_Num.setText("");
+			jTextField_Name.setText("");
+			jTextField_Age.setText("");
+			jTextField_Address.setText("");
+			Gender_Group.clearSelection();
+			try {
+				
+				addressbookInter.insertAddress(addressvo);
+				DBaddressbookInter.insertAddress(addressvo);
 			} catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
+			JOptionPane.showMessageDialog(this, "추가 되었습니다.");
+
+		}else {
+			JOptionPane.showMessageDialog(this, "정보를 입력해주세요");
 		}
+	
+	}
+	void dataDelete() {
+		try {
+			DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
+
+			addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
+			tableModel.removeData(jTable_Result.getSelectedRow());
+			tableModel.fireTableDataChanged();
+			JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
+			
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	void dataUpdate() {
+		AddressVo addressvo = new AddressVo();
+		addressvo.setName(jTextField_Name.getText());
+		enums = Gender_Group.getElements();
 		
+		while(enums.hasMoreElements()) {
+			AbstractButton ab = enums.nextElement();
+			JRadioButton jb = (JRadioButton)ab;
+			
+			if(jb.isSelected()) {
+				LOGGER.debug(jb.getText());
+				try {
+					addressvo.setGender(Gender.toGender(jb.getText()));
+					tableModel.setValueAt(Gender.toGender(jb.getText()), jTable_Result.getSelectedRow(), TABLE_COLUMN_GENDER);
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
+		addressvo.setAddress(jTextField_Address.getText());
+		try {
+			DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
+			addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
+			tableModel.setValueAt(jTextField_Name.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_NAME);
+			tableModel.setValueAt(jTextField_Age.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_AGE);
+			tableModel.setValueAt(jTextField_Address.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_ADDRESS);
+			tableModel.fireTableDataChanged();
+			JOptionPane.showMessageDialog(this, "수정 되었습니다.");
+
+		} catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
+}
+
+
+class Button_this_ActionListener implements ActionListener {
+	private TestPanel adaptee;
+	
+	public Button_this_ActionListener(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String event = e.getActionCommand();
+		
+		switch (event) {
+			case "추가": adaptee.dataInsert();
+				break;
+			case "삭제": adaptee.dataDelete();
+				break;
+			case "수정": adaptee.dataUpdate();
+				break;
+			default :
+				break;
+		}	
 	}
 }
 
