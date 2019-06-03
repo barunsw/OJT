@@ -341,7 +341,6 @@ public class TestPanel extends JPanel implements ActionListener{
 				
 				oneData.add(jTable_Result.getRowCount()+1);
 				oneData.add(jTextField_Name.getText());
-				oneData.add(Integer.parseInt(jTextField_Age.getText()));
 				enums = Gender_Group.getElements();
 				
 				while(enums.hasMoreElements()) {
@@ -358,6 +357,8 @@ public class TestPanel extends JPanel implements ActionListener{
 						}
 					}
 				}
+				oneData.add(Integer.parseInt(jTextField_Age.getText()));
+
 				addressvo.setAddress(jTextField_Address.getText());
 				oneData.add(jTextField_Address.getText());
 				tableModel.addData(oneData);
@@ -383,10 +384,11 @@ public class TestPanel extends JPanel implements ActionListener{
 		if(((JButton)e.getSource()).getText() == "삭제"){
 			
 			try {
+				DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
+
 				addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
 				tableModel.removeData(jTable_Result.getSelectedRow());
 				tableModel.fireTableDataChanged();
-				DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
 				JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
 				
 			} catch (Exception e1) {
@@ -418,6 +420,7 @@ public class TestPanel extends JPanel implements ActionListener{
 			addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
 			addressvo.setAddress(jTextField_Address.getText());
 			try {
+				DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
 				addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
 				tableModel.setValueAt(jTextField_Name.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_NAME);
 				tableModel.setValueAt(jTextField_Age.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_AGE);

@@ -12,11 +12,11 @@
  	</select>
  	
  	<delete id="delete_Address">
- 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{index}
+ 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{seq}
  	</delete>
  	
  	<update id="update_Address">
- 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, GENDER = #{gender}, AGE = #{age}, ADDRESS = #{address} where name = #{name}
+ 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, GENDER = #{gender}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
  	</update>
  	
  	<select id="select_Particular_Address" resultType="Map" parameterType="String">
