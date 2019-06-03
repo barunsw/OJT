@@ -45,8 +45,10 @@ public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
 	private final Dimension SIZE 	   = new Dimension(80, 35);
 	private final String[] PHONE_LOCAL = { "010", "011", "016", "017", "018", "019" };
-	private final char[] hangleList	   = { 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ',
-										 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
+	private final String[] hangleList	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
+										"ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",  
+										"ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
+	
 	private static int seq = 1;
 	
 	private int columnIdx = 0;
@@ -125,44 +127,6 @@ public class TestPanel extends JPanel {
 		initActionListener();
 		selectData();
 	}
-
-	private DefaultMutableTreeNode searchNode(String name) {
-		DefaultMutableTreeNode node    	   = null;
-		DefaultMutableTreeNode defaultNode = null;
-		// Iterator 대신 Enumeration 으로 사용 
-		Enumeration e = root.breadthFirstEnumeration();
-		while (e.hasMoreElements()) {
-			node = (DefaultMutableTreeNode) e.nextElement();
-			if (name.equals(node.getUserObject().toString())) {
-				return node;
-			}
-			
-			if(node.getUserObject().toString().equals("기타")) {
-				defaultNode = node;
-			}
-		}
-		return defaultNode;
-	}
-	
-	void insertTreeData(String nodeName) {	
-		String parentName 			  = getChosung(nodeName);
-		DefaultMutableTreeNode parent = searchNode(parentName);
-		DefaultMutableTreeNode node   = new DefaultMutableTreeNode(nodeName);
-		
-		treeModel.insertNodeInto(node, parent, parent.getChildCount());	
-		//LOGGER.debug(parent.getUserObject().toString() + "에 노드가 추가 되었습니다 : "
-		//		+ node.getUserObject().toString());
-	}
-	
-	void autoExpendTree(JTree tree, int index, int rowCount) {
-		for(int i = index; i < rowCount; i++) {
-			tree.expandRow(i);
-		}
-		
-		if(tree.getRowCount() != rowCount) {
-			autoExpendTree(tree, rowCount, tree.getRowCount());
-		}
-	}
 	
 	void insertData() {
 		Vector getData = getComponentData();
@@ -189,12 +153,18 @@ public class TestPanel extends JPanel {
 	void deleteData() {
 		try {
 		int row = jTable_Result.getSelectedRow();
-		int delseq = (int) jTable_Result.getValueAt(row, TABLE_COLUMN_REALSEQ);
-		AddressVo deleteData = new AddressVo();
-		deleteData.setSeq(delseq);
-	
-		addressBook.deleteAddress(deleteData);
-		selectData();
+		
+		if (row > -1) {
+				int delseq = (int) jTable_Result.getValueAt(row, TABLE_COLUMN_REALSEQ);
+				AddressVo deleteData = new AddressVo();
+				deleteData.setSeq(delseq);
+				LOGGER.debug("삭제할 seq : " + delseq);
+				addressBook.deleteAddress(deleteData);
+				selectData();
+				initText();
+			}else {
+				JOptionPane.showMessageDialog(this, "삭제할 데이터를 선택하세요", "Warn", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		catch (Exception ex) {
 			LOGGER.debug(ex.getMessage(), ex);
@@ -204,8 +174,8 @@ public class TestPanel extends JPanel {
 	void updateData() {
 		int row = jTable_Result.getSelectedRow();
 		try {
-			if(row > 0) {
-				Vector getData 		 = getComponentData();
+			Vector getData 		 = getComponentData();
+			if(row > -1 && getData != null) {
 				AddressVo updateData = new AddressVo();
 				
 				updateData.setName(getData.get(VO_COLUMN_NAME).toString());
@@ -220,7 +190,7 @@ public class TestPanel extends JPanel {
 				selectData();
 			}
 			else {
-				JOptionPane.showMessageDialog(this, "수정할 테이블을 선택하세요", "error", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "수정할 테이블을 선택 하세요", "error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		catch (Exception ex) {
@@ -253,8 +223,12 @@ public class TestPanel extends JPanel {
 					tableModel.fireTableDataChanged();
 					insertTreeData(address.getName());
 					autoExpendTree(jTree_Result, 0, jTree_Result.getRowCount());
-				}		
-				seq = seqnumber;
+				}	
+				
+				if (!addressList.isEmpty()) {
+					seq = addressList.get(addressList.size() - 1).getSeq();
+					seq++;
+				}
 			}
 			else { 
 				LOGGER.debug("데이터를 읽을 수 없습니다" + addressList);
@@ -266,8 +240,34 @@ public class TestPanel extends JPanel {
 	}
 	
 	void jTable_Result_mouseReleased(MouseEvent e) {
+		setComponentData();
+	}
+	
+	private void setComponentData() {
 		int row = jTable_Result.getSelectedRow();
-		// 데이터 읽어와서 패널에 값 자동 입력 구현 필요
+		try {
+			jTextField_Name.setText(jTable_Result.getValueAt(row, TABLE_COLUMN_NAME).toString());
+			jTextField_Age.setText(jTable_Result.getValueAt(row, TABLE_COLUMN_AGE).toString());
+			jTextArea_Adress.setText(jTable_Result.getValueAt(row, TABLE_COLUMN_ADDRESS).toString());
+
+			String gender = jTable_Result.getValueAt(row, TABLE_COLUMN_GENDER).toString();
+			if (gender.equals("남")) {
+				jRadioButton_Man.setSelected(true);
+			}
+			else {
+				jRadioButton_Woman.setSelected(true);
+
+			}
+			
+			String phone  = jTable_Result.getValueAt(row, TABLE_COLUMN_PHONE).toString();
+			String[] list = phone.split("-");
+			jComboBox_Phone_Pre.setSelectedItem(list[0]);
+			jTextField_Phone_Mid.setText(list[1]);
+			jTextField_Phone_Suf.setText(list[2]);
+		}
+		catch(Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
 		
 	}
 	
@@ -313,58 +313,58 @@ public class TestPanel extends JPanel {
 	private String getChosung(String name) {
 		char ch = name.charAt(0);
 		String chosung = new String();
-		// 초성만 추출해서 유니코드를 계산하는 식 이라고 함
-		int value = (ch - 44032) / (21 * 28);
-		switch (value) {
-		case 0 :
-		case 1 :
-			chosung = "ㄱ";
-			break;
-		case 2 :
-			chosung = "ㄴ";
-			break;
-		case 3 :
-		case 4 :
-			chosung = "ㄷ";
-			break;
-		case 5 :
-			chosung = "ㄹ";
-			break;
-		case 6 :
-			chosung = "ㅁ";
-			break;
-		case 7 :
-		case 8 :
-			chosung = "ㅂ";
-			break;
-		case 9 :
-		case 10 :
-			chosung = "ㅅ";
-			break;
-		case 11 :
-			chosung = "ㅇ";
-			break;
-		case 12 :
-		case 13 :
-			chosung = "ㅈ";
-			break;
-		case 14 :
-			chosung = "ㅊ";
-			break;
-		case 15 :
-			chosung = "ㅋ";
-			break;
-		case 16 :
-			chosung = "ㅌ";
-			break;
-		case 17 :
-			chosung = "ㅍ";
-			break;
-		case 18 :
-			chosung = "ㅎ";
-			break;
+	
+		// 초성: 글자의 코드에서 44032를 빼고, 21*28로 나눈 몫 0 ~ 18
+		// 중성: 글자의 코드에서 44032를 빼고, 21*28로 나눈 나머지를 다시 28로 나눈 몫 0 ~ 20
+		// 종성: 글자의 코드에서 44032를 빼고, 21*28로 나눈 나머지를 다시 28로 나눈 나머지 0 ~ 27
+		// https://linuxism.ustd.ip.or.kr/1451
+		
+		// 한글인지 확인 
+		if (ch < 0xAC00 || ch > 0xD7A3) {
+			return "기타";
 		}
+		
+		chosung = hangleList[(ch - 44032)/(21 * 28)];
 		return chosung;
+	}
+	
+
+	private DefaultMutableTreeNode searchNode(String name) {
+		DefaultMutableTreeNode node    	   = null;
+		DefaultMutableTreeNode defaultNode = null;
+		// Iterator 대신 Enumeration 으로 사용 
+		Enumeration e = root.breadthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) e.nextElement();
+			if (name.equals(node.getUserObject().toString())) {
+				return node;
+			}
+			
+			if(node.getUserObject().toString().equals("기타")) {
+				defaultNode = node;
+			}
+		}
+		return defaultNode;
+	}
+	
+	void insertTreeData(String nodeName) {	
+		String parentName 			  = getChosung(nodeName);
+		DefaultMutableTreeNode parent = searchNode(parentName);
+		DefaultMutableTreeNode node   = new DefaultMutableTreeNode(nodeName);
+		
+		treeModel.insertNodeInto(node, parent, parent.getChildCount());	
+		//LOGGER.debug(parent.getUserObject().toString() + "에 노드가 추가 되었습니다 : "
+		//		+ node.getUserObject().toString());
+	}
+	
+	void autoExpendTree(JTree tree, int index, int rowCount) {
+		for(int i = index; i < rowCount; i++) {
+			tree.expandRow(i);
+		}
+		
+		if(tree.getRowCount() != rowCount) {
+			autoExpendTree(tree, rowCount, tree.getRowCount());
+		}
 	}
 	
 	private void initText() {
@@ -385,8 +385,6 @@ public class TestPanel extends JPanel {
 		
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));
 		jTree_Result.addMouseListener(new TestPanel_JTree_Reuslt_MouseAdapter(this));
-		//addComponentListener(new TestPanel_this_AutoReSize(this));
-		//jTable_Result.addMouseListener(new TestPanel_this_Mouse_ActionListener(this));
 	}
 	
 	private void initTable() {
@@ -426,8 +424,8 @@ public class TestPanel extends JPanel {
 	private void initTree() {
 		DefaultMutableTreeNode child = null;
 		
-		for(char ch : hangleList) {
-			child = new DefaultMutableTreeNode(Character.toString(ch));
+		for(String indexName : hangleList) {
+			child = new DefaultMutableTreeNode(indexName);
 			root.add(child);
 		}
 		root.add(new DefaultMutableTreeNode("기타"));

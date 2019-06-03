@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 public class FileAddressBookImpl implements AddressBookInterface{
 	private static final Logger LOGGER = LogManager.getLogger(FileAddressBookImpl.class);
 	private final Path DEFAULT_DIR = Paths.get("data/gtkim/day10/");
-	private final String FILE_NAME = "Address.dat";
+	private final String FILE_NAME = "AddressBook.dat";
 	
 	private Path absolutePathDirectroy  = DEFAULT_DIR.toAbsolutePath();
 	private Path filePath 				= Paths.get(absolutePathDirectroy.toString(),
@@ -62,9 +63,7 @@ public class FileAddressBookImpl implements AddressBookInterface{
 			Object object;
 			while ((object = ois.readObject()) != null) {	
 				if (object instanceof AddressVo) {
-					LOGGER.debug("Object is : " + object);
 					AddressVo oneAddress = (AddressVo) object;
-					LOGGER.debug("Address is : " + oneAddress);
 					addressList.add(oneAddress);
 				}
 			}
@@ -103,8 +102,15 @@ public class FileAddressBookImpl implements AddressBookInterface{
 
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
-		int index = addressVo.getSeq();		
-		addressList.remove(index-1);
+		int index = addressVo.getSeq();
+		Iterator iter = addressList.iterator();
+		while(iter.hasNext()) {
+			AddressVo deleteVo = (AddressVo) iter.next(); 
+			if(deleteVo.getSeq() == index) {
+				iter.remove();
+			}
+		}
+		
 		int ret = writeObject();
 		
 		return ret;
@@ -134,5 +140,4 @@ public class FileAddressBookImpl implements AddressBookInterface{
 		}
 		return search;
 	}
-
 }
