@@ -43,6 +43,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			mapper = session.getMapper(AddressDao.class);
 			result = mapper.insertAddress(addressVo);
+			session.commit();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -56,6 +57,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			mapper = session.getMapper(AddressDao.class);
 			result = mapper.updateAddress(addressVo);
+			session.commit();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -69,6 +71,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			mapper = session.getMapper(AddressDao.class);
 			result = mapper.deleteAddress(addressVo);
+			session.commit();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);

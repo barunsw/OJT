@@ -93,8 +93,16 @@ public class FileAddressBookImpl implements AddressBookInterface{
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		int seq = addressVo.getSeq();
-		
-		addressList.set(seq, addressVo);
+		int index = -1;
+		Iterator iter = addressList.iterator();
+		while(iter.hasNext()) {
+			AddressVo deleteVo = (AddressVo) iter.next(); 
+			index++;
+			if(deleteVo.getSeq() == seq) {
+				break;
+			}
+		}
+		addressList.set(index, addressVo);
 		int ret = writeObject();
 		
 		return ret;
@@ -103,6 +111,7 @@ public class FileAddressBookImpl implements AddressBookInterface{
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		int index = addressVo.getSeq();
+		
 		Iterator iter = addressList.iterator();
 		while(iter.hasNext()) {
 			AddressVo deleteVo = (AddressVo) iter.next(); 

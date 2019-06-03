@@ -25,7 +25,7 @@
 
 	<delete id="deleteAddress" parameterType="Address">
 		DELETE FROM TB_ADDRESS
-		WHERE name=#{name} and gender=#{gender} and age=#{age} and phone=#{phone} and address=#{address}
+		WHERE SEQ=#{seq}
 	</delete>
 
 	<update id="createAddressTable">

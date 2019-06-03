@@ -183,7 +183,7 @@ public class TestPanel extends JPanel {
 				updateData.setAge(Integer.parseInt(getData.get(VO_COLUMN_AGE).toString()));
 				updateData.setPhone(getData.get(VO_COLUMN_PHONE).toString());
 				updateData.setAddress(getData.get(VO_COLUMN_ADDRESS).toString());
-				updateData.setSeq(row);
+				updateData.setSeq((int)(jTable_Result.getValueAt(row, TABLE_COLUMN_REALSEQ)));
 				
 				addressBook.updateAddress(updateData);
 				initText();
