@@ -13,9 +13,10 @@ public class DBAddressBookImpl implements AddressBookInterface {
 
 	private SqlSessionFactory sqlSessionFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 	private AddressDao mapper;
+	private SqlSession session;
 	
 	public DBAddressBookImpl() {
-		try (SqlSession session = sqlSessionFactory.openSession()){
+		try (SqlSession session = sqlSessionFactory.openSession()) {
 			mapper = session.getMapper(AddressDao.class);
 			mapper.createAddressTable();
 		}
@@ -27,7 +28,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public List<AddressVo> selectAddressList() throws Exception {
 		List<AddressVo> addressList = new ArrayList<>();
-		try (SqlSession session = sqlSessionFactory.openSession()){
+		try (SqlSession session = sqlSessionFactory.openSession()) {
 			mapper = session.getMapper(AddressDao.class);
 			addressList = mapper.selectAddressList();
 		}
@@ -40,13 +41,20 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int insertAddress(AddressVo addressVo) throws Exception {
 		int result = 0;
-		try (SqlSession session = sqlSessionFactory.openSession()){
-			mapper = session.getMapper(AddressDao.class);
-			result = mapper.insertAddress(addressVo);
+		try {
+			session = sqlSessionFactory.openSession();
+			mapper  = session.getMapper(AddressDao.class);
+			result  = mapper.insertAddress(addressVo);
 			session.commit();
 		}
 		catch (Exception ex) {
+			session.rollback();
 			LOGGER.error(ex.getMessage(), ex);
+		}
+		finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		return result;
 	}
@@ -54,13 +62,20 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		int result = 0;
-		try (SqlSession session = sqlSessionFactory.openSession()){
-			mapper = session.getMapper(AddressDao.class);
-			result = mapper.updateAddress(addressVo);
+		try {
+			session = sqlSessionFactory.openSession();
+			mapper  = session.getMapper(AddressDao.class);
+			result  = mapper.updateAddress(addressVo);
 			session.commit();
 		}
 		catch (Exception ex) {
+			session.rollback();
 			LOGGER.error(ex.getMessage(), ex);
+		}
+		finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		return result;
 	}
@@ -68,15 +83,21 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		int result = 0;
-		try (SqlSession session = sqlSessionFactory.openSession()){
-			mapper = session.getMapper(AddressDao.class);
-			result = mapper.deleteAddress(addressVo);
+		try {
+			session = sqlSessionFactory.openSession();
+			mapper  = session.getMapper(AddressDao.class);
+			result  = mapper.deleteAddress(addressVo);
 			session.commit();
 		}
 		catch (Exception ex) {
+			session.rollback();
 			LOGGER.error(ex.getMessage(), ex);
+		}
+		finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		return result;
 	}
-
 }

@@ -19,7 +19,8 @@ public class SqlSessionFactoryManager {
 		Reader reader = null;
 		try {
 			reader = Resources.getResourceAsReader(rsc);
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
 
