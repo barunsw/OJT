@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
@@ -24,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -292,6 +295,46 @@ public class TestPanel extends JPanel implements ActionListener{
 		jTable_Result.setAutoCreateRowSorter(true);
 
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));
+		jtree.addMouseListener(new TestPanel_jTree_MouseAdapter(this));
+	}
+	
+	void jTree_mouseReleased(MouseEvent e) {
+		JTree jtree = (JTree)e.getSource();
+		TreePath selectionPath = jtree.getSelectionPath();
+		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
+		Map<String,Object> map = new HashMap<String,Object>();
+		switch(selectedNode.toString()) {
+			case "ㄱ":
+				map.put("param",selectedNode.toString());
+				LOGGER.debug(selectedNode.toString()+"임");
+				break;
+			case "ㄴ":
+				map.put("param",selectedNode.toString());break;
+			case "ㄷ":
+				map.put("param",selectedNode.toString());break;
+			case "ㄹ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅁ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅂ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅅ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅇ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅈ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅋ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅌ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅍ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅎ":
+				map.put("param",selectedNode.toString());break;
+			default :
+				break;
+		}
 	}
 	void jTable_Result_mouseReleased(MouseEvent e) {
 		int selectedRow = jTable_Result.getSelectedRow();
@@ -446,6 +489,19 @@ class TestPanel_jTable_Result_MouseAdapter extends MouseAdapter {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		adaptee.jTable_Result_mouseReleased(e);
+	}
+}
+
+class TestPanel_jTree_MouseAdapter extends MouseAdapter{
+	private TestPanel adaptee;
+	
+	public TestPanel_jTree_MouseAdapter(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		adaptee.jTree_mouseReleased(e);
 	}
 }
 
