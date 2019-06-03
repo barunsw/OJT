@@ -1,14 +1,13 @@
 package com.barunsw.ojt.yjkim.day10;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.barunsw.ojt.yjkim.day10.AddressBookInterface;
-import com.barunsw.ojt.yjkim.day10.AddressVo;
 
 public class DBAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LogManager.getLogger(DBAddressBookImpl.class);
@@ -39,6 +38,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int updateAddress(int index, AddressVo addressVo) throws Exception {
 		try(SqlSession session = sqlSessionFactory.openSession()){
+			 addressVo.setSeq(index);
 			 count = session.update(namespace+".update_Address",addressVo);
 			 session.commit();
 			 return count;
@@ -51,7 +51,9 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	public int deleteAddress(int index) throws Exception {
 		// TODO Auto-generated method stub
 		try(SqlSession session = sqlSessionFactory.openSession()){
-			count = session.delete(namespace+".delete_Address", index);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("seq",index);
+			count = session.delete(namespace+".delete_Address", map);
 			session.commit();
 			return count;
 			

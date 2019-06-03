@@ -5,10 +5,19 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class AddressVo implements Serializable{
+	private int seq;
 	private String name;
 	private int age;
 	private Gender gender;
 	private String Address;
+	
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 	public String getName() {
 		return name;
 	}
