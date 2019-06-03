@@ -48,10 +48,10 @@ public class DBAddressBookImpl implements AddressBookInterface {
 
 
 	@Override
-	public int deleteAddress(int index, AddressVo addressVo) throws Exception {
+	public int deleteAddress(int index) throws Exception {
 		// TODO Auto-generated method stub
 		try(SqlSession session = sqlSessionFactory.openSession()){
-			count = session.delete(namespace+".delete_Address",addressVo);
+			count = session.delete(namespace+".delete_Address", index);
 			session.commit();
 			return count;
 			

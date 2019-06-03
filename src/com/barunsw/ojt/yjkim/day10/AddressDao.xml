@@ -12,7 +12,7 @@
  	</select>
  	
  	<delete id="delete_Address">
- 		DELETE FROM TB_ADDRESSBOOK WHERE NAME = #{name}
+ 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{index}
  	</delete>
  	
  	<update id="update_Address">

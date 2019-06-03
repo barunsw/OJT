@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -340,7 +339,7 @@ public class TestPanel extends JPanel implements ActionListener{
 			
 				addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
 				
-				oneData.add(++Person_Count);
+				oneData.add(jTable_Result.getRowCount()+1);
 				oneData.add(jTextField_Name.getText());
 				oneData.add(Integer.parseInt(jTextField_Age.getText()));
 				enums = Gender_Group.getElements();
@@ -384,11 +383,12 @@ public class TestPanel extends JPanel implements ActionListener{
 		if(((JButton)e.getSource()).getText() == "삭제"){
 			
 			try {
-				addressbookInter.deleteAddress(jTable_Result.getSelectedRow(),new AddressVo());
+				addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
 				tableModel.removeData(jTable_Result.getSelectedRow());
 				tableModel.fireTableDataChanged();
+				DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
 				JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
-
+				
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
