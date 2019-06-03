@@ -81,7 +81,7 @@ public class FileAddressBookImpl implements AddressBookInterface {
 	}
 
 	@Override
-	public int deleteAddress(int index, AddressVo addressVo) throws Exception {
+	public int deleteAddress(int index) throws Exception {
 		list.remove(index);
 		output();
 		
