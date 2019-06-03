@@ -126,9 +126,9 @@ public class FileAddressBookImpl implements AddressBookInterface{
 	}
 	
 	private int writeObject() {
-		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile)) ){
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile))) {
 			
-			for(AddressVo v : addressList) {
+			for (AddressVo v : addressList) {
 				oos.writeObject(v);
 			}
 			LOGGER.debug("파일에 입력되었습니다.");
