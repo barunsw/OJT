@@ -114,6 +114,10 @@ public class TestPanel extends JPanel {
 	public TestPanel() {
 		try {
 			initComponent();
+			initTable();
+			initTree();
+			
+			selectData();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -121,11 +125,8 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void initComponent() {		
-		initTable();
-		initTree();
 		initLayout();
 		initActionListener();
-		selectData();
 	}
 	
 	void insertData() {
@@ -152,9 +153,9 @@ public class TestPanel extends JPanel {
 	
 	void deleteData() {
 		try {
-		int row = jTable_Result.getSelectedRow();
-		
-		if (row > -1) {
+			int row = jTable_Result.getSelectedRow();
+			
+			if (row > -1) {
 				int delseq = (int) jTable_Result.getValueAt(row, TABLE_COLUMN_REALSEQ);
 				AddressVo deleteData = new AddressVo();
 				deleteData.setSeq(delseq);
@@ -162,7 +163,8 @@ public class TestPanel extends JPanel {
 				addressBook.deleteAddress(deleteData);
 				selectData();
 				initText();
-			}else {
+			}
+			else {
 				JOptionPane.showMessageDialog(this, "삭제할 데이터를 선택하세요", "Warn", JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -175,7 +177,7 @@ public class TestPanel extends JPanel {
 		int row = jTable_Result.getSelectedRow();
 		try {
 			Vector getData 		 = getComponentData();
-			if(row > -1 && getData != null) {
+			if (row >= 0 && getData != null) {
 				AddressVo updateData = new AddressVo();
 				
 				updateData.setName(getData.get(VO_COLUMN_NAME).toString());
@@ -220,10 +222,12 @@ public class TestPanel extends JPanel {
 					
 					LOGGER.debug("rowdata : " + rowdata);
 					tableModel.addData(rowdata);
-					tableModel.fireTableDataChanged();
+
 					insertTreeData(address.getName());
 					autoExpendTree(jTree_Result, 0, jTree_Result.getRowCount());
 				}	
+
+				tableModel.fireTableDataChanged();
 				
 				if (!addressList.isEmpty()) {
 					seq = addressList.get(addressList.size() - 1).getSeq();
@@ -405,6 +409,15 @@ public class TestPanel extends JPanel {
 		jTable_Result.getColumn("이름").setMaxWidth(150);
 		jTable_Result.getColumn("성별").setMaxWidth(60);
 		jTable_Result.getColumn("나이").setMaxWidth(60);
+		
+		int columnCount = jTable_Result.getColumnCount();
+		for (int i = 0; i < columnCount; i++) {
+			TableColumn oneColumn = jTable_Result.getColumnModel().getColumn(i);
+			
+			if (i == TABLE_COLUMN_SEQ) {
+				oneColumn.setMaxWidth(40);
+			}
+		}
 		
 		
 		jTable_Result.setCellEditor(jTable_Result.getDefaultEditor(Boolean.class));

@@ -245,8 +245,8 @@ public class TestPanel extends JPanel implements ActionListener{
 						GridBagConstraints.EAST,GridBagConstraints.VERTICAL,
 						new Insets(0, 0, 5, 5),
 						0, 0));
-	
 	}
+	
 	private void initData() {
 		try {
 			List<AddressVo> list = addressbookInter.selectAddressList();
@@ -336,6 +336,7 @@ public class TestPanel extends JPanel implements ActionListener{
 				break;
 		}
 	}
+	
 	void jTable_Result_mouseReleased(MouseEvent e) {
 		int selectedRow = jTable_Result.getSelectedRow();
 		if (selectedRow >= 0) {
