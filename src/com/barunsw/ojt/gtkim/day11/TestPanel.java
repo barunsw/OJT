@@ -109,19 +109,17 @@ public class TestPanel extends JPanel {
 	
 	void jButton_Click_actionPerformed(ActionEvent e) {
 		LOGGER.debug("버튼클릭 메소드 시작");
-		
+		LOGGER.debug(String.format("현재 activeCount : %d ", Thread.activeCount()));;
 		//LOGGER.debug(String.format("ProgressDialog 생성 전 activeCount : %d ", Thread.activeCount()));;		
 		progressDialog = new ProgressDialog(null);
 		progressDialog.setVisible(true);
 		//LOGGER.debug(String.format("ProgressDialog 생성 후 activeCount : %d ", Thread.activeCount()));;
-	
 		
 		SwingWorker worker = new SwingWorker() {
 			@Override
 			protected Object doInBackground() throws Exception {
 				// doSomething의 내용이 여기에 기술
 				LOGGER.debug("+++ doSomething");
-				LOGGER.debug(String.format("ProgressDialog 생성 전 activeCount : %d ", Thread.activeCount()));
 				
 				for (int i = 0; i < 2; i++) {
 					try {
@@ -144,12 +142,9 @@ public class TestPanel extends JPanel {
 				super.done();
 				
 				if (progressDialog != null) {
-					progressDialog.setVisible(false);
 					progressDialog.dispose();
 				}
 				LOGGER.debug("Done! 호출됨");
-				super.cancel(true);		
-				LOGGER.debug(super.isDone());
 			}
 		};
 					
@@ -191,7 +186,7 @@ public class TestPanel extends JPanel {
 */
 		//LOGGER.debug(String.format("activeCount : %d ", Thread.activeCount()));
 		
-
+/*
 		if (SwingUtilities.isEventDispatchThread()) {
 			LOGGER.debug("this is dispatchThread");
 		} 
