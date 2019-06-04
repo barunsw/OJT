@@ -27,7 +27,6 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 
 	private void connect(String host, int port) {
 		try {
-			
 			clientSocket = new Socket(host, port);
 			LOGGER.debug("새로운 연결을 생성합니다");
 
@@ -49,12 +48,9 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 			objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
 			SocketCommandVo selectVo = new SocketCommandVo();
-			AddressVo select = new AddressVo();
 			selectVo.setCmdType(CmdType.SELECT);
-			selectVo.setAddressVo(select);
 
 			objectOutputStream.writeObject(selectVo);
-			LOGGER.debug("select Obj" + select);
 			objectOutputStream.flush();
 
 			objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
@@ -63,14 +59,15 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 			while ((readObject = objectInputStream.readObject()) != null) {
 				if (readObject instanceof AddressVo) {
 					addressList.add((AddressVo) readObject);
-					LOGGER.debug(readObject);
 				}
 			}
-
+	
 			close(clientSocket, objectOutputStream, objectInputStream);
 			return addressList;
 		}
 		catch (EOFException eofe) {
+			LOGGER.debug("Select 결과 수신");
+			close(clientSocket, objectOutputStream, objectInputStream);
 			return addressList;
 		}
 	}
@@ -89,8 +86,10 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectOutputStream.writeObject(insertVo);
 		objectOutputStream.flush();
 		
+		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+		
 		int result = objectInputStream.read();
-
+		LOGGER.debug("Insert 결과 수신" + result);
 		close(clientSocket, objectOutputStream, objectInputStream);
 		return result;
 	}
@@ -109,8 +108,12 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectOutputStream.writeObject(updateVo);
 		objectOutputStream.flush();
 		
-		int result = objectInputStream.read();
+		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		
+		int result = objectInputStream.read();
+		LOGGER.debug("Update 결과 수신" + result);
+		
+		close(clientSocket, objectOutputStream, objectInputStream);	
 		return result;
 	}
 
@@ -128,8 +131,11 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectOutputStream.writeObject(deleteVo);
 		objectOutputStream.flush();
 
+		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+		
 		int result = objectInputStream.read();
-
+		LOGGER.debug("Delete 결과 수신" + result);
+		
 		close(clientSocket, objectOutputStream, objectInputStream);
 		return result;
 	}

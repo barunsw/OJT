@@ -26,7 +26,7 @@ public class ClientSocketHandlerByObject extends Thread {
 	public ClientSocketHandlerByObject(Socket clientSocket) throws Exception{
 		this.clientSocket = clientSocket;
 //		LOGGER.debug("소켓 초기화");
-		this.objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+//		this.objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 //		this.objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 //		LOGGER.debug("io스트림 초기화");
 	}
@@ -35,21 +35,21 @@ public class ClientSocketHandlerByObject extends Thread {
 	public void run() {
 		try {
 			Object readObject = null;
+			objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 			
-			while (!clientSocket.isClosed()) {
+//			while (!clientSocket.isClosed()) {		
 				readObject = objectInputStream.readObject();
-			
 				LOGGER.debug("[Server] readLine : " + readObject);
 
 				SocketCommandVo oneVo = null;
 				if (readObject instanceof SocketCommandVo) {
 					oneVo = (SocketCommandVo) readObject;
-					int result = handleObject(oneVo);
+					handleObject(oneVo);
 				}
 				else {			
 					LOGGER.debug("SocketCommandVo가 아닙니다");
 				}
-			}
+//			}
 		}
 		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
@@ -75,7 +75,7 @@ public class ClientSocketHandlerByObject extends Thread {
 		}
 	}
 	
-	private int handleObject(SocketCommandVo oneVo) {
+	private void handleObject(SocketCommandVo oneVo) {
 		int returnValue = 0;
 		
 		try {
@@ -84,6 +84,7 @@ public class ClientSocketHandlerByObject extends Thread {
 			
 			CmdType cmd = oneVo.getCmdType();		
 			AddressVo oneAddress = oneVo.getAddressVo();
+			
 			if (cmd.equals(CmdType.SELECT)) {
 				addressList = dbConn.selectAddressList();
 				sendData(addressList, oos);
@@ -108,7 +109,6 @@ public class ClientSocketHandlerByObject extends Thread {
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
-		return returnValue;
 	}
 	
 	private void sendData(List<AddressVo> addressList, ObjectOutputStream oos) {
