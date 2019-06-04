@@ -1,4 +1,4 @@
-package com.barunsw.ojt.yjkim.day10;
+package com.barunsw.ojt.yjkim.day12;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -85,14 +85,14 @@ public class TestPanel extends JPanel {
 	private JButton jButton_Cancle 	= new JButton("삭제");
 	private JButton jButton_Update 	= new JButton("수정");
 	
-	private AddressBookInterface addressbookInter	 =  new FileAddressBookImpl();
-	private AddressBookInterface DBaddressbookInter  = new DBAddressBookImpl();
+//	private AddressBookInterface addressbookInter	 =  new FileAddressBookImpl();
+	//private AddressBookInterface DBaddressbookInter  = new DBAddressBookImpl();
 	private String selected_Name ="";
 	private int selectedRow = 9999999;
 	
-	private final String[] hangleList	   = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", 
+	private final String[] hangleList2	   = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", 
 			"ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
-	private final String[] hangleList2	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
+	private final String[] hangleList	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
 			"ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",  
 			"ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
 	
@@ -238,7 +238,7 @@ public class TestPanel extends JPanel {
 	
 	private void initData() {
 		try {
-			List<AddressVo> list = addressbookInter.selectAddressList();
+			/*List<AddressVo> list = addressbookInter.selectAddressList();
 			LOGGER.debug(list.size());
 			for(int i = 0; i < list.size(); i++) {
 				Vector OneData = new Vector();
@@ -248,6 +248,21 @@ public class TestPanel extends JPanel {
 				OneData.add(list.get(i).getGender());
 				OneData.add(list.get(i).getAge());
 				OneData.add(list.get(i).getAddress());
+				tableModel.addData(OneData);
+				//LOGGER.debug(list.get(i).getName());
+			}*/
+			ClientMain client = new ClientMain();
+			List<AddressVo> selectList = client.addressBookIf.selectAddressList();
+
+			tableModel.setNumRows(0);
+			for(int i = 0; i < selectList.size(); i++) {
+				Vector OneData = new Vector();
+
+				OneData.add(selectList.get(i).getSeq());
+				OneData.add(selectList.get(i).getName());
+				OneData.add(selectList.get(i).getGender());
+				OneData.add(selectList.get(i).getAge());
+				OneData.add(selectList.get(i).getAddress());
 				tableModel.addData(OneData);
 				//LOGGER.debug(list.get(i).getName());
 			}
@@ -295,9 +310,13 @@ public class TestPanel extends JPanel {
 		switch(selectedNode.toString()) {
 			case "ㄱ":
 				map.put("param",selectedNode.toString());break;
+			case "ㄲ":
+				map.put("param",selectedNode.toString());break;
 			case "ㄴ":
 				map.put("param",selectedNode.toString());break;
 			case "ㄷ":
+				map.put("param",selectedNode.toString());break;
+			case "ㄸ":
 				map.put("param",selectedNode.toString());break;
 			case "ㄹ":
 				map.put("param",selectedNode.toString());break;
@@ -305,11 +324,17 @@ public class TestPanel extends JPanel {
 				map.put("param",selectedNode.toString());break;
 			case "ㅂ":
 				map.put("param",selectedNode.toString());break;
+			case "ㅃ":
+				map.put("param",selectedNode.toString());break;
 			case "ㅅ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅆ":
 				map.put("param",selectedNode.toString());break;
 			case "ㅇ":
 				map.put("param",selectedNode.toString());break;
 			case "ㅈ":
+				map.put("param",selectedNode.toString());break;
+			case "ㅉ":
 				map.put("param",selectedNode.toString());break;
 			case "ㅋ":
 				map.put("param",selectedNode.toString());break;
@@ -323,7 +348,7 @@ public class TestPanel extends JPanel {
 				break;	
 		}
 		try {
-			List<AddressVo> list = DBaddressbookInter.selectParticularAddress(map);
+			/*List<AddressVo> list = DBaddressbookInter.selectParticularAddress(map);
 			LOGGER.debug(list.size()+"리스트 사이즈");
 			tableModel.setNumRows(0);
 		
@@ -336,7 +361,7 @@ public class TestPanel extends JPanel {
 				oneData.add(list.get(i).getAge());
 				oneData.add(list.get(i).getAddress());
 				tableModel.addData(oneData);
-			}
+			}*/
 			tableModel.fireTableDataChanged();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -430,9 +455,13 @@ public class TestPanel extends JPanel {
 			jTextField_Address.setText("");
 			Gender_Group.clearSelection();
 			try {
-				
-				addressbookInter.insertAddress(addressvo);
-				DBaddressbookInter.insertAddress(addressvo);
+				ClientMain client = new ClientMain();
+				client.addressBookIf.insertAddress(addressvo);
+				initData();
+				//ClientMain.addressBookIf = new  SocketAddressBookImpl("localhost", 50000);
+				//ClientMain.addressBookIf.insertAddress(addressvo);
+				//addressbookInter.insertAddress(addressvo);
+				//DBaddressbookInter.insertAddress(addressvo);
 			} catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
@@ -445,9 +474,14 @@ public class TestPanel extends JPanel {
 	}
 	void dataDelete() {
 		try {
-			DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
+			AddressVo addressVo = new AddressVo();
+			addressVo.setSeq(Integer.parseInt(tableModel.getValueAt(jTable_Result.getSelectedRow(), TABLE_COLUMN_SEQ).toString()));
+			ClientMain client = new ClientMain();
+			client.addressBookIf.deleteAddress(addressVo);
+			
+			//DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
 
-			addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
+			//addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
 			tableModel.removeData(jTable_Result.getSelectedRow());
 			tableModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
@@ -459,6 +493,7 @@ public class TestPanel extends JPanel {
 	}
 	void dataUpdate() {
 		AddressVo addressvo = new AddressVo();
+		addressvo.setSeq(Integer.parseInt(tableModel.getValueAt(jTable_Result.getSelectedRow(), TABLE_COLUMN_SEQ).toString()));
 		addressvo.setName(jTextField_Name.getText());
 		enums = Gender_Group.getElements();
 		
@@ -471,7 +506,7 @@ public class TestPanel extends JPanel {
 				try {
 					addressvo.setGender(Gender.toGender(jb.getText()));
 					tableModel.setValueAt(Gender.toGender(jb.getText()), jTable_Result.getSelectedRow(), TABLE_COLUMN_GENDER);
-
+					
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -480,8 +515,11 @@ public class TestPanel extends JPanel {
 		addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
 		addressvo.setAddress(jTextField_Address.getText());
 		try {
-			DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
-			addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
+			ClientMain client = new ClientMain();
+			client.addressBookIf.updateAddress(addressvo);
+
+			//DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
+			//addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
 			tableModel.setValueAt(jTextField_Name.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_NAME);
 			tableModel.setValueAt(jTextField_Age.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_AGE);
 			tableModel.setValueAt(jTextField_Address.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_ADDRESS);

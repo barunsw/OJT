@@ -17,7 +17,6 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	private String namespace = "com.barunsw.ojt.yjkim.day10.AddressDao";
 	@Override
 	public List<AddressVo> selectAddressList() throws Exception {
-		List<AddressVo> list;
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			return session.selectList(namespace+".select_Address");
 		}
