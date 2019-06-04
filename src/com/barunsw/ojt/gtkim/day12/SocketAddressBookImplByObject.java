@@ -89,7 +89,7 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		
 		int result = objectInputStream.read();
-		LOGGER.debug("Insert 결과 수신" + result);
+	
 		close(clientSocket, objectOutputStream, objectInputStream);
 		return result;
 	}
@@ -111,8 +111,7 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		
 		int result = objectInputStream.read();
-		LOGGER.debug("Update 결과 수신" + result);
-		
+	
 		close(clientSocket, objectOutputStream, objectInputStream);	
 		return result;
 	}
@@ -134,7 +133,6 @@ public class SocketAddressBookImplByObject implements AddressBookInterface {
 		objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		
 		int result = objectInputStream.read();
-		LOGGER.debug("Delete 결과 수신" + result);
 		
 		close(clientSocket, objectOutputStream, objectInputStream);
 		return result;

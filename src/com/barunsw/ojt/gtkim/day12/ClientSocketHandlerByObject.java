@@ -38,17 +38,17 @@ public class ClientSocketHandlerByObject extends Thread {
 			objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 			
 //			while (!clientSocket.isClosed()) {		
-				readObject = objectInputStream.readObject();
-				LOGGER.debug("[Server] readLine : " + readObject);
+			readObject = objectInputStream.readObject();
+			LOGGER.debug("[Server] readLine : " + readObject);
 
-				SocketCommandVo oneVo = null;
-				if (readObject instanceof SocketCommandVo) {
-					oneVo = (SocketCommandVo) readObject;
-					handleObject(oneVo);
-				}
-				else {			
-					LOGGER.debug("SocketCommandVo가 아닙니다");
-				}
+			SocketCommandVo oneVo = null;
+			if (readObject instanceof SocketCommandVo) {
+				oneVo = (SocketCommandVo) readObject;
+				handleObject(oneVo);
+			} 
+			else {
+				LOGGER.debug("SocketCommandVo가 아닙니다");
+			}
 //			}
 		}
 		catch (IOException ioe) {
