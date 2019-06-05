@@ -40,6 +40,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.gtkim.day13.SocketAddressBookImplObj;
+import com.barunsw.ojt.gtkim.day13.SocketAddressBookImplString;
+import com.barunsw.ojt.gtkim.day13.DatagramServerMain;
+import com.barunsw.ojt.gtkim.day13.DatagramSocketAddressBookImpl;
+import com.barunsw.ojt.gtkim.day13.DatagramSocketAddressBookImplObj;
+import com.barunsw.ojt.gtkim.day13.ServerMain;
 
 public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -109,9 +115,19 @@ public class TestPanel extends JPanel {
 	
 	private DefaultTreeCellRenderer tree_cellRenderer = new DefaultTreeCellRenderer();
 	
-	private AddressBookInterface addressBook = new SocketAddressBookImplByObject("localhost", ServerMain.PORT);;
+	private AddressBookInterface addressBook ;
 	
 	public TestPanel() {
+		try {
+			addressBook = new DatagramSocketAddressBookImplObj("localhost", DatagramServerMain.PORT);
+//			addressBook = new DatagramSocketAddressBookImpl("localhost", DatagramServerMain.PORT);
+			//addressBook = new SocketAddressBookImplString("localhost", ServerMain.PORT);
+			//addressBook = new SocketAddressBookImplObject("localhost", ServerMain.PORT);
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
 		try {
 			initComponent();
 			initTable();
@@ -408,7 +424,7 @@ public class TestPanel extends JPanel {
 		jTextArea_Adress.setText("");
 	}
 	
-	synchronized void selectData() {
+	void selectData() {
 		List<AddressVo> addressList = new ArrayList<>();
 
 		try {

@@ -18,7 +18,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	public DBAddressBookImpl() {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			mapper = session.getMapper(AddressDao.class);
-		//	mapper.createAddressTable();
+			mapper.createAddressTable();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
