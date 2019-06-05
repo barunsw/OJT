@@ -20,19 +20,15 @@ public class ClientSocketHandlerByObject extends Thread {
 	
 	public ClientSocketHandlerByObject(Socket clientSocket) throws Exception{
 		this.clientSocket = clientSocket;
-//		SocketChannel sc = clientSocket.getChannel();
-//		LOGGER.debug("소켓 초기화");
 		this.objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 		this.objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-		//		LOGGER.debug("io스트림 초기화");
 	}
 	
 	@Override 
 	public void run() {
 		try {
 			Object readObject = null;
-			//objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-			
+		
 //			while (!clientSocket.isClosed()) {		
 			readObject = objectInputStream.readObject();
 			LOGGER.debug("[Server] readLine : " + readObject);
