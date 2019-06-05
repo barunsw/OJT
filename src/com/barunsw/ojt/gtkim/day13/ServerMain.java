@@ -1,4 +1,4 @@
-package com.barunsw.ojt.gtkim.day12;
+package com.barunsw.ojt.gtkim.day13;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,6 +13,7 @@ public class ServerMain {
 	public static final int PORT = 9998;
 	
 	private boolean runFlag;
+	
 	private void start() {
 		LOGGER.debug("ServerMain Started");
 	
@@ -23,8 +24,8 @@ public class ServerMain {
 			while (runFlag) {
 				socket = serverSocket.accept();
 				
-				//ClientSocketHandlerByString handler = new ClientSocketHandlerByString(socket);
-				ClientSocketHandlerByObject handler = new ClientSocketHandlerByObject(socket);
+				//ClientSocketHandlerObj handler = new ClientSocketHandlerObj(socket);
+				ClientSocketHandlerString handler = new ClientSocketHandlerString(socket);
 				
 				handler.start();
 				

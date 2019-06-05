@@ -9,6 +9,10 @@ import com.barunsw.ojt.constants.Gender;
 
 
 public class AddressVo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5214869031497732676L;
 	private String name;
 	private Gender gender;
 	private int age;
