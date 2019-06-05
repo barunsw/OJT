@@ -1,4 +1,4 @@
-package com.barunsw.ojt.yjkim.day12;
+package com.barunsw.ojt.yjkim.day13;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -94,14 +94,15 @@ public class TestPanel extends JPanel {
 	private final String[] hangleList	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
 			"ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",  
 			"ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
+	private ClientMain clientMain = new ClientMain();
 	
 	Enumeration<AbstractButton> enums;
 	public TestPanel() {
 		try {
 			initComponent();
 			initTable();
-			initData();
 			initButtonEvent();
+			initData();
 
 		}
 		catch (Exception ex) {
@@ -110,6 +111,8 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void initComponent() throws Exception {
+		
+		
 		this.setLayout(gridBagLayout);
 		Gender_Group.add(jRadioButton_Man);
 		Gender_Group.add(jRadioButton_Woman);
@@ -250,20 +253,22 @@ public class TestPanel extends JPanel {
 				tableModel.addData(OneData);
 				//LOGGER.debug(list.get(i).getName());
 			}*/
-			ClientMain client = new ClientMain();
-			List<AddressVo> selectList = client.addressBookIf.selectAddressList();
-
-			tableModel.setNumRows(0);
-			for(int i = 0; i < selectList.size(); i++) {
-				Vector OneData = new Vector();
-
-				OneData.add(selectList.get(i).getSeq());
-				OneData.add(selectList.get(i).getName());
-				OneData.add(selectList.get(i).getGender());
-				OneData.add(selectList.get(i).getAge());
-				OneData.add(selectList.get(i).getAddress());
-				tableModel.addData(OneData);
-				//LOGGER.debug(list.get(i).getName());
+			
+			List<AddressVo> selectList = clientMain.addressBookIf.selectAddressList();
+			if (selectList.size() > 0) {
+				LOGGER.debug("selectSize " + selectList.size());
+				tableModel.setNumRows(0);
+				for(int i = 0; i < selectList.size(); i++) {
+					Vector OneData = new Vector();
+	
+					OneData.add(selectList.get(i).getSeq());
+					OneData.add(selectList.get(i).getName());
+					OneData.add(selectList.get(i).getGender());
+					OneData.add(selectList.get(i).getAge());
+					OneData.add(selectList.get(i).getAddress());
+					tableModel.addData(OneData);
+					//LOGGER.debug(list.get(i).getName());
+				}
 			}
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -454,13 +459,7 @@ public class TestPanel extends JPanel {
 			jTextField_Address.setText("");
 			Gender_Group.clearSelection();
 			try {
-				ClientMain client = new ClientMain();
-				client.addressBookIf.insertAddress(addressvo);
-				initData();
-				//ClientMain.addressBookIf = new  SocketAddressBookImpl("localhost", 50000);
-				//ClientMain.addressBookIf.insertAddress(addressvo);
-				//addressbookInter.insertAddress(addressvo);
-				//DBaddressbookInter.insertAddress(addressvo);
+				clientMain.addressBookIf.insertAddress(addressvo);
 			} catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
@@ -475,18 +474,14 @@ public class TestPanel extends JPanel {
 		try {
 			AddressVo addressVo = new AddressVo();
 			addressVo.setSeq(Integer.parseInt(tableModel.getValueAt(jTable_Result.getSelectedRow(), TABLE_COLUMN_SEQ).toString()));
-			ClientMain client = new ClientMain();
-			client.addressBookIf.deleteAddress(addressVo);
 			
-			//DBaddressbookInter.deleteAddress(jTable_Result.getSelectedRow()+1);
+			clientMain.addressBookIf.deleteAddress(addressVo);
 
-			//addressbookInter.deleteAddress(jTable_Result.getSelectedRow());
 			tableModel.removeData(jTable_Result.getSelectedRow());
 			tableModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(this, "삭제 되었습니다.");
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -514,11 +509,7 @@ public class TestPanel extends JPanel {
 		addressvo.setAge(Integer.parseInt(jTextField_Age.getText()));
 		addressvo.setAddress(jTextField_Address.getText());
 		try {
-			ClientMain client = new ClientMain();
-			client.addressBookIf.updateAddress(addressvo);
-
-			//DBaddressbookInter.updateAddress(jTable_Result.getSelectedRow()+1, addressvo);
-			//addressbookInter.updateAddress(jTable_Result.getSelectedRow(), addressvo);
+			clientMain.addressBookIf.updateAddress(addressvo);
 			tableModel.setValueAt(jTextField_Name.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_NAME);
 			tableModel.setValueAt(jTextField_Age.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_AGE);
 			tableModel.setValueAt(jTextField_Address.getText(), jTable_Result.getSelectedRow(), TABLE_COLUMN_ADDRESS);

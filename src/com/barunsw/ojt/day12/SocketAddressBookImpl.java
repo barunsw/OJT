@@ -27,7 +27,7 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 	
 	@Override
 	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception {
-		String command = String.format("SELECT");
+		String command = String.format("SELECT\n");
 
 		writer.write(command);
 		writer.flush();
@@ -68,7 +68,7 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
-		String command = String.format("UPDATE:NAME=%s,AGE=%s", 
+		String command = String.format("UPDATE:NAME=%s,AGE=%s\n", 
 				addressVo.getName(), addressVo.getAge());
 
 		writer.write(command);
@@ -79,7 +79,7 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
-		String command = String.format("DELETE:NAME=%s,AGE=%s", 
+		String command = String.format("DELETE:NAME=%s,AGE=%s\n", 
 				addressVo.getName(), addressVo.getAge());
 
 		writer.write(command);
