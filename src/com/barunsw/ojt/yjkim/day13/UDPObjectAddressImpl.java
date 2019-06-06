@@ -21,72 +21,145 @@ public class UDPObjectAddressImpl implements AddressBookInterface{
 	private int port;
 	private String host;
 	private ByteArrayOutputStream byteOutputStream;
-	private ObjectOutputStream objectOutputstream;
+	//private ObjectOutputStream objectOutputstream;
 	private ObjectInputStream objectInputstream;
 	private byte[] receiveMsg = new byte[50000];
+	private DatagramPacket datagramPacket;
+	private InetAddress inetAddress;
 	
 	public UDPObjectAddressImpl(String host, int port) throws SocketException {
 		LOGGER.debug("+++ UPDObjectAddressImpl");
 		this.host = host;
 		this.port = port;
 		clientSocket = new DatagramSocket(port);
-		LOGGER.debug("--- UPDObjectAddressImpl");
 		this.byteOutputStream = new ByteArrayOutputStream();
-		try {
-			this.objectOutputstream =
-					new ObjectOutputStream(byteOutputStream);
-		} catch (IOException ioe) {
-			LOGGER.error(ioe.getMessage(), ioe);
-		}
 		
-		Thread inputThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					objectInputstream = 
-							new ObjectInputStream(new ByteArrayInputStream(receiveMsg));
-				} catch (Exception ex) {
-					LOGGER.error(ex.getMessage(), ex);
-				}
-			}
-		});
-		inputThread.start();
-		try {
-			inputThread.join();
-		} catch (InterruptedException ie) {
-			LOGGER.error(ie.getMessage(), ie);
-		}
+		LOGGER.debug("--- UPDObjectAddressImpl");
 	}
 	
 	@Override
 	public List<AddressVo> selectAddressList() throws Exception {
+		LOGGER.debug("+++ UDPObjectselectAddressList");
 		List<AddressVo> list = new ArrayList<AddressVo>();
-        InetAddress ia = InetAddress.getByName(host);
+        inetAddress = InetAddress.getByName(host);
 
 		SocketCommandVo vo = new SocketCommandVo();
 		vo.setCmdType(CmdType.SELECT);
-		objectOutputstream.writeObject(vo);
-		objectOutputstream.flush();
-		
-		byte[] SendMsg = byteOutputStream.toByteArray();
-		DatagramPacket dp = new DatagramPacket(SendMsg, SendMsg.length, ia, 50000);
+		try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(); 
+				ObjectOutputStream objectOutputstream = new ObjectOutputStream(byteOutputStream)){
+			objectOutputstream.writeObject(vo);
+			objectOutputstream.flush();
+			byte[] impleSend = byteOutputStream.toByteArray();
+			DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+			clientSocket.send(dp);
+		} 
+		byte[] impleSend = byteOutputStream.toByteArray();
+		DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
 		clientSocket.send(dp);
 		
-		return null;
+		
+		
+		byte[] bf = new byte[50000];
+		datagramPacket = new DatagramPacket(bf,bf.length);
+		clientSocket.receive(datagramPacket);
+		ByteArrayInputStream byteArrayInputStrearm = new ByteArrayInputStream(bf);
+		ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStrearm);
+		Object o = null;
+		SocketCommandVo socketCommandvo = new SocketCommandVo();
+		
+		try {
+			o = objectInputStream.readObject();
+			if(o instanceof List) {
+				list = (List)o;
+			}
+			LOGGER.debug(list);
+		} catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		} finally {
+			if(objectInputStream != null) {
+				objectInputStream.close();
+			}
+		}
+		LOGGER.debug("--- UDPObjectselectAddressList");
+
+		return list;
+		
 	}
 
 	@Override
 	public int insertAddress(AddressVo addressVo) throws Exception {
+		LOGGER.debug("+++ UDPObjectinsertAddress");
+
+		inetAddress = InetAddress.getByName(host);
+
+		SocketCommandVo vo = new SocketCommandVo();
+		vo.setCmdType(CmdType.INSERT);
+		vo.setAddressVo(addressVo);
+		LOGGER.debug(vo.getAddressVo());
+		try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(); 
+				ObjectOutputStream objectOutputstream = new ObjectOutputStream(byteOutputStream)){
+			objectOutputstream.writeObject(vo);
+			objectOutputstream.flush();
+			byte[] impleSend = byteOutputStream.toByteArray();
+			DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+			clientSocket.send(dp);
+		} 
+		
+	
+		LOGGER.debug("--- UDPObjectinsertAddress");
+
 		return 0;
 	}
 
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
+		LOGGER.debug("+++ UDPObjectupdateAddress");
+
+		inetAddress = InetAddress.getByName(host);
+
+		SocketCommandVo vo = new SocketCommandVo();
+		vo.setCmdType(CmdType.UPDATE);
+		vo.setAddressVo(addressVo);
+		try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(); 
+				ObjectOutputStream objectOutputstream = new ObjectOutputStream(byteOutputStream)){
+			objectOutputstream.writeObject(vo);
+			objectOutputstream.flush();
+			byte[] impleSend = byteOutputStream.toByteArray();
+			DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+			clientSocket.send(dp);
+		} 
+		
+		byte[] impleSend = byteOutputStream.toByteArray();
+		DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+		clientSocket.send(dp);
+		LOGGER.debug("--- UDPObjectinsertAddress");
+
 		return 0;
 	}
 
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
+		LOGGER.debug("+++ UDPObjectdeleteAddress");
+
+		inetAddress = InetAddress.getByName(host);
+
+		SocketCommandVo vo = new SocketCommandVo();
+		vo.setCmdType(CmdType.DELETE);
+		vo.setAddressVo(addressVo);
+		try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(); 
+				ObjectOutputStream objectOutputstream = new ObjectOutputStream(byteOutputStream)){
+			objectOutputstream.writeObject(vo);
+			objectOutputstream.flush();
+			byte[] impleSend = byteOutputStream.toByteArray();
+			DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+			clientSocket.send(dp);
+		} 
+		
+		byte[] impleSend = byteOutputStream.toByteArray();
+		DatagramPacket dp = new DatagramPacket(impleSend, impleSend.length, inetAddress, 50000);
+		clientSocket.send(dp);
+		LOGGER.debug("--- UDPObjectdeleteAddress");
+
 		return 0;
 	}
 

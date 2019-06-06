@@ -1,6 +1,10 @@
 package com.barunsw.ojt.yjkim.day13;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -10,6 +14,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mariadb.jdbc.internal.failover.HandleErrorResult;
 
 public class UDPObjectClientSocketHandler extends Thread{
 	private static final Logger LOGGER = LogManager.getLogger(UDPObjectClientSocketHandler.class);
@@ -18,83 +23,68 @@ public class UDPObjectClientSocketHandler extends Thread{
 	private DatagramSocket clientSocket;
 	private int port;
 	byte buffer[] = new byte[512];
-	DatagramPacket dp = new DatagramPacket(buffer,buffer.length);
-	InetAddress ia;
+	private DatagramPacket datagramPacket = new DatagramPacket(buffer,buffer.length);
+	private InetAddress inetAddress;
+	private ByteArrayOutputStream byteOutputStream;
+	private ObjectOutputStream objectOutputStream;
+	private ObjectInputStream objectInputStream;
+	private ByteArrayInputStream byteArrayInpuStream;
 	
+	private byte[] bf = new byte[50000];
+
 	public UDPObjectClientSocketHandler(DatagramSocket clientSocket) {
 		LOGGER.debug("+++ UDPObjectClientSocketHandler");
 		this.clientSocket = clientSocket;
-		
-		LOGGER.debug("--- UDPObjectClientSocketHandler");
-	}
-	
-	public AddressVo parseCmd(String paramStr) {
-		AddressVo addressVo = new AddressVo();
-		
-		String[] paramList = paramStr.split(",");
-		for (String oneParam : paramList) {
-			String[] oneParamData = oneParam.split("=");
-			String key = oneParamData[0].trim();
-			String val = oneParamData[1].trim();
-			
-			switch (key) {
-			case "SEQ":
-				addressVo.setSeq(Integer.parseInt(val));
-			case "NAME":
-				addressVo.setName(val);
-				break;
-			case "GENDER":
-				try {
-					addressVo.setGender(Gender.toGender(val));
-				} catch (Exception ex) {
-					LOGGER.error(ex.getMessage(), ex);
-				}
-				break;
-			case "AGE":
-				addressVo.setAge(Integer.parseInt(val));
-				break;
-			case "ADDRESS":
-				addressVo.setAddress(val);
-				break;
-			}
+		this.byteOutputStream = new ByteArrayOutputStream();
+		try {
+			this.objectOutputStream =
+					new ObjectOutputStream(byteOutputStream);
+		} catch (IOException ioe) {
+			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		return addressVo;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
 			while (true) {
 				LOGGER.debug("+++ UDPClientSocketHandler run ");
-				byte[] bf = new byte[50000];
-				dp = new DatagramPacket(bf,bf.length);
-				clientSocket.receive(dp);
-				String str = new String(dp.getData());
-				ia = dp.getAddress();
-				LOGGER.debug("수신 데이터 : " + str);
-				String[] cmdSplit = str.split(":");
-				AddressVo addressVo;
-				LOGGER.debug(cmdSplit[0]);
-				String cmd = cmdSplit[0];
-				switch (cmd) {
-					case "SELECT":
+				datagramPacket = new DatagramPacket(bf,bf.length);
+				clientSocket.receive(datagramPacket);
+				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bf);
+				ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+				Object o = null;
+				SocketCommandVo socketCommandvo = new SocketCommandVo();
+				try {
+					 o = objectInputStream.readObject();
+					 LOGGER.debug(o);
+					 socketCommandvo = (SocketCommandVo)o;
+				} catch (ClassNotFoundException cnfe) {
+					LOGGER.error(cnfe.getMessage(), cnfe);
+				}finally {
+					if (objectInputStream != null) {
+						objectInputStream.close();
+					}
+				}
+				
+				inetAddress = datagramPacket.getAddress();
+				LOGGER.debug("수신 데이터 : " + socketCommandvo.toString());
+				switch (socketCommandvo.getCmdType()) {
+					case SELECT:
 					try {
 						UDPObjecthandleAllSelect();
 					} catch (Exception ex) {
 						LOGGER.error(ex.getMessage(), ex);
 					}
 						break;
-					case "INSERT":
-						addressVo = parseCmd(cmdSplit[1]);
-						UDPObjecthandleInsert(addressVo);
+					case INSERT:
+						UDPObjecthandleInsert(socketCommandvo.getAddressVo());
 						break;
-					case "UPDATE":
-						addressVo = parseCmd(cmdSplit[1]);
-						UDPObjecthandleUpdate(addressVo);
+					case UPDATE:
+						UDPObjecthandleUpdate(socketCommandvo.getAddressVo());
 						break;
-					case "DELETE":
-						addressVo = parseCmd(cmdSplit[1]);
-						UDPObjecthandleDelete(addressVo);
+					case DELETE:
+						UDPObjecthandleDelete(socketCommandvo.getAddressVo());
 						break;
 				}
 			LOGGER.debug("UDPClientSocketHandler run ");
@@ -139,30 +129,15 @@ public class UDPObjectClientSocketHandler extends Thread{
 			List<AddressVo> list = session.selectList(namespace + ".selectAllSocketAddress");
 			LOGGER.debug(list.toString() + "list입니다");
 		
-			port = dp.getPort();
-			LOGGER.debug("IA : " +ia +"port "+port);
-			StringBuffer buf = new StringBuffer();
-			/*for (AddressVo addressvo : list) {
-				buf.append(addressvo.toString()+"\n");
-			}*/
-			for (int i = 0; i < list.size(); i++) {
-				if (i == list.size()-1) {
-					buf.append(list.get(i).toString());
-				}else {
-					buf.append(list.get(i).toString()+"\n");
-				}
-			}
+			port = datagramPacket.getPort();
+			objectOutputStream.writeObject(list);
+			objectOutputStream.flush();
 			
-			byte[] bf = buf.toString().getBytes();
-			byte[] b = "+".getBytes();
-			LOGGER.debug("LIST"+ buf.toString().getBytes(), buf.toString().length());
-			if (list.size() > 0) {
-				dp = new DatagramPacket(bf,bf.length,ia,port);
-				clientSocket.send(dp);
-			} else {
-				dp = new DatagramPacket(b,b.length,ia,port);
-				clientSocket.send(dp);
-			}
+			byte[] hanldersend = byteOutputStream.toByteArray();
+			datagramPacket = new DatagramPacket(hanldersend, hanldersend.length, inetAddress, port);
+			clientSocket.send(datagramPacket);
+			
+			
 		LOGGER.debug(String.format("--- UDPhandleAllSelect "));
 	 }
   }
