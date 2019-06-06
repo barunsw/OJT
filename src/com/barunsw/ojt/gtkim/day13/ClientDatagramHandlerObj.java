@@ -39,12 +39,17 @@ public class ClientDatagramHandlerObj extends Thread {
 		this.socket  = socket;
 		
 		this.byteObject = packet.getData();
+	
+		this.objectInput = new ObjectInputStream(
+				new ByteArrayInputStream(byteObject));		
+	
 		LOGGER.debug(new String(byteObject).trim() +  " Handler가 생성되었습니다. ");
 	}
 	
 	@Override 
 	public void run() {	
 		try {
+// 			
 //			Thread inputThread = new Thread(new Runnable() {
 //				@Override
 //				public void run() {
@@ -57,11 +62,11 @@ public class ClientDatagramHandlerObj extends Thread {
 //					}
 //				}
 //			});
-			//inputThread.start();
-			//inputThread.join();
-			objectInput = new ObjectInputStream(
-					new ByteArrayInputStream(byteObject));		
-		
+//			inputThread.start();
+//			inputThread.join();
+//			objectInput = new ObjectInputStream(
+//					new ByteArrayInputStream(byteObject));		
+//		
 			LOGGER.debug("오브젝트 수신 대기 : ");
 			Object object = objectInput.readObject();
 

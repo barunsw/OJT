@@ -51,7 +51,7 @@ public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
 	private final Dimension SIZE 	   = new Dimension(80, 35);
 	private final String[] PHONE_LOCAL = { "010", "011", "016", "017", "018", "019" };
-	private final String[] hangleList	   = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
+	private final String[] hangleList  = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", 
 										"ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ",  
 										"ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
 	

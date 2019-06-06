@@ -5,9 +5,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class SocketCommandVo implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 6284070788597252236L;
 	private CmdType cmdType;
 	private AddressVo addressVo;
