@@ -33,8 +33,8 @@ public class DatagramServerMain {
 				
 				socket.receive(packet);
 				
-//				DatagramHandler handle = 
-//						new DatagramHandler(socket, packet);
+//				ClientDatagramHandler handle = 
+//						new ClientDatagramHandler(socket, packet);
 				ClientDatagramHandlerObj handle =
 						new ClientDatagramHandlerObj(socket, packet);
 				handle.start();
