@@ -12,8 +12,8 @@ import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.gtkim.day12.AddressVo;
 import com.barunsw.ojt.gtkim.day12.DBAddressBookImpl;
 
-public class DatagramHandler extends Thread {
-	private static final Logger LOGGER = LogManager.getLogger(DatagramHandler.class);
+public class ClientDatagramHandler extends Thread {
+	private static final Logger LOGGER = LogManager.getLogger(ClientDatagramHandler.class);
 	
 	private DatagramSocket socket;
 	private DatagramPacket packet;
@@ -25,7 +25,7 @@ public class DatagramHandler extends Thread {
 	
 	private DBAddressBookImpl dbController = new DBAddressBookImpl();
 	
-	public DatagramHandler (DatagramSocket socket, DatagramPacket packet) throws Exception { 
+	public ClientDatagramHandler (DatagramSocket socket, DatagramPacket packet) throws Exception { 
 		this.message = new String(packet.getData()).trim();
 		this.address = packet.getAddress();
 		this.port  	 = packet.getPort();	

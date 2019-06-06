@@ -60,20 +60,22 @@ public class DatagramSocketAddressBookImplObj implements AddressBookInterface {
 			packet = new DatagramPacket(recvMsg, recvMsg.length);
 			socket.receive(packet);
 		
-			Thread inputThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						objectInput = new ObjectInputStream(
-								new ByteArrayInputStream(recvMsg));						
-					}
-					catch (Exception ex) {
-						LOGGER.error(ex.getMessage(), ex);
-					}
-				}
-			});
-			inputThread.start();
-			inputThread.join();
+//			Thread inputThread = new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					try {
+//						objectInput = new ObjectInputStream(
+//								new ByteArrayInputStream(recvMsg));						
+//					}
+//					catch (Exception ex) {
+//						LOGGER.error(ex.getMessage(), ex);
+//					}
+//				}
+//			});
+			//inputThread.start();
+			//inputThread.join();
+			objectInput = new ObjectInputStream(
+					new ByteArrayInputStream(recvMsg));	
 			
 			Object object = objectInput.readObject();
 			if (object instanceof List) {

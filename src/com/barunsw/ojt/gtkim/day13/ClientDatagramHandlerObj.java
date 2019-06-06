@@ -18,8 +18,8 @@ import com.barunsw.ojt.gtkim.day12.AddressVo;
 import com.barunsw.ojt.gtkim.day12.DBAddressBookImpl;
 import com.barunsw.ojt.gtkim.day12.SocketCommandVo;
 
-public class DatagramHandlerObj extends Thread {
-	private static final Logger LOGGER = LogManager.getLogger(DatagramHandlerObj.class);
+public class ClientDatagramHandlerObj extends Thread {
+	private static final Logger LOGGER = LogManager.getLogger(ClientDatagramHandlerObj.class);
 	
 	private DatagramSocket socket;
 	private DatagramPacket packet;
@@ -33,7 +33,7 @@ public class DatagramHandlerObj extends Thread {
 	
 	private DBAddressBookImpl dbController = new DBAddressBookImpl();
 	
-	public DatagramHandlerObj (DatagramSocket socket, DatagramPacket packet) throws Exception { 
+	public ClientDatagramHandlerObj (DatagramSocket socket, DatagramPacket packet) throws Exception { 
 		this.address = packet.getAddress();
 		this.port  	 = packet.getPort();	
 		this.socket  = socket;
@@ -45,21 +45,23 @@ public class DatagramHandlerObj extends Thread {
 	@Override 
 	public void run() {	
 		try {
-			Thread inputThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						objectInput = new ObjectInputStream(
-								new ByteArrayInputStream(byteObject));		
-					}
-					catch (Exception ex) {
-						LOGGER.error(ex.getMessage(), ex);
-					}
-				}
-			});
-			inputThread.start();
-			inputThread.join();
-			
+//			Thread inputThread = new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					try {
+//						objectInput = new ObjectInputStream(
+//								new ByteArrayInputStream(byteObject));		
+//					}
+//					catch (Exception ex) {
+//						LOGGER.error(ex.getMessage(), ex);
+//					}
+//				}
+//			});
+			//inputThread.start();
+			//inputThread.join();
+			objectInput = new ObjectInputStream(
+					new ByteArrayInputStream(byteObject));		
+		
 			LOGGER.debug("오브젝트 수신 대기 : ");
 			Object object = objectInput.readObject();
 

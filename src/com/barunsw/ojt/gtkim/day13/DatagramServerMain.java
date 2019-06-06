@@ -35,8 +35,8 @@ public class DatagramServerMain {
 				
 //				DatagramHandler handle = 
 //						new DatagramHandler(socket, packet);
-				DatagramHandlerObj handle =
-						new DatagramHandlerObj(socket, packet);
+				ClientDatagramHandlerObj handle =
+						new ClientDatagramHandlerObj(socket, packet);
 				handle.start();
 			
 				LOGGER.debug(String.format("Client Connected [%s]:%d", 
