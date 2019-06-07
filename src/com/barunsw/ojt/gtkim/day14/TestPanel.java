@@ -1,4 +1,4 @@
-package com.barunsw.ojt.gtkim.day12;
+package com.barunsw.ojt.gtkim.day14;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -17,7 +24,6 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,13 +45,12 @@ import javax.swing.tree.DefaultTreeModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.constants.AddressVo;
 import com.barunsw.ojt.constants.Gender;
-import com.barunsw.ojt.gtkim.day13.SocketAddressBookImplObj;
-import com.barunsw.ojt.gtkim.day13.SocketAddressBookImplString;
-import com.barunsw.ojt.gtkim.day13.DatagramServerMain;
-import com.barunsw.ojt.gtkim.day13.DatagramSocketAddressBookImpl;
-import com.barunsw.ojt.gtkim.day13.DatagramSocketAddressBookImplObj;
-import com.barunsw.ojt.gtkim.day13.ServerMain;
+import com.barunsw.ojt.constants.RmiAddressBookInterface;
+import com.barunsw.ojt.gtkim.day12.AddressTableCellRenderer;
+import com.barunsw.ojt.gtkim.day12.CommonTableModel;
+import com.barunsw.ojt.gtkim.day12.TestFileManager;
 
 public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -62,7 +67,7 @@ public class TestPanel extends JPanel {
 	private final int TABLE_COLUMN_NAME 	= columnIdx++; 
 	private final int TABLE_COLUMN_GENDER 	= columnIdx++;
 	private final int TABLE_COLUMN_AGE 		= columnIdx++;
-	private final int TABLE_COLUMN_PHONE 	= columnIdx++;
+//	private final int TABLE_COLUMN_PHONE 	= columnIdx++;
 	private final int TABLE_COLUMN_ADDRESS 	= columnIdx++; 
 	private final int TABLE_COLUMN_REALSEQ 	= columnIdx++; 
 	
@@ -70,7 +75,7 @@ public class TestPanel extends JPanel {
 	private final int VO_COLUMN_NAME 	= voIdx++; 
 	private final int VO_COLUMN_GENDER 	= voIdx++;
 	private final int VO_COLUMN_AGE 	= voIdx++;
-	private final int VO_COLUMN_PHONE 	= voIdx++;
+//	private final int VO_COLUMN_PHONE 	= voIdx++;
 	private final int VO_COLUMN_ADDRESS	= voIdx++; 
 	
 	
@@ -115,7 +120,7 @@ public class TestPanel extends JPanel {
 	
 	private DefaultTreeCellRenderer tree_cellRenderer = new DefaultTreeCellRenderer();
 	
-	private AddressBookInterface addressBook ;
+	private RmiAddressBookInterface addressBook;
 	
 	public TestPanel() {
 //		try {
@@ -128,6 +133,7 @@ public class TestPanel extends JPanel {
 //			LOGGER.error(ex.getMessage(), ex);
 //		}	
 		try {
+			initRmiConn();
 			initComponent();
 			initTable();
 			initTree();
@@ -137,6 +143,40 @@ public class TestPanel extends JPanel {
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+	}
+	
+	private void initRmiConn() {
+		try {
+			Registry registry = LocateRegistry.getRegistry("192.168.0.16", ServerMain.PORT);
+
+		
+			
+			Remote remote = registry.lookup("ADDRESSBOOK2");
+			// Naming클래스로 받기 return값은 Remote 
+			//Remote remote = Naming.lookup("rmi://192.168.0.16:" + ServerMain.PORT +"/ADDRESSBOOK");
+			if (remote instanceof RmiAddressBookInterface) {
+				addressBook = (RmiAddressBookInterface)remote;
+				
+				LOGGER.debug("Rmi Interface Lookup 완료");
+			}
+			else {
+				String[] list = registry.list();
+				for (String s : list) {
+					LOGGER.debug("list " + s);
+				}
+				LOGGER.debug("package : " + remote.toString());
+				
+			}
+		}
+		catch (RemoteException re) {
+			LOGGER.error(re.getMessage(), re);
+		} catch (NotBoundException nbe) {
+			LOGGER.error(nbe.getMessage(), nbe);
+		} 
+//		catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void initComponent() {		
@@ -448,7 +488,7 @@ public class TestPanel extends JPanel {
 					rowdata.add(address.getName());
 					rowdata.add(address.getGender());
 					rowdata.add(address.getAge());
-					rowdata.add(address.getPhone());
+//					rowdata.add(address.getPhone());
 					rowdata.add(address.getAddress());
 					rowdata.add(address.getSeq());
 
@@ -479,7 +519,7 @@ public class TestPanel extends JPanel {
 				data.setName(getData.get(VO_COLUMN_NAME).toString());
 				data.setGender(Gender.toGender(getData.get(VO_COLUMN_GENDER).toString()));
 				data.setAge(Integer.parseInt(getData.get(VO_COLUMN_AGE).toString()));
-				data.setPhone(getData.get(VO_COLUMN_PHONE).toString());
+//				data.setPhone(getData.get(VO_COLUMN_PHONE).toString());
 				data.setAddress(getData.get(VO_COLUMN_ADDRESS).toString());
 
 				addressBook.insertAddress(data);
@@ -528,7 +568,7 @@ public class TestPanel extends JPanel {
 				updateData.setName(getData.get(VO_COLUMN_NAME).toString());
 				updateData.setGender(Gender.toGender(getData.get(VO_COLUMN_GENDER).toString()));
 				updateData.setAge(Integer.parseInt(getData.get(VO_COLUMN_AGE).toString()));
-				updateData.setPhone(getData.get(VO_COLUMN_PHONE).toString());
+//				updateData.setPhone(getData.get(VO_COLUMN_PHONE).toString());
 				updateData.setAddress(getData.get(VO_COLUMN_ADDRESS).toString());
 				updateData.setSeq((int) (jTable_Result.getValueAt(row, TABLE_COLUMN_REALSEQ)));
 
@@ -565,11 +605,11 @@ public class TestPanel extends JPanel {
 
 			}
 			
-			String phone  = jTable_Result.getValueAt(row, TABLE_COLUMN_PHONE).toString();
-			String[] list = phone.split("-");
-			jComboBox_Phone_Pre.setSelectedItem(list[0]);
-			jTextField_Phone_Mid.setText(list[1]);
-			jTextField_Phone_Suf.setText(list[2]);
+//			String phone  = jTable_Result.getValueAt(row, TABLE_COLUMN_PHONE).toString();
+//			String[] list = phone.split("-");
+//			jComboBox_Phone_Pre.setSelectedItem(list[0]);
+//			jTextField_Phone_Mid.setText(list[1]);
+//			jTextField_Phone_Suf.setText(list[2]);
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -583,17 +623,17 @@ public class TestPanel extends JPanel {
 			String name    = jTextField_Name.getText();
 			String gender  = jRadioButton_Man.isSelected() ? new String("남자") : new String("여자");
 			int age 	   = jTextField_Age.getText().equals("") ? null : Integer.parseInt(jTextField_Age.getText());
-			String phone   = jComboBox_Phone_Pre.getSelectedItem().toString() + "-" 
-								+ jTextField_Phone_Mid.getText() + "-" 
-								+ jTextField_Phone_Suf.getText();	
-			String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
+//			String phone   = jComboBox_Phone_Pre.getSelectedItem().toString() + "-" 
+//								+ jTextField_Phone_Mid.getText() + "-" 
+//								+ jTextField_Phone_Suf.getText();	
+//			String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
 			String address = jTextArea_Adress.getText();
 			
-			if (phone.matches(regPhone)) {		
+//			if (phone.matches(regPhone)) {		
 				data.add(name);
 				data.add(gender);
 				data.add(age);
-				data.add(phone);
+//				data.add(phone);
 				data.add(address);
 				/*
 				data.setName(name);
@@ -602,10 +642,10 @@ public class TestPanel extends JPanel {
 				data.setPhone(phone);
 				data.setAddress(address);
 				*/
-			}
-			else {
-				throw new Exception();
-			}
+//			}
+//			else {
+//				throw new Exception();
+//			}
 		}
 		catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "잘못된 입력이 있습니다.", "Error", JOptionPane.ERROR_MESSAGE);
