@@ -28,8 +28,8 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 		List<AddressVo> list;
 		try (SqlSession session = sqlSessionFactory.openSession()){
 				mapper = session.getMapper(RmiAddressDao.class);
-				//list = session.selectList(namespace +".selectAllAddress");
 				list = mapper.selectAddressList();
+			//list = session.selectList(namespace +".selectAllAddress");
 		}
 		return list;
 	}
@@ -51,7 +51,7 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		LOGGER.debug("updateAddress:" + addressVo);
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			//session.insert(namespace +".updateAddress", addressVo);
+			//session.update(namespace +".updateAddress", addressVo);
 			//session.commit();
 			mapper = session.getMapper(RmiAddressDao.class);
 			mapper.updateAddress(addressVo);
@@ -64,7 +64,7 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		LOGGER.debug("deleteAddress:" + addressVo);
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			//session.insert(namespace +".deleteAddress", addressVo);
+			//session.delete(namespace +".deleteAddress", addressVo);
 			mapper = session.getMapper(RmiAddressDao.class);
 			mapper.deleteAddress(addressVo);
 			session.commit();
@@ -77,7 +77,7 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 		LOGGER.debug("selectParticularAddress" + map);
 		List<AddressVo> list;
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			//session.insert(namespace +".deleteAddress", addressVo);
+			//list = session.selectList(namespace +".deleteAddress", map);
 			mapper = session.getMapper(RmiAddressDao.class);
 			list = mapper.selectParticularAddress(map);
 		}
