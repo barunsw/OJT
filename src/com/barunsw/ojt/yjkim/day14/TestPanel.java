@@ -128,10 +128,10 @@ public class TestPanel extends JPanel {
 	private void initComponent() throws Exception {
 		
 		try {
-			//Registry registry = LocateRegistry.getRegistry("192.168.0.16",commonFunction.getPort());
-			Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
+			Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
+			//Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
 			
-			Remote remote = registry.lookup("ADDRESSBOOK2");
+			Remote remote = registry.lookup("ADDRESSBOOK");
 			if (remote instanceof RmiAddressBookInterface) {
 				addressBookIf = (RmiAddressBookInterface)remote;
 			}
