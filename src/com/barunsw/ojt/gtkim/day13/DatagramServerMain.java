@@ -59,8 +59,6 @@ public class DatagramServerMain {
 		}
 	}
 	
-	
-	
 	public static void main(String[] args) {
 		new DatagramServerMain().start();
 
