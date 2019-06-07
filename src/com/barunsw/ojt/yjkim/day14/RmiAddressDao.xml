@@ -7,7 +7,7 @@
  		INSERT INTO TB_ADDRESSBOOK(NAME,GENDER,AGE,ADDRESS) VALUES (#{name}, #{gender}, #{age}, #{address}) 
  	</insert>
  	
- 	<select id="selectAddressList" resultType="com.barunsw.ojt.yjkim.day14.AddressVo">
+ 	<select id="selectAddressList" resultType="com.barunsw.ojt.constants.AddressVo">
  		SELECT * FROM TB_ADDRESSBOOK
  	</select>
  	
@@ -19,7 +19,7 @@
  		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, GENDER = #{gender}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
  	</update>
  	
- 	<select id="selectParticularAddress" resultType="com.barunsw.ojt.yjkim.day14.AddressVo" parameterType="Map">
+ 	<select id="selectParticularAddress" resultType="com.barunsw.ojt.constants.AddressVo" parameterType="Map">
 	<![CDATA[
 		select * from TB_ADDRESSBOOK 
 	]]> 
