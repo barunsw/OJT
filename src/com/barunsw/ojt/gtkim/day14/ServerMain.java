@@ -1,6 +1,5 @@
 package com.barunsw.ojt.gtkim.day14;
 
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -8,7 +7,7 @@ import java.rmi.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.*;
+import com.barunsw.ojt.constants.RmiAddressBookInterface;
 
 public class ServerMain {
 	private static final Logger LOGGER = LogManager.getLogger(ServerMain.class);

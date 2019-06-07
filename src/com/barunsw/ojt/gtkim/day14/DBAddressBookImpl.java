@@ -4,16 +4,15 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.constants.AddressVo;
 import com.barunsw.ojt.constants.RmiAddressBookInterface;
-import com.barunsw.ojt.gtkim.day12.AddressDao;
-import com.barunsw.ojt.gtkim.day12.AddressVo;
-import com.barunsw.ojt.gtkim.day12.SqlSessionFactoryManager;
 
 public class DBAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
 	private static final Logger LOGGER = LogManager.getLogger(DBAddressBookImpl.class);
@@ -108,4 +107,10 @@ public class DBAddressBookImpl extends UnicastRemoteObject implements RmiAddress
 		}
 		return result;
 	}
+
+	@Override
+	public List<AddressVo> selectParticularAddress(Map<String, Object> map) throws Exception {
+		return null;
+	}
+
 }

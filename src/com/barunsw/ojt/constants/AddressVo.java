@@ -15,6 +15,10 @@ public class AddressVo implements Serializable {
 	private int age;
 	private String address;
 
+	public AddressVo() {
+		
+	}
+	
 	public int getSeq() {
 		return seq;
 	}

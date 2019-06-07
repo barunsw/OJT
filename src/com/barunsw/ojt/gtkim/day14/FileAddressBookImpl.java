@@ -71,14 +71,18 @@ public class FileAddressBookImpl extends UnicastRemoteObject implements RmiAddre
 	public List<AddressVo> selectAddressList() throws Exception {
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataFile))) {
 			
-			LOGGER.debug("SELECT");
 			addressList.clear();
 
 			Object object;
+			LOGGER.debug("SELECT");
+			
 			while ((object = ois.readObject()) != null) {
 				if (object instanceof AddressVo) {
 					AddressVo oneAddress = (AddressVo) object;
 					addressList.add(oneAddress);
+				}
+				else {
+					LOGGER.debug("타입 에러!");
 				}
 			}
 		} 
