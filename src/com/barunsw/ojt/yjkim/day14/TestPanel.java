@@ -30,6 +30,7 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.logging.log4j.LogManager;
@@ -128,8 +129,9 @@ public class TestPanel extends JPanel {
 	private void initComponent() throws Exception {
 		
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
-			//Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
+			//Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
+			
+			Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
 			
 			Remote remote = registry.lookup("ADDRESSBOOK");
 			if (remote instanceof RmiAddressBookInterface) {
@@ -270,6 +272,11 @@ public class TestPanel extends JPanel {
 			if (selectList.size() > 0) {
 				LOGGER.debug("selectSize " + selectList.size());
 				tableModel.setNumRows(0);
+				
+				  for (int j = 0; j< root.getChildCount(); j++) {
+					  DefaultMutableTreeNode nd = (DefaultMutableTreeNode)root.getChildAt(j); nd.removeAllChildren(); 
+					  }
+					
 				for(int i = 0; i < selectList.size(); i++) {
 					Vector OneData = new Vector();
 					OneData.add(selectList.get(i).getSeq());
@@ -279,14 +286,16 @@ public class TestPanel extends JPanel {
 					OneData.add(selectList.get(i).getAddress());
 					tableModel.addData(OneData);
 					//LOGGER.debug(list.get(i).getName());
+			
 					chosung = root.breadthFirstEnumeration();
+				
 					node  	= null;
 					parent	= null;
 					insertNode = new DefaultMutableTreeNode(selectList.get(i).getName());
 					String str = insertgetChosung(selectList.get(i).getName());
-
 					while(chosung.hasMoreElements()) {
 						node = (DefaultMutableTreeNode) chosung.nextElement();
+						LOGGER.debug(String.format("chosung Element : [%s] str : [%s]" , node.getUserObject(), str));
 						if(str.equals(node.getUserObject().toString())) {
 								LOGGER.debug("selectList : " + selectList.get(i).getName());
 							parent = node;
@@ -445,19 +454,22 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void insertTree(String name) {
+		LOGGER.debug("insert Tree :" + name);
 		String str = insertgetChosung(name);
-		chosung = root.breadthFirstEnumeration();
+		Enumeration chosung = root.breadthFirstEnumeration();
 		node  	= null;
 		parent	= null;
 		insertNode = new DefaultMutableTreeNode(name);
 		
 		while(chosung.hasMoreElements()) {
 			node = (DefaultMutableTreeNode) chosung.nextElement();
+			LOGGER.debug(String.format("insert Tree getUserObject() : [%s]", node.getUserObject().toString()));
 			if(str.equals(node.getUserObject().toString())) {
 				parent = node;
+				treeModel.insertNodeInto(insertNode, parent, parent.getChildCount());
+
 			}
 		}
-		treeModel.insertNodeInto(insertNode, parent, parent.getChildCount());
 	}
 	
 	private void deleteTreeNode(String name) {
@@ -474,8 +486,20 @@ public class TestPanel extends JPanel {
 		}
 		deleteNode = new DefaultMutableTreeNode(name);
 		deleteNode.setParent(parent);
-		LOGGER.debug(deleteNode.getParent() + "부모 노드 ");
-		//treeModel.nodesWereRemoved(deleteNode, childIndices, removedChildren);
+		LOGGER.debug(String.format("parent Tree [%s], current Tree [%s]",deleteNode.getParent(),deleteNode.toString()));
+		
+		try{
+			//treeModel.removeNodeFromParent(deleteNode);
+			for (int i = 0; i < parent.getChildCount(); i++) {
+				if (parent.getChildAt(i).toString().equals(deleteNode.getUserObject().toString())) {
+					LOGGER.debug("parent.getChildAt(i) " + parent.getChildAt(i));
+					LOGGER.debug("deleteNode.getUserObject() " + deleteNode.getUserObject());
+					((DefaultTreeModel)jtree.getModel()).removeNodeFromParent((MutableTreeNode) parent.getChildAt(i));
+				}
+			}
+		} catch(Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
 		treeModel.reload();
 	}
 	
@@ -484,7 +508,7 @@ public class TestPanel extends JPanel {
 				&& !(jTextField_Age.getText().equals("")) 
 				&& !(jTextField_Address.getText().equals(""))) {
 			
-			insertTree(jTextField_Name.getText());
+			//insertTree(jTextField_Name.getText());
 			
 			Vector oneData = new Vector();
 			AddressVo addressvo = new AddressVo();
@@ -517,11 +541,12 @@ public class TestPanel extends JPanel {
 			tableModel.addData(oneData);
 			tableModel.fireTableDataChanged();
 			//jTextField_Num.setText("");
-			inputClear();
 
 			try {
 				addressBookIf.insertAddress(addressvo);
-				initData();
+				insertTree(jTextField_Name.getText());
+				inputClear();
+
 			} catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}

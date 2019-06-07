@@ -24,7 +24,7 @@ public class ServerMain {
 			RmiAddressBookInterface addressBookIf = 
 					new AddressBookImpl();
 			
-			registry.bind("ADDRESSBOOK2", addressBookIf);
+			registry.bind("ADDRESSBOOK", addressBookIf);
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);

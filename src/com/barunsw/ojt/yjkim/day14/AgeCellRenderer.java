@@ -17,6 +17,7 @@ public class AgeCellRenderer extends JPanel
 	
 	private JTextField jTextField_Age = new JTextField();
 	
+	
 	public AgeCellRenderer() {
 		initComponent();
 	}

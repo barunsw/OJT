@@ -24,62 +24,82 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 	}
 	
 	@Override
-	public List<AddressVo> selectAddressList() throws Exception {
-		List<AddressVo> list;
+	public List<AddressVo> selectAddressList() throws RemoteException {
+		List<AddressVo> list = null;
 		try (SqlSession session = sqlSessionFactory.openSession()){
-				mapper = session.getMapper(RmiAddressDao.class);
-				list = mapper.selectAddressList();
+				try {
+					mapper = session.getMapper(RmiAddressDao.class);
+					list = mapper.selectAddressList();
+				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage(), ex);
+				}
 			//list = session.selectList(namespace +".selectAllAddress");
 		}
 		return list;
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws Exception {
+	public int insertAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("insertAddress:" + addressVo);
 		try (SqlSession session = sqlSessionFactory.openSession()){
 			//session.insert(namespace +".insertAddress", addressVo);
 			//session.commit();		
-			mapper = session.getMapper(RmiAddressDao.class);
-			mapper.insertAddress(addressVo);
+			try {
+				mapper = session.getMapper(RmiAddressDao.class);
+				mapper.insertAddress(addressVo);
+			} catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 			session.commit();
 		}
 		return 0;
 	}
 
 	@Override
-	public int updateAddress(AddressVo addressVo) throws Exception {
+	public int updateAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("updateAddress:" + addressVo);
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			//session.update(namespace +".updateAddress", addressVo);
 			//session.commit();
-			mapper = session.getMapper(RmiAddressDao.class);
-			mapper.updateAddress(addressVo);
+			try {
+				mapper.updateAddress(addressVo);
+				mapper = session.getMapper(RmiAddressDao.class);
+			} catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 			session.commit();
 		}
 		return 0;
 	}
 
 	@Override
-	public int deleteAddress(AddressVo addressVo) throws Exception {
+	public int deleteAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("deleteAddress:" + addressVo);
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			//session.delete(namespace +".deleteAddress", addressVo);
 			mapper = session.getMapper(RmiAddressDao.class);
-			mapper.deleteAddress(addressVo);
+			try {
+				mapper.deleteAddress(addressVo);
+			} catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 			session.commit();
 		}
 		return 0;
 	}
 
 	@Override
-	public List<AddressVo> selectParticularAddress(Map<String, Object> map) throws Exception {
+	public List<AddressVo> selectParticularAddress(Map<String, Object> map) throws RemoteException {
 		LOGGER.debug("selectParticularAddress" + map);
-		List<AddressVo> list;
+		List<AddressVo> list = null;
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			//list = session.selectList(namespace +".deleteAddress", map);
 			mapper = session.getMapper(RmiAddressDao.class);
-			list = mapper.selectParticularAddress(map);
+			try {
+				list = mapper.selectParticularAddress(map);
+			} catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 		return list;
 	}
