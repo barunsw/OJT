@@ -268,6 +268,21 @@ public class TestPanel extends JPanel {
 					OneData.add(selectList.get(i).getAddress());
 					tableModel.addData(OneData);
 					//LOGGER.debug(list.get(i).getName());
+					Enumeration chosung = root.breadthFirstEnumeration();
+					DefaultMutableTreeNode node  	= null;
+					DefaultMutableTreeNode parent	= null;
+					DefaultMutableTreeNode insertNode = new DefaultMutableTreeNode(selectList.get(i).getName());
+					
+					while(chosung.hasMoreElements()) {
+						node = (DefaultMutableTreeNode) chosung.nextElement();
+						if(selectList.get(i).getName().equals(node.getUserObject().toString())) {
+								LOGGER.debug("selectList : " + selectList.get(i).getName());
+							parent = node;
+						}
+					}
+					treeModel.insertNodeInto(insertNode, parent, parent.getChildCount());
+					
+					
 				}
 			}
 		} catch (Exception ex) {
