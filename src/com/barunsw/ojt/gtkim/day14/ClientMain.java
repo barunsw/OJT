@@ -9,12 +9,12 @@ import javax.swing.UIManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public class ClientMain {
 	private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);
 
 	public static void main(String[] args) {
-		LOGGER.debug("Test Swing");
+		LOGGER.debug("AddressBook with RMI");
+		
 		try {
 			// Look and Feel UIManager를 통해 ui 쉽게 변경 가능
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");		
