@@ -35,6 +35,10 @@ import javax.swing.tree.TreePath;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.constants.AddressVo;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.constants.RmiAddressBookInterface;
+
 
 
 
@@ -124,9 +128,10 @@ public class TestPanel extends JPanel {
 	private void initComponent() throws Exception {
 		
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
+			//Registry registry = LocateRegistry.getRegistry("192.168.0.16",commonFunction.getPort());
+			Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
 			
-			Remote remote = registry.lookup("ADDRESSBOOK");
+			Remote remote = registry.lookup("ADDRESSBOOK2");
 			if (remote instanceof RmiAddressBookInterface) {
 				addressBookIf = (RmiAddressBookInterface)remote;
 			}
@@ -297,48 +302,7 @@ public class TestPanel extends JPanel {
 		
 		
 	}
-	private void inputClear() {
-		jTextField_Name.setText("");
-		jTextField_Age.setText("");
-		jTextField_Address.setText("");
-		Gender_Group.clearSelection();
-	}
-	private void insertTree(String name) {
-		String str = insertgetChosung(name);
-		chosung = root.breadthFirstEnumeration();
-		node  	= null;
-		parent	= null;
-		insertNode = new DefaultMutableTreeNode(name);
-		
-		while(chosung.hasMoreElements()) {
-			node = (DefaultMutableTreeNode) chosung.nextElement();
-			if(str.equals(node.getUserObject().toString())) {
-				parent = node;
-			}
-		}
-		treeModel.insertNodeInto(insertNode, parent, parent.getChildCount());
-	}
-	private void deleteTreeNode(String name) {
-		LOGGER.debug("Jtree Node delete" + name);
-		String str = insertgetChosung(name);
-		chosung = root.breadthFirstEnumeration();
-		parent	= null;
-		
-		while(chosung.hasMoreElements()) {
-			node = (DefaultMutableTreeNode) chosung.nextElement();
-			if(str.equals(node.getUserObject().toString())) {
-				parent = node;
-			}
-		}
-		deleteNode = new DefaultMutableTreeNode(name);
-		deleteNode.setParent(parent);
-		LOGGER.debug(deleteNode.getParent() + "부모 노드 ");
-		if (deleteNode.getParent() != null) {
-			treeModel.removeNodeFromParent(deleteNode);
-		}
-		treeModel.reload();
-	}
-	
+
 	private void initButtonEvent() {
 		jButton_Update.addActionListener(new Button_this_ActionListener(this));
 		jButton_Add.addActionListener(new Button_this_ActionListener(this));
@@ -472,7 +436,49 @@ public class TestPanel extends JPanel {
 		str = hangleList[(ch-44032)/(21*28)];
 		return str;
 	}
-
+	
+	private void inputClear() {
+		jTextField_Name.setText("");
+		jTextField_Age.setText("");
+		jTextField_Address.setText("");
+		Gender_Group.clearSelection();
+	}
+	
+	private void insertTree(String name) {
+		String str = insertgetChosung(name);
+		chosung = root.breadthFirstEnumeration();
+		node  	= null;
+		parent	= null;
+		insertNode = new DefaultMutableTreeNode(name);
+		
+		while(chosung.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) chosung.nextElement();
+			if(str.equals(node.getUserObject().toString())) {
+				parent = node;
+			}
+		}
+		treeModel.insertNodeInto(insertNode, parent, parent.getChildCount());
+	}
+	
+	private void deleteTreeNode(String name) {
+		LOGGER.debug("Jtree Node delete" + name);
+		String str = insertgetChosung(name);
+		chosung = root.breadthFirstEnumeration();
+		parent	= null;
+		
+		while(chosung.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) chosung.nextElement();
+			if(str.equals(node.getUserObject().toString())) {
+				parent = node;
+			}
+		}
+		deleteNode = new DefaultMutableTreeNode(name);
+		deleteNode.setParent(parent);
+		LOGGER.debug(deleteNode.getParent() + "부모 노드 ");
+		//treeModel.nodesWereRemoved(deleteNode, childIndices, removedChildren);
+		treeModel.reload();
+	}
+	
 	void dataInsert() {
 		if(	!(jTextField_Name.getText().equals("")) 
 				&& !(jTextField_Age.getText().equals("")) 

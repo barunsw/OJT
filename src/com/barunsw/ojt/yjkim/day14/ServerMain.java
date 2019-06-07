@@ -6,6 +6,8 @@ import java.rmi.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.constants.RmiAddressBookInterface;
+
 public class ServerMain {
 	private static final Logger LOGGER = LogManager.getLogger(ServerMain.class);
 	
@@ -22,7 +24,7 @@ public class ServerMain {
 			RmiAddressBookInterface addressBookIf = 
 					new AddressBookImpl();
 			
-			registry.bind("ADDRESSBOOK", addressBookIf);
+			registry.bind("ADDRESSBOOK2", addressBookIf);
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);

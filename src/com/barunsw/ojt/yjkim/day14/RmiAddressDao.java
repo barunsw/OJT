@@ -3,6 +3,8 @@ package com.barunsw.ojt.yjkim.day14;
 import java.util.List;
 import java.util.Map;
 
+import com.barunsw.ojt.constants.AddressVo;
+
 public interface RmiAddressDao {
 	public List<AddressVo> selectAddressList() throws Exception;
 	public int insertAddress(AddressVo addressVo) throws Exception;
