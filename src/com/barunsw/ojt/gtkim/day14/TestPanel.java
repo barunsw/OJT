@@ -147,11 +147,10 @@ public class TestPanel extends JPanel {
 	
 	private void initRmiConn() {
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.0.16", ServerMain.PORT);
-
+//			Registry registry = LocateRegistry.getRegistry("192.168.0.16", ServerMain.PORT);
+			Registry registry = LocateRegistry.getRegistry("localhost", ServerMain.PORT);
 		
-			
-			Remote remote = registry.lookup("ADDRESSBOOK2");
+			Remote remote = registry.lookup("ADDRESSBOOK");
 			// Naming클래스로 받기 return값은 Remote 
 			//Remote remote = Naming.lookup("rmi://192.168.0.16:" + ServerMain.PORT +"/ADDRESSBOOK");
 			if (remote instanceof RmiAddressBookInterface) {
