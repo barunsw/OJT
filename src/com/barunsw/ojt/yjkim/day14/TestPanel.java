@@ -268,6 +268,7 @@ public class TestPanel extends JPanel {
 	
 	private void initData() {
 		try {
+			LOGGER.debug("+++ initData");
 			List<AddressVo> selectList = addressBookIf.selectAddressList();
 			if (selectList.size() > 0) {
 				LOGGER.debug("selectSize " + selectList.size());
@@ -308,8 +309,7 @@ public class TestPanel extends JPanel {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 
-		
-		
+		LOGGER.debug("--- initData");
 	}
 
 	private void initButtonEvent() {

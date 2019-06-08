@@ -18,12 +18,13 @@ public class ServerMain {
 	public void start() {
 		LOGGER.debug(String.format("+++ ServerMain started."));
 
-		try {
+		try { 
 			Registry registry = LocateRegistry.createRegistry(commonFunction.getPort());
 			
-			RmiAddressBookInterface addressBookIf = 
-					new AddressBookImpl();
-			
+			//RmiAddressBookInterface addressBookIf = 
+			//		new AddressBookImpl();
+			RmiAddressBookInterface addressBookIf =
+					new FileAddressBookImpl();
 			registry.bind("ADDRESSBOOK", addressBookIf);
 		} 
 		catch (Exception e) {
