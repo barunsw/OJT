@@ -7,7 +7,7 @@ import java.rmi.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.RmiAddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 
 public class ServerMain {
 	private static final Logger LOGGER = LogManager.getLogger(ServerMain.class);

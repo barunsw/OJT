@@ -45,12 +45,12 @@ import javax.swing.tree.DefaultTreeModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.AddressVo;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
-import com.barunsw.ojt.constants.RmiAddressBookInterface;
 import com.barunsw.ojt.gtkim.day12.AddressTableCellRenderer;
 import com.barunsw.ojt.gtkim.day12.CommonTableModel;
 import com.barunsw.ojt.gtkim.day12.TestFileManager;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	static final Logger LOGGER = LogManager.getLogger(TestPanel.class);

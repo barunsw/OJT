@@ -36,9 +36,9 @@ import javax.swing.tree.TreePath;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.AddressVo;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
-import com.barunsw.ojt.constants.RmiAddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 
 
 
@@ -118,8 +118,8 @@ public class TestPanel extends JPanel {
 			initComponent();
 			initTable();
 			initButtonEvent();
+			initRmi();
 			initData();
-
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -127,20 +127,6 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void initComponent() throws Exception {
-		
-		try {
-			//Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
-			
-			Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
-			
-			Remote remote = registry.lookup("ADDRESSBOOK");
-			if (remote instanceof RmiAddressBookInterface) {
-				addressBookIf = (RmiAddressBookInterface)remote;
-			}
-		} 
-		catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
 		this.setLayout(gridBagLayout);
 		Gender_Group.add(jRadioButton_Man);
 		Gender_Group.add(jRadioButton_Woman);
@@ -266,6 +252,52 @@ public class TestPanel extends JPanel {
 						0, 0));
 	}
 	
+	private void initRmi() {
+		try {
+			//Registry registry = LocateRegistry.getRegistry("192.168.0.15",commonFunction.getPort());
+			
+			Registry registry = LocateRegistry.getRegistry(commonFunction.getPort());
+			
+			Remote remote = registry.lookup("ADDRESSBOOK");
+			if (remote instanceof RmiAddressBookInterface) {
+				addressBookIf = (RmiAddressBookInterface)remote;
+			}
+		} 
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+
+	private void initTable() {
+		Vector<String> columnData = new Vector<>();
+		columnData.add("번호");
+		columnData.add("이름");
+		columnData.add("성별");
+		columnData.add("나이");
+		columnData.add("주소");
+		
+		tableModel.setColumn(columnData);
+		tableModel.setCellEditable(TABLE_COLUMN_NAME);
+		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
+		
+		jTable_Result.setModel(tableModel);
+		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
+			.setCellRenderer(new AgeCellRenderer());
+	
+		jTable_Result.setRowHeight(32);
+		jTable_Result.setAutoCreateRowSorter(true);
+
+		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));
+		jtree.addMouseListener(new TestPanel_jTree_MouseAdapter(this));
+	}
+	
+	private void initButtonEvent() {
+		jButton_Update.addActionListener(new Button_this_ActionListener(this));
+		jButton_Add.addActionListener(new Button_this_ActionListener(this));
+		jButton_Cancle.addActionListener(new Button_this_ActionListener(this));
+	}
+	
 	private void initData() {
 		try {
 			LOGGER.debug("+++ initData");
@@ -274,11 +306,11 @@ public class TestPanel extends JPanel {
 				LOGGER.debug("selectSize " + selectList.size());
 				tableModel.setNumRows(0);
 				
-				  for (int j = 0; j< root.getChildCount(); j++) {
-					  DefaultMutableTreeNode nd = (DefaultMutableTreeNode)root.getChildAt(j); nd.removeAllChildren(); 
-					  }
+				for (int j = 0; j < root.getChildCount(); j++) {
+					DefaultMutableTreeNode nd = (DefaultMutableTreeNode)root.getChildAt(j); nd.removeAllChildren(); 
+				}
 					
-				for(int i = 0; i < selectList.size(); i++) {
+				for (int i = 0; i < selectList.size(); i++) {
 					Vector OneData = new Vector();
 					OneData.add(selectList.get(i).getSeq());
 					OneData.add(selectList.get(i).getName());
@@ -312,37 +344,8 @@ public class TestPanel extends JPanel {
 		LOGGER.debug("--- initData");
 	}
 
-	private void initButtonEvent() {
-		jButton_Update.addActionListener(new Button_this_ActionListener(this));
-		jButton_Add.addActionListener(new Button_this_ActionListener(this));
-		jButton_Cancle.addActionListener(new Button_this_ActionListener(this));
-	}
-	private void initTable() {
-		Vector<String> columnData = new Vector<>();
-		columnData.add("번호");
-		columnData.add("이름");
-		columnData.add("성별");
-		columnData.add("나이");
-		columnData.add("주소");
-		
-		tableModel.setColumn(columnData);
-		tableModel.setCellEditable(TABLE_COLUMN_NAME);
-		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
-		
-		jTable_Result.setModel(tableModel);
-		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
-			.setCellRenderer(new AgeCellRenderer());
-	
-		jTable_Result.setRowHeight(32);
-		jTable_Result.setAutoCreateRowSorter(true);
-
-		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));
-		jtree.addMouseListener(new TestPanel_jTree_MouseAdapter(this));
-	}
-	
 	void jTree_mouseReleased(MouseEvent e) {
-			JTree jtree = (JTree)e.getSource();
+		JTree jtree = (JTree)e.getSource();
 			TreePath selectionPath = jtree.getSelectionPath();
 			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
 			Map<String,Object> map = new HashMap<String,Object>();

@@ -1,8 +1,10 @@
-package com.barunsw.ojt.constants;
+package com.barunsw.ojt.vo;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.barunsw.ojt.constants.Gender;
 
 public class AddressVo implements Serializable {
 	/**

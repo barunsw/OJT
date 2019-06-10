@@ -1,7 +1,9 @@
-package com.barunsw.ojt.constants;
+package com.barunsw.ojt.common;
 
 import java.util.List;
 import java.util.Map;
+
+import com.barunsw.ojt.vo.AddressVo;
 
 public interface AddressBookInterface {
 	public List<AddressVo> selectAddressList() throws Exception;

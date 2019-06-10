@@ -1,4 +1,4 @@
-package com.barunsw.ojt.constants;
+package com.barunsw.ojt.common;
 
 import java.rmi.Remote;
 

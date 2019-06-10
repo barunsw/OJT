@@ -2,7 +2,7 @@ package com.barunsw.ojt.gtkim.day14;
 
 import java.util.List;
 
-import com.barunsw.ojt.constants.AddressVo;
+import com.barunsw.ojt.vo.AddressVo;
 
 public interface AddressDao {
 	public List<AddressVo> selectAddressList();

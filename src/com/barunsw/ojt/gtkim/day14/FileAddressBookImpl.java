@@ -21,8 +21,8 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.AddressVo;
-import com.barunsw.ojt.constants.RmiAddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class FileAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface{
 	private static final Logger LOGGER = LogManager.getLogger(FileAddressBookImpl.class);
