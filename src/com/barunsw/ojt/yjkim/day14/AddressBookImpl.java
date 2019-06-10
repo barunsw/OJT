@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
+
+
 public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
 	private static final Logger LOGGER = LogManager.getLogger(AddressBookImpl.class);
 	private String namespace = "com.barunsw.ojt.yjkim.day14.RmiAddressDao";
