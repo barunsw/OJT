@@ -1,17 +1,18 @@
 package com.barunsw.ojt.yjkim.day16;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.barunsw.ojt.constants.Severity;
 
-public class AlaramVo {
+public class AlaramVo implements Serializable{
 	private int severity;
 	private int idx;
 	
 	public AlaramVo() {
-		double randomServerity = Math.random();
-		int randomValue = (int) (randomServerity * 37);
-		idx = randomValue;
+		idx = (int) (Math.random() * 37);
+		severity = (int) (Math.random() * 4);
 	}
 	public int getSeverity() {
 		return severity;

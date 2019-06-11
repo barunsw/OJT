@@ -12,7 +12,6 @@ public class ServerMain {
 	public static final String BIND_NAME = "CHAT";
 	public static final int PORT = 50000;
 
-	private boolean runFlag;
 	
 	public void start() {
 		LOGGER.debug(String.format("+++ ServerMain started."));
@@ -22,8 +21,10 @@ public class ServerMain {
 			
 			ServerInterface serverIf = 
 					new ServerImpl();
-			
 			registry.bind(BIND_NAME, serverIf);
+			
+			AlaramGenerator alaramGenerator = new AlaramGenerator(serverIf);
+			alaramGenerator.start();
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);

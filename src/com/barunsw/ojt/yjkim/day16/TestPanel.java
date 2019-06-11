@@ -27,6 +27,7 @@ import com.barunsw.ojt.constants.Severity;
 import com.barunsw.ojt.vo.BoardVo;
 import com.barunsw.ojt.yjkim.day10.CommonTableModel;
 
+
 public class TestPanel extends JPanel implements EventListener {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
 	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
@@ -34,11 +35,12 @@ public class TestPanel extends JPanel implements EventListener {
 	private ServerInterface serverIf = null;
 	
 	// 패널의 폭
-	public static final int WIDTH 	= 854;
+	public static final int WIDTH 		 	= 854;
 	// 패널의 넓이
-	public static final int HEIGHT 	= 604;
+	public static final int HEIGHT 		 	= 600;
+	public static final int TABLE_HEIGHT 	= 500;
 	// 슬롯 넘버
-	public final int SLOT_NUM 		= 38;
+	public final int SLOT_NUM 			    = 38;
 	// 시작위치
 	public final int TOP_BOARD_START_X 		= 27;
 	public final int BOTTOM_BOARD_START_X 	= 107;
@@ -58,6 +60,7 @@ public class TestPanel extends JPanel implements EventListener {
 	private JTable jTable_Result 				= new JTable();
 	private CommonTableModel tableModel 		= new CommonTableModel();
 	private List<BoardVo> boardList =  new ArrayList<BoardVo>();
+	
 	public TestPanel() {
 		try {
 			initEvent();
@@ -70,11 +73,6 @@ public class TestPanel extends JPanel implements EventListener {
 		}
 	}
 	private void initEvent() {
-		try {
-			clientIf = new ClientImpl();
-		} catch (RemoteException re) {
-			LOGGER.error(re);
-		}
 		eventQueueWorker.addEventListener(this);
 		
 		eventQueueWorker.start();
@@ -83,21 +81,22 @@ public class TestPanel extends JPanel implements EventListener {
 	private void initComponent() throws Exception {
 		this.setLayout(null);
 		this.add(jPanel_gridBag);
-		jPanel_gridBag.setBounds(0,604,854,520);
+		jPanel_gridBag.setBounds(0,HEIGHT,WIDTH,TABLE_HEIGHT);
 		jPanel_gridBag.setVisible(true);
 		jPanel_gridBag.add(jScrollPane_Table, 
-				new GridBagConstraints(1, 1, 1, 1,
+				new GridBagConstraints(0, 0, 1, 1,
 						1.0, 1.0,
-						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-						new Insets(5, 5, 5, 5),
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 0),
 						0, 0));
-		
 		jScrollPane_Table.getViewport().add(jTable_Result);
 		LOGGER.debug("--- TestRack StateView initComponent");
 	}
 	
 	private void initConnectRMI() {
 		try {
+			clientIf = new ClientImpl();
+
 			Registry registry;
 			registry = LocateRegistry.getRegistry(ServerMain.PORT);
 			
@@ -106,10 +105,8 @@ public class TestPanel extends JPanel implements EventListener {
 				serverIf = (ServerInterface)remote;
 			}
 			if (serverIf != null) {
-				serverIf.register("start", clientIf);
-				serverIf.send("start", "start");
+				serverIf.register(clientIf);
 			}
-		
 		} catch (RemoteException re) {
 			LOGGER.error(re.getMessage(), re);
 		} catch (NotBoundException nbe) {
@@ -130,7 +127,7 @@ public class TestPanel extends JPanel implements EventListener {
 		jTable_Result.setModel(tableModel);
 		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		LOGGER.debug("---TestRack StateView initTable ");
-		
+		jTable_Result.setRowHeight(38);
 		for (int i = 0; i < SLOT_NUM; i++) {
 			Vector OneData = new Vector();
 			OneData.add(i);
@@ -184,6 +181,8 @@ public class TestPanel extends JPanel implements EventListener {
 			} else if (i % 18 == 0 || i % 36 == 0) {
 				boardVo.setBoardType(BoardType.SRGU);
 				boardVo.setBoardName("SRGU");
+			} else if (i % 19 == 0 || i % 37 == 0) {
+				continue;
 			} else {
 				boardVo.setBoardType(BoardType.SALC);
 				boardVo.setBoardName("SALC");
@@ -223,30 +222,35 @@ public class TestPanel extends JPanel implements EventListener {
 
 		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
 	}
+	
 	@Override
 	public void push(Object o) {
-		String[] str = o.toString().split("/");
-		LOGGER.debug(str[0] + str[1]);
-		switch (str[0]) {
-			case "0" :
-				tableModel.setValueAt("CRITICAL", Integer.parseInt(str[1]), TABLE_COLUMN_SERVERITY);
+		LOGGER.debug("push : "+ o);
+		if (o instanceof AlaramVo) {
+			AlaramVo alaramVo = (AlaramVo)o;
+			switch (alaramVo.getSeverity()) {
+			case 0 :
+				tableModel.setValueAt("CRITICAL", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
 				break;
-			case "1" :
-				tableModel.setValueAt("MAJOR", Integer.parseInt(str[1]), TABLE_COLUMN_SERVERITY);
+			case 1 :
+				tableModel.setValueAt("MAJOR", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);	
 				break;
-			case "2" :
-				tableModel.setValueAt("MINOR", Integer.parseInt(str[1]), TABLE_COLUMN_SERVERITY);
+			case 2 :
+				tableModel.setValueAt("MINOR", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
 				break;
-			case "3" :
-				tableModel.setValueAt("NORMAL", Integer.parseInt(str[1]), TABLE_COLUMN_SERVERITY);
+			case 3 :
+				tableModel.setValueAt("NORMAL", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
 				break;
 			}
 		
 			for (int i = 0; i < boardList.size(); i++) {
-				if(boardList.get(i).getBoardId() == Integer.parseInt(str[1])) {
-					boardList.get(i).setSeverity(Integer.parseInt(str[0]));
+				
+				if(boardList.get(i).getBoardId() == alaramVo.getIdx()) {
+					boardList.get(i).setSeverity(alaramVo.getSeverity());
 				}
 			}
+		}
+	
 		ResetData();
 		tableModel.fireTableDataChanged();		
 	}
