@@ -7,4 +7,6 @@ public interface ServerInterface extends Remote {
 	public void register(ClientInterface clientIf) throws RemoteException;
 	
 	public void change() throws RemoteException;
+	
+	public void deRegister(ClientInterface clientIf) throws RemoteException;
 }

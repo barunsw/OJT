@@ -43,6 +43,7 @@ public class TestFrame extends JFrame {
 		int result = JOptionPane.showConfirmDialog(TestFrame.this, 
 				"정말로 종료하시겠습니까?", "EXIT", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
+			testPanel.close();
 			System.exit(0);
 		}
 	}

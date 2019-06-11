@@ -166,6 +166,17 @@ public class TestPanel extends JPanel {
 		}
 	}
 	
+	public void close() {
+		try {
+			tablePanel.close();
+			// boardPanel.close(); 
+			serverIf.deRegister(clientIf);
+		}
+		catch (RemoteException re) {
+			LOGGER.error(re.getMessage(), re);
+		}
+	}
+	
 	@Override 
 	protected void paintComponent(Graphics g) { 
 //		LOGGER.debug("paint_Background_Component");

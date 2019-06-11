@@ -131,6 +131,10 @@ public class TablePanel extends JPanel implements EventListener {
 		}
 	}
 	
+	public void close() {
+		ClientMain.eventQueueWorker.removeEventListener(this);
+	}
+	
 	@Override
 	public void push(Object o) {
 		if (o instanceof AlarmVo) {

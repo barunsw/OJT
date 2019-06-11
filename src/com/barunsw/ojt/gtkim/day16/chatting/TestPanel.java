@@ -136,6 +136,15 @@ public class TestPanel extends JPanel implements EventListener {
 		}
 	}
 
+	public void close() {
+		try {
+			serverIf.logOut(name, clientIf);
+		}
+		catch (Exception ex) {
+			LOGGER.debug(ex.getMessage(), ex);
+		}
+	}
+	
 	@Override
 	public void push(Object o) {
 		if (o instanceof String) {

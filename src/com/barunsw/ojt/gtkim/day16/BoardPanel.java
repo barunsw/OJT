@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.vo.BoardVo;
 
+import sun.applet.Main;
+
 /*
  *  background Rack에 부착될 unit panel을 생성하는 클래스
  */
@@ -120,6 +122,10 @@ public class BoardPanel extends JPanel implements EventListener {
 		jLabel_Info.setBackground(Color.white);
 		jLabel_Info.setBounds(e.getX(), e.getY(), 70, 10);
 		
+	}
+	
+	public void close() {
+		ClientMain.eventQueueWorker.removeEventListener(this);
 	}
 	
 	@Override

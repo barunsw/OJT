@@ -32,10 +32,22 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		
 		synchronized (clientRepo) {
 			for (ClientInterface oneIf : clientRepo.values()) {
-					oneIf.push(String.format("[%s] : %s", name, msg));
-					LOGGER.debug(String.format("[%s] : %s", name, msg));
+
+				oneIf.push(String.format("[%s] : %s", name, msg));
+				LOGGER.debug(String.format("[%s] : %s", name, msg));
+
 			}
 		}
+	}
+
+	@Override
+	public void logOut(String name, ClientInterface clientInterface) throws RemoteException {
+		LOGGER.debug("연결을 해제합니다 : " + name);
+		
+		synchronized (clientRepo) {
+			clientRepo.remove(name, clientInterface);
+		}
+		
 	}
 
 }

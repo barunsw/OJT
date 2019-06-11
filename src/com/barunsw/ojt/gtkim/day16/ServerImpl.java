@@ -39,4 +39,11 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 			}
 		}
 	}
+
+	@Override
+	public void deRegister(ClientInterface clientIf) throws RemoteException {
+		synchronized (clientRepo) {
+			clientRepo.remove(clientIf);
+		}		
+	}
 }
