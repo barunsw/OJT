@@ -2,12 +2,13 @@ package com.barunsw.ojt.yjkim.day15;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class TestPanel extends JPanel {
 	// board 위치 간격
 	public final int BOARD_WIDTH_GAP = 40;
 	private String greetings = "Hello World";
-
+	
 	public TestPanel() {
 		try {
 			initComponent();
@@ -98,59 +99,61 @@ public class TestPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		LOGGER.debug("paintComponent");
+
+		g.setColor(Color.white);
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+		g.setColor(Color.black);
+		g.drawOval(100, 100, 300, 200);
+
+		// 문자열을 가운데 쓴다.
+		g.setColor(Color.red);
+		g.setFont(new Font("Tahoma", Font.BOLD, 20));
 		
-		  g.setColor(Color.white); g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		  
-		  g.setColor(Color.black); g.drawOval(100, 100, 300, 200);
-		  
-		  // 문자열을 가운데 쓴다. 
-		  g.setColor(Color.red); g.setFont(new Font("Tahoma",
-		  Font.BOLD, 20));
-		  
-//		  int stringWidth = g.getFontMetrics().stringWidth(greetings); int stringHeight
-//		  = g.getFontMetrics().getHeight();
-//		  
-//		  int strX = (this.getWidth() - stringWidth) / 2; int strY = (this.getHeight()
-//		  - stringHeight) / 2;
-//		  int ascent 	= g.getFontMetrics().getAscent();
-//		  int descent	= g.getFontMetrics().getDescent();
-//		  int height 	= g.getFontMetrics().getHeight();
-//		  int leading 	= g.getFontMetrics().getLeading();
-//		  int baseline 	= 60;
-//		  int baseline2;
-//		  String s = "java";
-//		  int x = 600 , x2, y1, y2, y3, y4, y5;
-//		  g.drawString(s, x, baseline);
-//		  g.drawString(greetings, strX, strY);
-//		 
-//		  y1 = baseline - ascent;
-//		  g.drawLine(580, y1, 700, y1);
-//		  
-//		  g.drawLine(580, baseline, 750, baseline);
-//		  
-//		  y2 = baseline + descent + leading;
-//		  g.drawLine(580, y2, 770, y2);
-//		  
-//		  y3 = baseline + descent + leading;
-//		  g.drawLine(580, y3, 790, y3);
+		 
+		int stringWidth = g.getFontMetrics().stringWidth(greetings);
+		int stringHeight = g.getFontMetrics().getHeight();
+
+//		int strX = (this.getWidth() - stringWidth) / 2;
+//		int strY = (this.getHeight() - stringHeight) / 2;
+//		int ascent = g.getFontMetrics().getAscent();
+//		int descent = g.getFontMetrics().getDescent();
+//		int height = g.getFontMetrics().getHeight();
+//		int leading = g.getFontMetrics().getLeading();
+//		int baseline = 60;
+//		int baseline2;
+//		String s = "java";
+//		int x = 600, x2, y1, y2, y3, y4, y5;
+//		g.drawString(s, x, baseline);
+//		g.drawString(greetings, strX, strY);
 //
-//		  baseline2 = baseline + g.getFontMetrics().getHeight();
-//		  g.drawString(s, x, baseline2);  
-//		  
-//		  g.drawLine(580,baseline2,800,baseline2);
-//		  
-//		  y4 = baseline2 - ascent;
-//		  g.drawLine(700, y4, 800, y4);
-//		 
-//		  y5 = baseline2 - descent;
-//		  g.drawLine(580, y5, 780, y5);
-//		  
-//		  x2 = x + g.getFontMetrics().stringWidth(s);
-//		  g.drawLine(x, 5, x, 150);
-//		  g.drawLine(x2, 5, x2, 150);
-//		 
-		 g.drawImage(ImageFactory.backgroundImageIcon.getImage(),
-		 			0, 0, this);
+//		y1 = baseline - ascent;
+//		g.drawLine(580, y1, 700, y1);
+//
+//		g.drawLine(580, baseline, 750, baseline);
+//
+//		y2 = baseline + descent + leading;
+//		g.drawLine(580, y2, 770, y2);
+//
+//		y3 = baseline + descent + leading;
+//		g.drawLine(580, y3, 790, y3);
+//
+//		baseline2 = baseline + g.getFontMetrics().getHeight();
+//		g.drawString(s, x, baseline2);
+//
+//		g.drawLine(580, baseline2, 800, baseline2);
+//
+//		y4 = baseline2 - ascent;
+//		g.drawLine(700, y4, 800, y4);
+//
+//		y5 = baseline2 - descent;
+//		g.drawLine(580, y5, 780, y5);
+//
+//		x2 = x + g.getFontMetrics().stringWidth(s);
+//		g.drawLine(x, 5, x, 150);
+//		g.drawLine(x2, 5, x2, 150);
+
+		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
 	}
 
 	public int getSeverity() {

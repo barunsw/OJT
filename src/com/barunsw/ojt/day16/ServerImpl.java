@@ -31,8 +31,7 @@ public class ServerImpl extends UnicastRemoteObject
 
 	@Override
 	public void send(String name, String msg) throws RemoteException {
-		// TODO Auto-generated method stub
-		LOGGER.debug("send msg:" + msg);
+		LOGGER.debug(String.format("Server send name : [%s] msg : [%s]",name, msg));
 		
 		synchronized (clientRepo) {
 			for (ClientInterface oneClient : clientRepo.values()) {

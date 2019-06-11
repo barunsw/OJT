@@ -1,4 +1,4 @@
-package com.barunsw.ojt.yjkim.day15;
+package com.barunsw.ojt.yjkim.day16;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -22,16 +22,13 @@ public class BoardPanel extends JPanel {
 	public final int MPU_BOARD_HEIGHT	= 550;
 	
 	private BoardVo boardVo;
-	private Popup popup;
 
 	public BoardPanel(BoardVo boardVo) {
 		LOGGER.debug("board 생성");
 		this.boardVo = boardVo;
-		PopupFactory popupFactory = new PopupFactory();
-		popup = popupFactory.getPopup(this.getParent(), this, 500, 500);
-		popup.show();
 	}
-	public Image getBoardImage() {
+	
+	private Image getBoardImage() {
 		// 보드 타입, 등급(Severity)에 따라 이미지를 반환
 		// ImageFactory.mpuImageIcon[boardVo.getSeverity()];
 		Image boardImage = null;

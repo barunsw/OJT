@@ -1,4 +1,4 @@
-package com.barunsw.ojt.yjkim.day15;
+package com.barunsw.ojt.yjkim.day16;
 
 import javax.swing.ImageIcon;
 
@@ -39,5 +39,6 @@ public class ImageFactory {
 		salcImageIcon[0] = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/tamms/SALC_critical.png"));
 		srguImageIcon[0] = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/tamms/SRGU_critical.png"));
 		
+	
 	}
 }
