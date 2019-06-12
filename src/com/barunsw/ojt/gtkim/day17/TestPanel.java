@@ -1,4 +1,4 @@
-package com.barunsw.ojt.gtkim.day16;
+package com.barunsw.ojt.gtkim.day17;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -46,8 +46,6 @@ public class TestPanel extends JPanel {
 	public final int BOARD_START_Y_TOP		= 26;
 	public final int BOARD_START_Y_BOTTOM 	= 307;
 	
-	private JButton jButton_Change = new JButton("Change");
-	
 	private TablePanel tablePanel = new TablePanel();
 	
 	private ServerInterface serverIf;
@@ -87,18 +85,12 @@ public class TestPanel extends JPanel {
 		this.setLayout(null);
 		
 		this.add(tablePanel);
-		this.add(jButton_Change);
 	
 		tablePanel.setBounds(0, HEIGHT, WIDTH, TABLE_HEIGHT);
-		jButton_Change.setBounds(TEXT_WIDTH * 7, 0, BUTTON_WIDTH, BUTTON_HEIGHT);
-
-		jButton_Change.addActionListener(new TestPanel_JButton_ActionListener(this));
 	}
 	
 	private void initData() {
 		List<BoardVo> boardList = getBoardData();
-		
-		tablePanel.updateData(boardList);
 		
 		for (BoardVo oneBoardVo : boardList) {
 			int boardId = oneBoardVo.getBoardId();
@@ -154,21 +146,12 @@ public class TestPanel extends JPanel {
 		return boardList;
 	}
 	
-	public void buttonAction(ActionEvent e) {
-		try {
-			serverIf.change();
-		}
-		catch (RemoteException re) {
-			LOGGER.error(re.getMessage(), re);
-		}
-	}
-	
 	public void close() {
 		try {
 			tablePanel.close();
 			// boardPanel.close(); 
-			if (clientIf != null) {
-				serverIf.deRegister(clientIf);
+			if (serverIf != null) {
+				serverIf.deregister(clientIf);
 			}
 		}
 		catch (RemoteException re) {
@@ -185,20 +168,6 @@ public class TestPanel extends JPanel {
 		
 		g.setColor(Color.RED);
 		g.setFont(new Font("바탕", Font.BOLD, 16));
-		g.drawString("테스트 Rack_View", TEXT_WIDTH, TEXT_HEIGHT);
+		g.drawString("테스트 Shelf_View", TEXT_WIDTH, TEXT_HEIGHT);
 	}
-}
-
-class TestPanel_JButton_ActionListener implements ActionListener {
-	TestPanel adaptee;
-	
-	public TestPanel_JButton_ActionListener(TestPanel adaptee) { 
-		this.adaptee = adaptee;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		adaptee.buttonAction(e);
-	}
-	
 }

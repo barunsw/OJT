@@ -150,7 +150,8 @@ public class TestPanel extends JPanel implements EventListener {
 		if (o instanceof String) {
 			String msg = (String) o;
 			
-			jTextArea_View.setText(jTextArea_View.getText() + "\n" + msg);
+//			jTextArea_View.setText(jTextArea_View.getText() + "\n" + msg);
+			jTextArea_View.append("\n" + msg);
 			
 			jScrollPane_View.getVerticalScrollBar()
 				.setValue(jScrollPane_View.getVerticalScrollBar().getMaximum());
