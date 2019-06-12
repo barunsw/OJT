@@ -1,4 +1,4 @@
-package com.barunsw.ojt.yjkim.day16;
+package com.barunsw.ojt.yjkim.day17;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,8 +24,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.constants.BoardType;
 import com.barunsw.ojt.constants.Severity;
+import com.barunsw.ojt.vo.AlarmVo;
 import com.barunsw.ojt.vo.BoardVo;
 import com.barunsw.ojt.yjkim.day10.CommonTableModel;
+import com.barunsw.ojt.yjkim.day13.AgeCellRenderer;
 
 
 public class TestPanel extends JPanel implements EventListener {
@@ -50,11 +52,12 @@ public class TestPanel extends JPanel implements EventListener {
 	public final int BOARD_WIDTH_GAP		= 40;
 	
 	private int columnIdx = 0;
-	private final int TABLE_COLUMN_IDX 			= columnIdx++; 
-	private final int TABLE_COLUMN_TYPE 		= columnIdx++; 
-	private final int TABLE_COLUMN_SERVERITY  	= columnIdx++;
-	private final int TABLE_COLUMN_STATE 		= columnIdx++; 
-	
+	private final int TABLE_COLUMN_ID 			= columnIdx++; 
+	private final int TABLE_COLUMN_SEV 			= columnIdx++; 
+	private final int TABLE_COLUMN_MSG  		= columnIdx++;
+	private final int TABLE_COLUMN_LOC 			= columnIdx++; 
+	private final int TABLE_COLUMN_TIME 		= columnIdx++; 
+
 	private JPanel jPanel_Table 				= new JPanel();
 	private JScrollPane jScrollPane_Table 		= new JScrollPane();
 	private JTable jTable_Result 				= new JTable();
@@ -94,7 +97,6 @@ public class TestPanel extends JPanel implements EventListener {
 	private void initConnectRMI() {
 		try {
 			clientIf = new ClientImpl();
-
 			Registry registry;
 			registry = LocateRegistry.getRegistry(ServerMain.PORT);
 			
@@ -103,7 +105,7 @@ public class TestPanel extends JPanel implements EventListener {
 				serverIf = (ServerInterface)remote;
 			}
 			if (serverIf != null) {
-				serverIf.register(clientIf);
+				serverIf.register("김윤제",clientIf);
 			}
 		} catch (RemoteException re) {
 			LOGGER.error(re.getMessage(), re);
@@ -123,21 +125,10 @@ public class TestPanel extends JPanel implements EventListener {
 		tableModel.setColumn(columnData);
 		jTable_Result.setModel(tableModel);
 		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_SEV)
+		.setCellRenderer(new SevCellRenderer());		
 		jTable_Result.setRowHeight(38);
-		for (int i = 0; i < SLOT_NUM; i++) {
-			Vector OneData = new Vector();
-			OneData.add(i);
-			if (i < 2) {
-				OneData.add("MPU");
-			} else if (i % 18 == 0 || i % 19 == 0 || i % 37 == 0) {
-				OneData.add("SRGU");
-			} else {
-				OneData.add("SALC");
-			}
-			OneData.add("NORMAL");
-			OneData.add("NONE");
-			tableModel.addData(OneData);
-		}		
+
 	}
 	
 	private void initData() {
@@ -222,34 +213,46 @@ public class TestPanel extends JPanel implements EventListener {
 	@Override
 	public void push(Object o) {
 		LOGGER.debug("push : "+ o);
-		if (o instanceof AlaramVo) {
-			AlaramVo alaramVo = (AlaramVo)o;
-			switch (alaramVo.getSeverity()) {
-			case 0 :
-				tableModel.setValueAt("CRITICAL", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
-				break;
-			case 1 :
-				tableModel.setValueAt("MAJOR", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);	
-				break;
-			case 2 :
-				tableModel.setValueAt("MINOR", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
-				break;
-			case 3 :
-				tableModel.setValueAt("NORMAL", alaramVo.getIdx(), TABLE_COLUMN_SERVERITY);
-				break;
-			}
-		
-			for (int i = 0; i < boardList.size(); i++) {
-				
-				if(boardList.get(i).getBoardId() == alaramVo.getIdx()) {
-					boardList.get(i).setSeverity(alaramVo.getSeverity());
+		if (o instanceof AlarmVo) {
+			LOGGER.debug(o);
+			AlarmVo alarmVo = (AlarmVo)o;
+			if (!(alarmVo.getAlarmLoc() == null)) {
+				String[] boardId = alarmVo.getAlarmLoc().split("=");
+	
+				Vector oneData = new Vector();
+				oneData.add(alarmVo.getAlarmId());
+				switch (alarmVo.getSeverity()) {
+				case 0 :
+					oneData.add("CRITICAL");
+					break;
+				case 1 :
+					oneData.add("MAJOR");
+					break;
+				case 2 :
+					oneData.add("MINOR");
+					break;
+				case 3 :
+					oneData.add("NORMAL");
+					break;
 				}
-			}
+				oneData.add(alarmVo.getAlarmMsg());
+				oneData.add(Integer.parseInt(boardId[1]));
+				oneData.add(alarmVo.getEventTime());
+				
+				if(tableModel.getRowCount() == 0) {
+					tableModel.addData(oneData);
+				} else {
+					tableModel.addData(oneData, 0);
+				}
+				
+				for (int i = 0; i < boardList.size(); i++) { // //
+					if(boardList.get(i).getBoardId() == Integer.parseInt(boardId[1])) {
+						boardList.get(i).setSeverity(alarmVo.getSeverity()); // } // }
+					}
+				}
+				ResetData();
+				tableModel.fireTableDataChanged();		
 		}
-	
-		ResetData();
-		tableModel.fireTableDataChanged();		
+	  }
 	}
-
-	
 }

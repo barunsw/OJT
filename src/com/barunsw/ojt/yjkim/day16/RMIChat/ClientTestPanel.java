@@ -27,17 +27,17 @@ public class ClientTestPanel extends JPanel implements EventListener {
 	private static final Logger LOGGER = LogManager.getLogger(ClientTestPanel.class);
 	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
 
-	private GridBagLayout gridBagLayout 	= new GridBagLayout();
-	private JLabel jLabel_Name 				= new JLabel("이름");
-	private JLabel jLabel_Message 			= new JLabel("메시지");
+	private GridBagLayout gridBagLayout 	 	 = new GridBagLayout();
+	private JLabel jLabel_Name 					 = new JLabel("이름");
+	private JLabel jLabel_Message 				 = new JLabel("메시지");
 	
-	private JTextField jTextField_Name		= new JTextField(10);
-	private JTextField jTextField_Message 	= new JTextField(20); 
+	private JTextField jTextField_Name			 = new JTextField(10);
+	private JTextField jTextField_Message 		 = new JTextField(20); 
 	public JTextArea jTextArea_ToTalMessge;
 	
-	private JButton jButton_Send 			= new JButton("전송");
+	private JButton jButton_Send 				 = new JButton("전송");
 	
-	private JPanel jPanel_InputField 		= new JPanel();
+	private JPanel jPanel_InputField 			 = new JPanel();
 	private JScrollPane jScrollPane_TotalMessage = new JScrollPane();
 	
 	private ClientInterface clientIf;
@@ -55,11 +55,6 @@ public class ClientTestPanel extends JPanel implements EventListener {
 	}
 	
 	private void initEvent() {
-		try {
-			clientIf = new ClientImpl();
-		} catch (RemoteException re) {
-			LOGGER.error(re);
-		}
 		eventQueueWorker.addEventListener(this);
 		
 		eventQueueWorker.start();
@@ -67,6 +62,8 @@ public class ClientTestPanel extends JPanel implements EventListener {
 	
 	private void initConnectRMI() {
 		try {
+			clientIf = new ClientImpl();
+
 			Registry registry;
 			registry = LocateRegistry.getRegistry(ServerMain.PORT);
 			
