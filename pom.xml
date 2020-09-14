@@ -17,6 +17,10 @@
     </plugins>
   </build>
   
+  <properties>
+  	<org.apache.logging.log4j-version>2.13.2</org.apache.logging.log4j-version>
+  </properties>
+  
   <dependencies>
 	 <dependency>
 	  <groupId>org.apache.logging.log4j</groupId>
