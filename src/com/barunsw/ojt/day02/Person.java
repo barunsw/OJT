@@ -2,7 +2,7 @@ package com.barunsw.ojt.day02;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Person {
+public class Person extends Object {
 	private int age;
 	private String name;
 	

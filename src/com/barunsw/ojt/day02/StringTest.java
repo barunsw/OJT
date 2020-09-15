@@ -1,5 +1,8 @@
 package com.barunsw.ojt.day02;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +18,7 @@ public class StringTest {
 		
 		final Person onePerson = new Person(25, "홍길동");
 		LOGGER.debug("onePerson:" + onePerson);
-		
+
 		final String aaa = "Hello World";
 		if (aaa.startsWith("Hello")) {
 			LOGGER.debug("Hello로 시작");
@@ -25,8 +28,8 @@ public class StringTest {
 			LOGGER.debug("World로 끝");
 		}
 		
-		final String bbb = "Hello World";
-		//String bbb = new String("Hello World");
+//		final String bbb = "Hello World";
+		String bbb = new String("Hello World");
 		
 		if (aaa.equals(bbb)) {
 			LOGGER.debug("aaa와 bbb는 동일한 내용을 가진다.");
@@ -72,6 +75,21 @@ public class StringTest {
 		}
 		else {
 			LOGGER.debug("정규표현식 일치하지 않음");
+		}
+		
+		String driverLicense = "운전면허번호:92-016593-02-1";
+		String rt = ".*(\\d{2}-(\\d{6})-\\d{2}-\\d{1})";
+		
+		Pattern p = Pattern.compile(".*(\\d{2}-(\\d{6})-\\d{2}-\\d{1})");
+		Matcher m = p.matcher(driverLicense);
+		if (m.matches()) {
+			System.out.println("group1:" + m.group(1));
+			System.out.println("group2:" + m.group(2));
+		}
+		
+		if (driverLicense.matches(rt)) {
+			
+			LOGGER.debug("정규표현식 일치");
 		}
 	}
 }
