@@ -78,6 +78,25 @@ public class StringTest {
 		LOGGER.debug("str1이 'Park'로 시작하는지? : " + str1.startsWith("Park"));
 		LOGGER.debug("str1이 'Seong'로 끝나는지? : " + str1.endsWith("Seong"));
 		LOGGER.debug("str1이 'hehe'로 끝나는지? : " + str1.endsWith("hehe"));
+		
+//		=============================================
+		
+		//str1과 str2를 비교해서 정렬한다
+		//str2가 높은 우선순위이면 -1을 반환
+		//str2가 낮은 우선순위이면 1을 반환
+		//str1과 str2가 둘다 같으면  0을 반환
+		//comparable를 implements해서 compareTo를 재정의하여 객체 정렬할떄 사용할수있음
+		//compareToIgnoreCase 는 대소문자를 구분하지않는다. 사용방법은 같음
+		if (str1.compareTo(str2) == 0) {
+			LOGGER.debug("str1 과 str2는 같음");
+		}
+		
+//		==============================================
+		
+		LOGGER.debug("str1에 'Hee' 문자열을  포함하고있는지? : " + str1.contains("Hee"));
+		
+		LOGGER.debug("str1의 해쉬코드값은? : " + str1.hashCode());
+		
 	}
 
 }
