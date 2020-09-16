@@ -10,7 +10,7 @@ public class Person implements Serializable{
 	private String age;
 	private String phone;
 	private String address;
-	
+	  
 	public String getAddress() {
 		return address;
 	}
