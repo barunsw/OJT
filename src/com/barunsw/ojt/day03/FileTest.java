@@ -64,6 +64,8 @@ public class FileTest {
 		}
 
 		try (InputStream inputStream2 = new FileInputStream(addressFile)) {
+			int readNum = inputStream2.read(data);
+			LOGGER.debug(String.format("[%d]%s", readNum, new String(data)));
 		}
 		catch (FileNotFoundException fnfe) {
 			LOGGER.error(fnfe.getMessage(), fnfe);
@@ -72,7 +74,8 @@ public class FileTest {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		
-		char[] charData = new char[1024];
+
+		char[] charData = new char[5];
 		try (Reader reader = new FileReader(addressFile)) {
 			int readNum = reader.read(charData);
 			LOGGER.debug(String.format("+++ [%d]%s", readNum, new String(charData)));
@@ -83,7 +86,7 @@ public class FileTest {
 		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		
+
 		List<Person> personList = new ArrayList<Person>();
 		
 		// line  단위로 읽기 위해 BufferedReader 사용
@@ -119,7 +122,7 @@ public class FileTest {
 		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		
+
 		File outputFile = new File("data/day03/address.dat");
 		// Person 객체 단위로 write
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outputFile))) {
@@ -151,7 +154,7 @@ public class FileTest {
 		catch (ClassNotFoundException cnfe) {
 			LOGGER.error(cnfe.getMessage(), cnfe);
 		}
-		
+
 		try (BufferedReader reader = Files.newBufferedReader(Paths.get("data/day03/address.txt"), StandardCharsets.UTF_8)) {
 			String readLine = null;
 			while ((readLine = reader.readLine()) != null) {
