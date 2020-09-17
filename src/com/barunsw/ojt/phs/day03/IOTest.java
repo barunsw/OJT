@@ -97,7 +97,7 @@ public class IOTest {
 				LOGGER.debug("파일이 이미 존재합니다. 파일이름: " + outputFile.getName());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.debug(e);
 		}
 		
 		//personList에 들어있는 person객체들을 dat파일에 전부다 쓰기
@@ -123,6 +123,24 @@ public class IOTest {
 		}
 		
 //		=================================================================
+		
+		FileInputStream fis = null;
+		try {
+			new FileInputStream(file);
+			//...내용생략
+		}catch(IOException e) {
+			LOGGER.debug(e);
+		}finally {
+			try {
+				fis.close();
+			} catch (IOException e) {
+				LOGGER.debug(e);
+			}
+		}
+		
+		
+		
+		
 		
 	}
 }
