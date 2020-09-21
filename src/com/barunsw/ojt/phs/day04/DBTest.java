@@ -33,7 +33,7 @@ public class DBTest {
 		return dbTest;
 	}
 
-	public void driverRoad() {
+	public void driverLoad() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 			LOGGER.debug("driver 로드 성공");
@@ -119,15 +119,17 @@ public class DBTest {
 		}
 	}
 	
-	public static void closeAll(Object... obj){
-		for(Object o:obj) {
+	public static void closeAll(Object... obj) {
+		for (Object o:obj) {
 			try {
-				if(o instanceof PreparedStatement) {
+				if (o instanceof PreparedStatement) {
 					((PreparedStatement)o).close();
-				}else if(o instanceof Connection){
+				}
+				else if (o instanceof Connection) {
 					((Connection)o).close();
 				}
-			}catch(Exception e) {
+			}
+			catch (Exception e) {
 				LOGGER.debug(e.getMessage());
 			}
 		}
@@ -135,7 +137,7 @@ public class DBTest {
 	
 	public static void main(String[] args) {
 
-		dbTest.driverRoad();
+		dbTest.driverLoad();
 		dbTest.dbSelect();
 //		dbTest.dbInsert();
 //		dbTest.dbUpdate();

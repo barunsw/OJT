@@ -2,6 +2,7 @@ package com.barunsw.ojt.day06;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -36,6 +37,13 @@ public class TestFrame extends JFrame {
 		
 		// 윈도우 이벤트
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
+//		this.addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosing(WindowEvent e) {
+//				// TODO Auto-generated method stub
+//				System.exit(0);
+//			}
+//		});
 	}
 	
 	void windowClosing(WindowEvent e) {

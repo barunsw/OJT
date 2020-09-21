@@ -9,9 +9,9 @@ public class SwingTest {
 		TestFrame frame = new TestFrame();
 		//frame.setSize(100, 100);
 		// 1) 표시할 위치 지정
-		//frame.setLocation(new Point(100, 100));
+//		frame.setLocation(new Point(100, 100));
 		// 2) 표시할 크기 지정
-		//frame.setSize(new Dimension(300, 300));
+//		frame.setSize(new Dimension(300, 300));
 		
 		// 화면의 전체 크기
 		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();

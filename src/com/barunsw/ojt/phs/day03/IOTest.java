@@ -34,10 +34,11 @@ public class IOTest {
 		
 		//Stream 선언을 try 오른쪽 괄호 안에 넣어주면 finally를 이용해 close()를 사용할 필요가없음
 		//코드가 줄어들어 간편해짐
-		try (FileInputStream fis = new FileInputStream(file)){
+		try (FileInputStream fis = new FileInputStream(file)) {
 			fis.read(data);
 			LOGGER.debug(String.format("%s", new String(data)));
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			LOGGER.debug(e);
 		}
 		
@@ -46,10 +47,11 @@ public class IOTest {
 		//reader는 Char단위로 읽기 때문에 char배열 선언
 		char[] data2 = new char[1024];
 		
-		try (FileReader fr = new FileReader(file)){
+		try (FileReader fr = new FileReader(file)) {
 			fr.read(data2);
 			LOGGER.debug(String.format("%s", new String(data2)));
-		}catch(Exception e) {
+		} 
+		catch(Exception e) {
 			LOGGER.debug(e);
 		}
 		
@@ -58,11 +60,11 @@ public class IOTest {
 		List<Person> personList = new ArrayList<Person>();
 		
 		//file 내용을 한줄씩 읽기 위해 BufferedReader 사용
-		try (BufferedReader br = new BufferedReader(new FileReader(file))){
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String readLine = null;
 			
 			//한줄씩 읽어서 readLine에 집어넣고 값이 없을때까지 반복
-			while((readLine = br.readLine()) != null) {
+			while ((readLine = br.readLine()) != null) {
 				LOGGER.debug(readLine);
 				
 				//한줄 불러서와서 String배열로 만듬
@@ -81,7 +83,8 @@ public class IOTest {
 				
 				LOGGER.debug(String.format("+++ onePerson:%s", onePerson));
 			}
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			LOGGER.debug(e);
 		}
 		

@@ -1,7 +1,11 @@
 package com.barunsw.ojt.day06;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,6 +31,8 @@ public class TestPanel extends JPanel {
 	private JRadioButton jRadioButton_Woman = new JRadioButton("여");
 	private JTextArea jTextArea_Address		= new JTextArea();
 	
+	private JPanel jPanel_Command = new JPanel();
+	
 	private JButton jButton_Add = new JButton("추가");
 
 	private CardLayout cardLayout = new CardLayout();
@@ -43,7 +49,9 @@ public class TestPanel extends JPanel {
 	private void initComponent() throws Exception {
 		//this.setLayout(new BorderLayout());
 		//this.setLayout(new GridLayout(4, 2));
-		this.setLayout(cardLayout);
+		//this.setLayout(cardLayout);
+		this.setLayout(new GridBagLayout());
+		jPanel_Command.setLayout(new GridBagLayout());
 		
 		jLabel_Name.setPreferredSize(LABEL_SIZE);
 		jLabel_Gender.setPreferredSize(LABEL_SIZE);
@@ -58,18 +66,103 @@ public class TestPanel extends JPanel {
 		this.add(jLabel_Name, BorderLayout.WEST);
 		this.add(jTextField_Name, BorderLayout.CENTER);
 		*/
-		/*
-		this.add(jLabel_Name);
-		this.add(jTextField_Name);
-		this.add(jLabel_Gender);
-		this.add(jRadioButton_Man);
-		this.add(jRadioButton_Woman);
-		this.add(jLabel_Address);
-		this.add(jTextArea_Address);
+
+//		JPanel redPanel = new JPanel();
+//		redPanel.setPreferredSize(new Dimension(100, 100));
+//		redPanel.setBackground(Color.red);
+//		
+//		JPanel greenPanel = new JPanel();
+//		greenPanel.setBackground(Color.green);
+//		
+//		this.add(redPanel, new GridBagConstraints(
+//				0, 0, 1, 1,
+//				1.0, 1.0,
+//				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+//				new Insets(5, 5, 5, 5),
+//				0, 0
+//			));
+//
+//		this.add(greenPanel, new GridBagConstraints(
+//				1, 1, 1, 1,
+//				1.0, 1.0,
+//				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+//				new Insets(0, 0, 0, 0),
+//				0, 0
+//			));
+
 		
-		this.add(jButton_Add);
-		*/
+		this.add(jLabel_Name, new GridBagConstraints(
+					0, 0, 1, 1,
+					0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(5, 5, 5, 5),
+					0, 0
+				));
 		
+		this.add(jTextField_Name, new GridBagConstraints(
+				1, 0, 2, 1,
+				1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(5, 0, 5, 5),
+				0, 0
+			));
+		
+		this.add(jLabel_Gender, new GridBagConstraints(
+				0, 1, 1, 1,
+				0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 5, 5, 5),
+				0, 0
+			));
+		
+		this.add(jRadioButton_Man, new GridBagConstraints(
+				1, 1, 1, 1,
+				1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5),
+				0, 0
+			));
+		
+		this.add(jRadioButton_Woman, new GridBagConstraints(
+				2, 1, 1, 1,
+				1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5),
+				0, 0
+			));
+		
+		this.add(jLabel_Address, new GridBagConstraints(
+				0, 2, 1, 1,
+				0.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 5, 5, 5),
+				0, 0
+			));
+		
+		this.add(jTextArea_Address, new GridBagConstraints(
+				1, 2, 2, 1,
+				1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5),
+				0, 0
+			));
+		
+		this.add(jPanel_Command, new GridBagConstraints(
+				0, 3, 3, 1,
+				1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 0),
+				0, 0
+			));
+		
+		jPanel_Command.add(jButton_Add, new GridBagConstraints(
+				0, 0, 1, 1,
+				1.0, 0.0,
+				GridBagConstraints.EAST, GridBagConstraints.NONE,
+				new Insets(0, 5, 5, 5),
+				0, 0
+			));
+
 		/* cardLayout 
 		JPanel redPanel = new JPanel();
 		redPanel.setBackground(Color.red);
