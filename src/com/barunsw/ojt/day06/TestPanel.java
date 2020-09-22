@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -30,6 +31,8 @@ public class TestPanel extends JPanel {
 	private JRadioButton jRadioButton_Man 	= new JRadioButton("남");
 	private JRadioButton jRadioButton_Woman = new JRadioButton("여");
 	private JTextArea jTextArea_Address		= new JTextArea();
+	
+	private JScrollPane jScrollPane_Address = new JScrollPane();
 	
 	private JPanel jPanel_Command = new JPanel();
 	
@@ -51,6 +54,7 @@ public class TestPanel extends JPanel {
 		//this.setLayout(new GridLayout(4, 2));
 		//this.setLayout(cardLayout);
 		this.setLayout(new GridBagLayout());
+		
 		jPanel_Command.setLayout(new GridBagLayout());
 		
 		jLabel_Name.setPreferredSize(LABEL_SIZE);
@@ -60,35 +64,11 @@ public class TestPanel extends JPanel {
 		jTextField_Name.setPreferredSize(new Dimension(120, 22));
 		jRadioButton_Man.setPreferredSize(new Dimension(60, 22));
 		jRadioButton_Woman.setPreferredSize(new Dimension(60, 22));
-		jTextArea_Address.setPreferredSize(new Dimension(120, 60));
 
 		/* BorderLayout
 		this.add(jLabel_Name, BorderLayout.WEST);
 		this.add(jTextField_Name, BorderLayout.CENTER);
 		*/
-
-//		JPanel redPanel = new JPanel();
-//		redPanel.setPreferredSize(new Dimension(100, 100));
-//		redPanel.setBackground(Color.red);
-//		
-//		JPanel greenPanel = new JPanel();
-//		greenPanel.setBackground(Color.green);
-//		
-//		this.add(redPanel, new GridBagConstraints(
-//				0, 0, 1, 1,
-//				1.0, 1.0,
-//				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-//				new Insets(5, 5, 5, 5),
-//				0, 0
-//			));
-//
-//		this.add(greenPanel, new GridBagConstraints(
-//				1, 1, 1, 1,
-//				1.0, 1.0,
-//				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-//				new Insets(0, 0, 0, 0),
-//				0, 0
-//			));
 
 		
 		this.add(jLabel_Name, new GridBagConstraints(
@@ -139,7 +119,7 @@ public class TestPanel extends JPanel {
 				0, 0
 			));
 		
-		this.add(jTextArea_Address, new GridBagConstraints(
+		this.add(jScrollPane_Address, new GridBagConstraints(
 				1, 2, 2, 1,
 				1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -163,44 +143,46 @@ public class TestPanel extends JPanel {
 				0, 0
 			));
 
-		/* cardLayout 
-		JPanel redPanel = new JPanel();
-		redPanel.setBackground(Color.red);
-
-		JPanel bluePanel = new JPanel();
-		bluePanel.setBackground(Color.blue);
-
-		JPanel whitePanel = new JPanel();
-		whitePanel.setBackground(Color.white);
-
-		this.add(redPanel, "red");
-		this.add(bluePanel, "blue");
-		this.add(whitePanel, "white");
+		jScrollPane_Address.getViewport().add(jTextArea_Address);
 		
-		Thread timeThread = new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 10; i++) {
-					try {
-						Thread.sleep(1000);
-						
-						if (i % 3 == 0) {
-							cardLayout.show(TestPanel.this, "red");
-						}
-						else if (i % 3 == 1) {
-							cardLayout.show(TestPanel.this, "blue");
-						}
-						else if (i % 3 == 2) {
-							cardLayout.show(TestPanel.this, "white");
-						}
-					}
-					catch (Exception ex) {
-						LOGGER.error(ex.getMessage(), ex);
-					}
-				}
-			}
-		});
-		
-		timeThread.start();
-		*/
+		//cardLayout 
+//		JPanel redPanel = new JPanel();
+//		redPanel.setBackground(Color.red);
+//
+//		JPanel bluePanel = new JPanel();
+//		bluePanel.setBackground(Color.blue);
+//
+//		JPanel whitePanel = new JPanel();
+//		whitePanel.setBackground(Color.white);
+//
+//		this.add(redPanel, "red");
+//		this.add(bluePanel, "blue");
+//		this.add(whitePanel, "white");
+//		
+//
+//		Thread timeThread = new Thread(new Runnable() {
+//			public void run() {
+//				for (int i = 0; i < 10; i++) {
+//					try {
+//						Thread.sleep(1000);
+//						
+//						if (i % 3 == 0) {
+//							cardLayout.show(TestPanel.this, "red");
+//						}
+//						else if (i % 3 == 1) {
+//							cardLayout.show(TestPanel.this, "blue");
+//						}
+//						else if (i % 3 == 2) {
+//							cardLayout.show(TestPanel.this, "white");
+//						}
+//					}
+//					catch (Exception ex) {
+//						LOGGER.error(ex.getMessage(), ex);
+//					}
+//				}
+//			}
+//		});
+//		
+//		timeThread.start();
 	}
 }

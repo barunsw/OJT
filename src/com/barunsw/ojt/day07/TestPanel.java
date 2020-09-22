@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -179,5 +181,29 @@ public class TestPanel extends JPanel {
 						new Insets(0, 0, 5, 5),
 						0, 0));
 */
+		jButton_Add.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+	}
+	
+	void jButton_Add_ActionListener(ActionEvent e) {
+		
+	}
+}
+
+class TestPanel_jButton_Add_ActionListener implements ActionListener {
+	private TestPanel adaptee;
+	
+	public TestPanel_jButton_Add_ActionListener(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		adaptee.jButton_Add_ActionListener(e);
 	}
 }
