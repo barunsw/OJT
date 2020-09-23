@@ -66,13 +66,13 @@ public class TestPanel extends JPanel {
 		//columnData.add("비고");
 		
 		tableModel.setColumn(columnData);
-		tableModel.setCellEditable(TABLE_COLUMN_NAME);
-		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
-		
+//		tableModel.setCellEditable(TABLE_COLUMN_NAME);
+//		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
+//		
 		jTable_Result.setModel(tableModel);
 		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
-			.setCellRenderer(new AgeCellRenderer());
+//		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
+//			.setCellRenderer(new AgeCellRenderer());
 	
 		jTable_Result.setRowHeight(32);
 			
@@ -108,7 +108,10 @@ public class TestPanel extends JPanel {
 		
 		oneData.add(onePerson);
 		
-		tableModel.addData(oneData);		
+		tableModel.addData(oneData);	
+		
+		// tableModel의 변경을 알린다.
+		tableModel.fireTableDataChanged();
 	}
 	
 	void jTable_Result_mouseReleased(MouseEvent e) {
