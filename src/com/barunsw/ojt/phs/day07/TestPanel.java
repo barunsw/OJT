@@ -38,16 +38,12 @@ public class TestPanel extends JPanel {
 
 	private JSpinner jSpinner = new JSpinner(new SpinnerNumberModel());
 
-//	============================================================
+//	===========================TABLE============================
 	private JTable table = null;
 	private JScrollPane jScrollPane_JTable = null;
 	private DefaultTableModel default_Table_Model = null;
 	private String header[] = {"이름", "나이", "성별", "전화번호", "주소"};
-	private String contents[][] = {
-			{"박희성", "27", "남자", "010-2994-9038", "부산"},
-	};
 //	============================================================
-	
 	
 	public TestPanel() {
 		try {
@@ -91,9 +87,11 @@ public class TestPanel extends JPanel {
 		btnGroup.add(jCheckbox_Man);
 		btnGroup.add(jCheckbox_Woman);
 		
+		// 스피너 크기와 값 설정
 		jSpinner.setPreferredSize(new Dimension(50, 22));
 		jSpinner.setValue(20);
 		
+		// 테이블 초기값 설정
 		default_Table_Model = new DefaultTableModel(null, header);
 		table = new JTable(default_Table_Model);
 		jScrollPane_JTable = new JScrollPane(table);
@@ -152,7 +150,9 @@ public class TestPanel extends JPanel {
 	}
 
 	void jButton_Add_ActionListener(ActionEvent e) {
-		LOGGER.debug("Add click!!");
+		LOGGER.debug("Add Click!!");
+		
+		//선택, 적혀있는 데이터들 다 가져옴
 		String name = jTextField_Name.getText();
 		int age = (int)jSpinner.getValue();
 		String gender = jCheckbox_Man.isSelected() ? "남자" : "여자";
@@ -173,6 +173,8 @@ public class TestPanel extends JPanel {
 		}
 		else {
 			LOGGER.debug("데이터추가!!");
+			
+			//행 하나 추가
 			Object[] data = {name, age, gender, phone, address};
 			default_Table_Model.addRow(data);
 			
