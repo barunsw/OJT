@@ -5,10 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.ibatis.io.ResolverUtil.Test;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import jdk.nashorn.internal.runtime.regexp.joni.Warnings;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -38,6 +41,7 @@ public class TestPanel extends JPanel {
 //	============================================================
 	private JTable table = null;
 	private JScrollPane jScrollPane_JTable = null;
+	private DefaultTableModel default_Table_Model = null;
 	private String header[] = {"이름", "나이", "성별", "전화번호", "주소"};
 	private String contents[][] = {
 			{"박희성", "27", "남자", "010-2994-9038", "부산"},
@@ -88,10 +92,11 @@ public class TestPanel extends JPanel {
 		btnGroup.add(jCheckbox_Woman);
 		
 		jSpinner.setPreferredSize(new Dimension(50, 22));
-
-		table = new JTable(contents, header);
-		jScrollPane_JTable = new JScrollPane(table);
+		jSpinner.setValue(20);
 		
+		default_Table_Model = new DefaultTableModel(null, header);
+		table = new JTable(default_Table_Model);
+		jScrollPane_JTable = new JScrollPane(table);
 		
 		
 //		1번째 줄 ========================================================
@@ -148,6 +153,36 @@ public class TestPanel extends JPanel {
 
 	void jButton_Add_ActionListener(ActionEvent e) {
 		LOGGER.debug("Add click!!");
+		String name = jTextField_Name.getText();
+		int age = (int)jSpinner.getValue();
+		String gender = jCheckbox_Man.isSelected() ? "남자" : "여자";
+		String phone = jTextField_PhoneNumber.getText();
+		String address = jTextField_Address.getText();
+		
+		if (name.isEmpty()) {
+			 JOptionPane.showMessageDialog(null, "이름을 입력해주세요.", "오류", JOptionPane.WARNING_MESSAGE);
+		}
+		else if (!(jCheckbox_Man.isSelected()) && !(jCheckbox_Woman.isSelected())) {
+			JOptionPane.showMessageDialog(null, "성별을 선택해주세요.", "오류", JOptionPane.WARNING_MESSAGE);
+		}
+		else if (phone.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "전화번호를 입력해주세요.", "오류", JOptionPane.WARNING_MESSAGE);
+		}
+		else if (address.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "주소를 입력해주세요.", "오류", JOptionPane.WARNING_MESSAGE);
+		}
+		else {
+			LOGGER.debug("데이터추가!!");
+			Object[] data = {name, age, gender, phone, address};
+			default_Table_Model.addRow(data);
+			
+			//초기값으로 변경
+			jTextField_Name.setText(null);
+			jSpinner.setValue(20);
+			btnGroup.clearSelection();
+			jTextField_PhoneNumber.setText(null);
+			jTextField_Address.setText(null);
+		}
 	}
 
 	void jButton_Change_ActionListener(ActionEvent e) {
