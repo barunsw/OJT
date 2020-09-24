@@ -57,9 +57,9 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	private Vector<PersonVO> peopleList = new Vector<PersonVO>(); 
 	
 	
-	//	===========================TABLE============================
+//	===========================TABLE============================
 	private TableModel table_Model = new TableModel();
-	private JTable table = new JTable();;
+	private JTable table = new JTable();
 	private JScrollPane jScrollPane_JTable = new JScrollPane();
 //	============================================================
 		
@@ -67,7 +67,8 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 		try {
 			if(file.createNewFile()) {
 				LOGGER.debug("파일이 생성 되었습니다. 파일이름: " + file.getName());
-			}else {
+			}
+			else {
 				LOGGER.debug("파일이 이미 존재합니다. 파일이름: " + file.getName());
 			}
 			initComponent();

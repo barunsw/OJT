@@ -56,7 +56,7 @@ public class MybatisPanel extends JPanel {
 	
 	private Vector<PersonVO> peopleList = new Vector<PersonVO>(); 
 	
-	private static SqlSessionFactory fac = SqlSessionFactoryManager.getSqlSessionFactory();
+	private static final SqlSessionFactory fac = SqlSessionFactoryManager.getSqlSessionFactory();
 	MybatisDAO mapper = null;
 	//	===========================TABLE============================
 	private TableModel table_Model = new TableModel();
@@ -65,11 +65,13 @@ public class MybatisPanel extends JPanel {
 //	============================================================
 		
 	public MybatisPanel() {
-		try (SqlSession session = fac.openSession(true)) {
-			mapper = session.getMapper(MybatisDAO.class);
+		try {
 			initComponent();
 			initTable();
 			setEventListener();
+			SqlSession session = fac.openSession(true);
+			mapper = session.getMapper(MybatisDAO.class);
+			allListLoad();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
@@ -123,6 +125,20 @@ public class MybatisPanel extends JPanel {
 		inputData.add(address);
 		
 		return inputData;
+	}
+	
+	private void allListLoad() {
+		Vector<PersonVO> allList = new Vector();
+		allList = mapper.selectPerson();
+		for (int i=0 ; i<allList.size() ; i++) {
+			Vector onePerson = new Vector();
+			onePerson.add(allList.get(i).getName());
+			onePerson.add(allList.get(i).getAge());
+			onePerson.add(allList.get(i).getGender());
+			onePerson.add(allList.get(i).getPhone());
+			onePerson.add(allList.get(i).getAddress());
+			table_Model.addData(onePerson);
+		}
 	}
 	
 	private void initComponent() throws Exception {
@@ -220,6 +236,8 @@ public class MybatisPanel extends JPanel {
 		boolean add_Approve = true;
 		String add_Name = jTextField_Name.getText();
 		
+		Vector<PersonVO> list = mapper.selectPerson();
+		
 		if (add_Name.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
 		}
@@ -242,6 +260,13 @@ public class MybatisPanel extends JPanel {
 			
 			if (add_Approve) {				
 				table_Model.addData(inputDataLoad());
+				PersonVO onePerson = new PersonVO();
+				onePerson.setName((String)inputDataLoad().get(0));
+				onePerson.setAge((int)inputDataLoad().get(1));
+				onePerson.setGender((String)inputDataLoad().get(2));
+				onePerson.setPhone((String)inputDataLoad().get(3));
+				onePerson.setAddress((String)inputDataLoad().get(4));
+				mapper.insertPerson(onePerson);
 				tableReset();
 			}
 		}
@@ -250,10 +275,36 @@ public class MybatisPanel extends JPanel {
 	void jButton_Change_ActionListener() {
 		LOGGER.debug("Change click!!");
 		
-		Vector<PersonVO> personList = new Vector();
-		personList = mapper.selectPerson();
-		LOGGER.debug(personList.get(0));
+		String change_Name = jTextField_Name.getText();
 		
+		if (change_Name.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "변경하는 대상의 이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+		}
+		else {
+			for (int i=0 ; i<=table_Model.getRowCount() ; i++) {
+				if ((table_Model.getValueAt(i, 0)) != null) {
+					if ((table_Model.getValueAt(i, 0)).equals(change_Name)) {
+						int result = JOptionPane.showConfirmDialog(this, change_Name+" 님의 정보를 변경 하시겠습니까?", "정보 변경", JOptionPane.YES_NO_OPTION);
+						if (result == JOptionPane.YES_OPTION) {
+							table_Model.changeData(inputDataLoad(), i);
+							PersonVO onePerson = new PersonVO();
+							onePerson.setName((String)inputDataLoad().get(0));
+							onePerson.setAge((int)inputDataLoad().get(1));
+							onePerson.setGender((String)inputDataLoad().get(2));
+							onePerson.setPhone((String)inputDataLoad().get(3));
+							onePerson.setAddress((String)inputDataLoad().get(4));
+							mapper.updatePerson(onePerson);
+							tableReset();
+						}
+						break;
+					} 
+				}
+				else {
+					JOptionPane.showMessageDialog(this, change_Name+" 님은 존재하지 않습니다.", "ERROR", JOptionPane.ERROR_MESSAGE);
+					break;
+				}
+			}
+		}
 	}
 
 	void jButton_Delete_ActionListener() {
@@ -267,6 +318,7 @@ public class MybatisPanel extends JPanel {
 					int result = JOptionPane.showConfirmDialog(this, remove_Name+" 님의 정보를 삭제 하시겠습니까?", "정보 삭제", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.YES_OPTION) {
 						table_Model.removeData(i);
+						mapper.deletePerson(remove_Name);
 						tableReset();
 					}
 					break;

@@ -5,12 +5,9 @@ import java.util.Vector;
 public interface MybatisDAO {
 	public Vector<PersonVO> selectPerson();
 	
-	public void updateAge();
-	public void updateGender();
-	public void updatePhone();
-	public void updateAddress();
+	public void insertPerson(PersonVO personVO);
 	
-	public void deletePerson();
+	public void deletePerson(String name);
 	
-	public void insertPerson();
+	public void updatePerson(PersonVO personVO);
 }

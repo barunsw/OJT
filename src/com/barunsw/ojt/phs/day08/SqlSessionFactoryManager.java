@@ -20,9 +20,9 @@ public class SqlSessionFactoryManager {
 
 		try {
 			reader = Resources.getResourceAsReader(resource);
+			LOGGER.debug("reader로 읽어옴!!!");
 		} 
 		catch ( IOException ex ) {
-			ex.printStackTrace();
 			LOGGER.error(ex.getMessage());
 		}
 		
