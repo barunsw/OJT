@@ -31,6 +31,7 @@ public class TestPanel extends JPanel {
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	
 	private JTable jTable_Result = new JTable();
+	
 	private CommonTableModel tableModel = new CommonTableModel();
 	
 	public TestPanel() {

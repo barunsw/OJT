@@ -77,13 +77,5 @@ public class DBMybatis {
 	public static void main(String[] args) {
 		dBMybatis.processDb(true);		
 	}
-	
+
 }
-
-
-
-
-
-
-
-

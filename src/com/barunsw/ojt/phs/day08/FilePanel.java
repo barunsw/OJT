@@ -17,16 +17,17 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.io.ResolverUtil.Test;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.phs.day03.Person;
-
 import jdk.nashorn.internal.runtime.regexp.joni.Warnings;
 
-public class Panel extends JPanel implements AddressBookDAO{
-	private static final Logger LOGGER = LogManager.getLogger(Panel.class);
+public class FilePanel extends JPanel implements AddressBookDAO{
+	private static final Logger LOGGER = LogManager.getLogger(FilePanel.class);
 
 	private final Dimension LABEL_SIZE = new Dimension(80, 22);
 
@@ -55,13 +56,14 @@ public class Panel extends JPanel implements AddressBookDAO{
 	
 	private Vector<PersonVO> peopleList = new Vector<PersonVO>(); 
 	
-//	===========================TABLE============================
+	
+	//	===========================TABLE============================
 	private TableModel table_Model = new TableModel();
 	private JTable table = new JTable();;
 	private JScrollPane jScrollPane_JTable = new JScrollPane();
 //	============================================================
-	
-	public Panel() {
+		
+	public FilePanel() {
 		try {
 			if(file.createNewFile()) {
 				LOGGER.debug("파일이 생성 되었습니다. 파일이름: " + file.getName());
@@ -91,10 +93,10 @@ public class Panel extends JPanel implements AddressBookDAO{
 	}
 
 	private void setEventListener() {
-		btn_Add.addActionListener(new Panel_jButton_Add_ActionListener(this));
-		btn_Change.addActionListener(new Panel_jButton_Add_ActionListener(this));
-		btn_Delete.addActionListener(new Panel_jButton_Add_ActionListener(this));
-		table.addMouseListener(new Panel_jTable_Result_MouseAdapter(this));
+		btn_Add.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
+		btn_Change.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
+		btn_Delete.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
+		table.addMouseListener(new FilePanel_jTable_Result_MouseAdapter(this));
 	}
 	
 	private void tableReset() {
@@ -355,7 +357,7 @@ public class Panel extends JPanel implements AddressBookDAO{
 			}
 		}
 		catch (Exception e) {
-			LOGGER.debug(e.getMessage());
+			LOGGER.debug(e.getMessage() +" 더 이상 불러올 데이터가 없습니다.");
 		}
 	}
 
@@ -379,13 +381,14 @@ public class Panel extends JPanel implements AddressBookDAO{
 			LOGGER.debug(e.getMessage());
 		}
 	}
+
 }
 
-class Panel_jButton_Add_ActionListener implements ActionListener {
+class FilePanel_jButton_Add_ActionListener implements ActionListener {
+	
+	private FilePanel testPanel;
 
-	private Panel testPanel;
-
-	public Panel_jButton_Add_ActionListener(Panel testPanel) {
+	public FilePanel_jButton_Add_ActionListener(FilePanel testPanel) {
 		this.testPanel = testPanel;
 	}
 
@@ -405,10 +408,10 @@ class Panel_jButton_Add_ActionListener implements ActionListener {
 	}
 }
 
-class Panel_jTable_Result_MouseAdapter extends MouseAdapter {
-	private Panel adaptee;
+class FilePanel_jTable_Result_MouseAdapter extends MouseAdapter {
+	private FilePanel adaptee;
 	
-	public Panel_jTable_Result_MouseAdapter(Panel adaptee) {
+	public FilePanel_jTable_Result_MouseAdapter(FilePanel adaptee) {
 		this.adaptee = adaptee;
 	}
 	

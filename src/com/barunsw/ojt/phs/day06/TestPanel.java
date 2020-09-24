@@ -16,6 +16,7 @@ public class TestPanel extends JPanel {
 	private JLabel jLabel_Gender 	= new JLabel("성별");
 	private JLabel jLabel_Age 	    = new JLabel("나이");
 	
+	
 	private JTextField jTextField_Name = new JTextField();
 	private JCheckBox jCheckbox_Man    = new JCheckBox("남자");
 	private JCheckBox jCheckbox_Woman  = new JCheckBox("여자");
@@ -70,7 +71,7 @@ public class TestPanel extends JPanel {
 		this.add(jTextField_Name, new GridBagConstraints(
 				1, 0, 2, 1,
 				0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH  ,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH  ,
 				new Insets(0, 0, 0, 0),
 				0, 0));
 		
@@ -86,14 +87,14 @@ public class TestPanel extends JPanel {
 		this.add(jCheckbox_Man, new GridBagConstraints(
 				1, 1, 1, 1,
 				0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH  ,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH  ,
 				new Insets(0, 0, 0, 0),
 				0, 0));
 		
 		this.add(jCheckbox_Woman, new GridBagConstraints(
 				2, 1, 1, 1,
 				0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH  ,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH  ,
 				new Insets(0, 0, 0, 0),
 				0, 0));
 		
@@ -108,7 +109,7 @@ public class TestPanel extends JPanel {
 		this.add(jTextField_Age, new GridBagConstraints(
 				1, 2, 1, 1,
 				0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH  ,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH  ,
 				new Insets(0, 0, 0, 0),
 				0, 0));
 		
@@ -116,10 +117,13 @@ public class TestPanel extends JPanel {
 		this.add(jPanel_Command, new GridBagConstraints(
 				3, 3, 1, 1,
 				0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH  ,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH  ,
 				new Insets(0, 0, 0, 0),
 				0, 0));
 		
 		jPanel_Command.add(btn_Send);
+		
+//		5번째 줄 ========================================================
+
 	}
 }

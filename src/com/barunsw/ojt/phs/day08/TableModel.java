@@ -9,7 +9,7 @@ public class TableModel extends AbstractTableModel {
 	protected Vector columnInfo;
     protected Vector dataInfo;
     protected Vector cellEditableInfo = new Vector();
-    
+
     public TableModel() {
         columnInfo = new Vector();
         dataInfo = new Vector();

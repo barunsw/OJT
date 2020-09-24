@@ -18,7 +18,7 @@
 	</environments>
 	
 	<mappers>
-		<mapper resource="com/barunsw/ojt/phs/day05/PersonDAO.xml"/>
+		<mapper resource="com/barunsw/ojt/phs/day08/SqlQuery.xml"/>
 	</mappers>
 </configuration>
 

@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day05;
+package com.barunsw.ojt.phs.day08;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,7 +14,7 @@ public class SqlSessionFactoryManager {
 	private static final SqlSessionFactory sqlMapper;
 
 	static {
-		String resource = "com/barunsw/ojt/phs/day05/SqlMapConfig.xml";
+		String resource = "com/barunsw/ojt/phs/day08/SqlMapConfig.xml";
 
 		Reader reader = null;
 
@@ -22,6 +22,7 @@ public class SqlSessionFactoryManager {
 			reader = Resources.getResourceAsReader(resource);
 		} 
 		catch ( IOException ex ) {
+			ex.printStackTrace();
 			LOGGER.error(ex.getMessage());
 		}
 		

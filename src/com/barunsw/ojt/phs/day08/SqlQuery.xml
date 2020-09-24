@@ -2,13 +2,13 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.barunsw.ojt.phs.day05.DAO">
-	<select id="selectPersonList"
-		resultType="com.barunsw.ojt.phs.day05.PersonDTO">
-		SELECT * FROM TB_PERSON
+<mapper namespace="com.barunsw.ojt.phs.day08.MyBatisDAO">
+	<select id="selectPerson"
+		resultType="com.barunsw.ojt.phs.day08.PersonVO">
+		SELECT * FROM ADDRESS_BOOK
 	</select>
 	<select id="selectOnePerson"
-		resultType="com.barunsw.ojt.phs.day05.PersonDTO">
+		resultType="com.barunsw.ojt.phs.day08.PersonVO">
 		SELECT * FROM TB_PERSON WHERE NAME = #{name}
 	</select>
 	<insert id="insertPerson">

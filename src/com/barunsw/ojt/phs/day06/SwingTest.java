@@ -16,7 +16,7 @@ public class SwingTest extends JFrame{
 		int x = (scrDim.width - TestFrame.WIDTH) / 2;
 		int y = (scrDim.height - TestFrame.HEIGHT) / 2;
 		
-		// 크기와,위치를 동시에 지정한다.
+		// 위치와 크기를 동시에 지정한다.
 		frame.setBounds(x, y, 600, 400);
 		
 		// 프레임을 표시한다.
