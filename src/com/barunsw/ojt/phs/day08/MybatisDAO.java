@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public interface MybatisDAO {
 	public Vector<PersonVO> selectPerson();
-	
+	 
 	public void insertPerson(PersonVO personVO);
 	
 	public void deletePerson(String name);

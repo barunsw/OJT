@@ -174,7 +174,7 @@ public class MybatisPanel extends JPanel {
 			JOptionPane.showMessageDialog(this, "주소를 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
 			allCheck = false;
 		}
-		
+		 
 		return allCheck;
 	}
 	

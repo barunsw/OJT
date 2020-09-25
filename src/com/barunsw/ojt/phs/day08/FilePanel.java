@@ -30,7 +30,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	private static final Logger LOGGER = LogManager.getLogger(FilePanel.class);
 
 	private final Dimension LABEL_SIZE = new Dimension(80, 22);
-
+ 
 	private JLabel jLabel_Name = new JLabel("이름");
 	private JLabel jLabel_Age = new JLabel("나이");
 	private JLabel jLabel_Gender = new JLabel("성별");
