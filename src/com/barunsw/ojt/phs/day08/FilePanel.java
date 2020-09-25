@@ -80,6 +80,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 
 	private boolean inputData_Check() {
+		LOGGER.debug("inputData_Check");
 		boolean allCheck = true;
 		String regPhone   = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
 		
@@ -112,6 +113,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 	
 	private void initTable() {
+		LOGGER.debug("initTable");
 		Vector<String> columnData = new Vector<>();
 		columnData.add("이름");
 		columnData.add("나이");
@@ -125,6 +127,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 
 	private void setEventListener() {
+		LOGGER.debug("setEventListener");
 		btn_Add.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
 		btn_Change.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
 		btn_Delete.addActionListener(new FilePanel_jButton_Add_ActionListener(this));
@@ -132,6 +135,8 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 	
 	private void tableReset() {
+		LOGGER.debug("tableReset");
+		
 		// tableModel의 변경을 알린다.
 		table_Model.fireTableDataChanged();
 		
@@ -144,6 +149,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 	
 	private Vector inputDataLoad() {
+		LOGGER.debug("inputDataLoad");
 		Vector inputData = new Vector();
 		
 		String name = jTextField_Name.getText();
@@ -162,7 +168,7 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 	}
 	
 	private void initComponent() throws Exception {
-
+		LOGGER.debug("initComponent");
 		this.setLayout(new GridBagLayout());
 		this.setBackground(Color.WHITE);
 		
