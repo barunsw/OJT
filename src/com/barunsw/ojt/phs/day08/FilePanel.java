@@ -80,6 +80,38 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 		}
 	}
 
+	private boolean inputData_Check() {
+		boolean allCheck = true;
+		String regPhone   = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
+		
+		String add_Name  = jTextField_Name.getText();
+		String add_Phone = jTextField_PhoneNumber.getText();
+		String add_Address = jTextField_Address.getText();
+
+		if (add_Name.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			allCheck = false;
+		}
+		else if (!(jCheckbox_Man.isSelected()) && !(jCheckbox_Woman.isSelected())) {
+			JOptionPane.showMessageDialog(this, "성별을 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			allCheck = false;
+		}
+		else if (add_Phone.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "번호를 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			allCheck = false;
+		}
+		else if (!(add_Phone.matches(regPhone))) {
+			JOptionPane.showMessageDialog(this, "번호형식이 맞지 않습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);	
+			allCheck = false;
+		}
+		else if (add_Address.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "주소를 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			allCheck = false;
+		}
+		
+		return allCheck;
+	}
+	
 	private void initTable() {
 		Vector<String> columnData = new Vector<>();
 		columnData.add("이름");
@@ -223,15 +255,11 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 		LOGGER.debug("Add Click!!");
 		
 		boolean add_Approve = true;
-		String add_Name = jTextField_Name.getText();
+		String add_Name  = jTextField_Name.getText();
+		String add_Phone = jTextField_PhoneNumber.getText();
+		String add_Address = jTextField_Address.getText();
 		
-		if (add_Name.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
-		}
-		else if (!(jCheckbox_Man.isSelected()) && !(jCheckbox_Woman.isSelected())) {
-			JOptionPane.showMessageDialog(this, "성별을 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
-		}
-		else {
+		if (inputData_Check()) {
 			for (int i=0 ; i<=table_Model.getRowCount() ; i++) {
 				if ((table_Model.getValueAt(i, 0)) != null) {
 					if ((table_Model.getValueAt(i, 0)).equals(add_Name)) {
@@ -269,15 +297,18 @@ public class FilePanel extends JPanel implements AddressBookDAO{
 			for (int i=0 ; i<=table_Model.getRowCount() ; i++) {
 				if ((table_Model.getValueAt(i, 0)) != null) {
 					if ((table_Model.getValueAt(i, 0)).equals(change_Name)) {
-						int result = JOptionPane.showConfirmDialog(this, change_Name+" 님의 정보를 변경 하시겠습니까?", "정보 변경", JOptionPane.YES_NO_OPTION);
-						if (result == JOptionPane.YES_OPTION) {
-							table_Model.changeData(inputDataLoad(), i);
-							tableReset();
-							try {
-								saveAllList();
-							} catch (Exception e) {
-								LOGGER.debug(e);
+						if (inputData_Check()) {
+							int result = JOptionPane.showConfirmDialog(this, change_Name+" 님의 정보를 변경 하시겠습니까?", "정보 변경", JOptionPane.YES_NO_OPTION);
+							if (result == JOptionPane.YES_OPTION) {
+								table_Model.changeData(inputDataLoad(), i);
+								tableReset();
+								try {
+									saveAllList();
+								} catch (Exception e) {
+									LOGGER.debug(e);
+								}
 							}
+							break;
 						}
 						break;
 					} 

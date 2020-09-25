@@ -24,4 +24,13 @@
 		DELETE FROM ADDRESS_BOOK WHERE name = #{name}
 	</delete>
 	
+	<update id="createTable">
+		CREATE TABLE IF NOT EXISTS ADDRESS_BOOK (
+			NAME VARCHAR(32) PRIMARY KEY NOT NULL
+			, GENDER VARCHAR(32) NOT NULL
+			, AGE INT
+			, PHONE VARCHAR(32)
+			, ADDRESS VARCHAR(256)
+		)
+	</update>
 </mapper>

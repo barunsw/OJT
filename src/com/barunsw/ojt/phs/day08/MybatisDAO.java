@@ -10,4 +10,6 @@ public interface MybatisDAO {
 	public void deletePerson(String name);
 	
 	public void updatePerson(PersonVO personVO);
+	
+	public void createTable();
 }
