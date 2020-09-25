@@ -31,20 +31,20 @@ public class MybatisPanel extends JPanel {
 
 	private final Dimension LABEL_SIZE = new Dimension(80, 22);
 
-	private JLabel jLabel_Name = new JLabel("이름");
-	private JLabel jLabel_Age = new JLabel("나이");
-	private JLabel jLabel_Gender = new JLabel("성별");
+	private JLabel jLabel_Name        = new JLabel("이름");
+	private JLabel jLabel_Age         = new JLabel("나이");
+	private JLabel jLabel_Gender      = new JLabel("성별");
 	private JLabel jLabel_PhoneNumber = new JLabel("전화번호");
-	private JLabel jLabel_Address = new JLabel("주소");
+	private JLabel jLabel_Address     = new JLabel("주소");
 
-	private JTextField jTextField_Name = new JTextField();
+	private JTextField jTextField_Name        = new JTextField();
 	private JTextField jTextField_PhoneNumber = new JTextField();
-	private JTextField jTextField_Address = new JTextField();
+	private JTextField jTextField_Address     = new JTextField();
 
-	private JCheckBox jCheckbox_Man = new JCheckBox("남자");
+	private JCheckBox jCheckbox_Man   = new JCheckBox("남자");
 	private JCheckBox jCheckbox_Woman = new JCheckBox("여자");
 
-	JButton btn_Add = new JButton("추가");
+	JButton btn_Add    = new JButton("추가");
 	JButton btn_Change = new JButton("변경");
 	JButton btn_Delete = new JButton("삭제");
 
@@ -59,8 +59,8 @@ public class MybatisPanel extends JPanel {
 	private static final SqlSessionFactory fac = SqlSessionFactoryManager.getSqlSessionFactory();
 	MybatisDAO mapper = null;
 //	===========================TABLE============================
-	private TableModel table_Model = new TableModel();
-	private JTable table = new JTable();;
+	private TableModel table_Model         = new TableModel();
+	private JTable table                   = new JTable();;
 	private JScrollPane jScrollPane_JTable = new JScrollPane();
 //	============================================================
 		
@@ -171,7 +171,7 @@ public class MybatisPanel extends JPanel {
 			allCheck = false;
 		}
 		else if (add_Address.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "주소를 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "주소를 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
 			allCheck = false;
 		}
 		 

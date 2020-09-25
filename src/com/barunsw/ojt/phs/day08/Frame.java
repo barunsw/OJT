@@ -15,8 +15,8 @@ public class Frame extends JFrame{
 	public static final int WIDTH 	= 750;
 	public static final int HEIGHT 	= 650;
 	
-	private FilePanel filePanel = new FilePanel();
-//	private MybatisPanel mybatisPanel = new MybatisPanel();
+//	private FilePanel filePanel = new FilePanel();
+	private MybatisPanel mybatisPanel = new MybatisPanel();
 	public Frame() {
 		try {
 			initComponent();
@@ -35,7 +35,7 @@ public class Frame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		//testPanel을 등록
-		this.setContentPane(filePanel);
+		this.setContentPane(mybatisPanel);
 		
 		// window 이벤트 등록한다
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
