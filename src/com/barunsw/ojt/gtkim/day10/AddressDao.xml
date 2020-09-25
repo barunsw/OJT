@@ -22,7 +22,6 @@
 		WHERE SEQ=#{seq}
 	</update>
 
-
 	<delete id="deleteAddress" parameterType="Address">
 		DELETE FROM TB_ADDRESS
 		WHERE SEQ=#{seq}
