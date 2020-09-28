@@ -96,8 +96,12 @@ public class TestPanel extends JPanel {
 	void jButton_Click_actionPerformed(ActionEvent e) {
 		LOGGER.debug("+++ click");
 
+		LOGGER.debug("+++ progressDialog visible");
+
 		progressDialog = new ProgressDialog(null);
 		progressDialog.setVisible(true);
+		
+		LOGGER.debug("--- progressDialog visible");
 		
 		SwingWorker worker = new SwingWorker() {
 			@Override

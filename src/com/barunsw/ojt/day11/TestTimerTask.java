@@ -26,9 +26,9 @@ public class TestTimerTask extends TimerTask {
 		LOGGER.debug(String.format("[%d]%s", id, currentTime));
 		
 		try {
-			Thread.sleep(2000);
+			//Thread.sleep(2000);
 		}
-		catch (InterruptedException e) {
+		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 	}

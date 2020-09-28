@@ -15,13 +15,22 @@
 	</insert>
 	
 	<update id="updateAddress">
-		UPDATE ADDRESS_BOOK SET
-		AGE = #{age}, GENDER = #{gender}, PHONE = #{phone}, ADDRESS = #{address}
-		WHERE NAME = #{name}
+		UPDATE 
+			ADDRESS_BOOK 
+		SET
+			AGE = #{age}
+			, GENDER = #{gender}
+			, PHONE = #{phone}
+			, ADDRESS = #{address}
+		WHERE 
+			NAME = #{name}
 	</update>
 	
 	<delete id="deleteAddress">
-		DELETE FROM ADDRESS_BOOK WHERE name = #{name}
+		DELETE FROM 
+			ADDRESS_BOOK 
+		WHERE 
+			name = #{name}
 	</delete>
 	
 	<update id="createStorage">
