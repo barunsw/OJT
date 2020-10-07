@@ -34,10 +34,11 @@ public class C_ClientPanel extends JPanel{
 	private JScrollPane scrollPane = new JScrollPane(textArea);
 	
 	private JTextField chat_TextField = new JTextField();
+	//private JTextField jTextField_Chat
 	private JTextField name_TextField = new JTextField();
 	
 	private JButton send_Button = new JButton("SEND");
-	
+	// private JButton jButton_Send
 	private Socket socket;
 	
 	private ObjectOutputStream oos = null;
