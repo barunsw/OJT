@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.constants.BoardType;
+import com.barunsw.ojt.constants.Severity;
 import com.barunsw.ojt.vo.BoardVo;
 
 public class TestPanel extends JPanel {
@@ -45,10 +46,33 @@ public class TestPanel extends JPanel {
 		
 		BoardVo boardVo = new BoardVo();
 		boardVo.setBoardType(BoardType.MPU);
-		boardVo.setBoardName("MPU");
+		boardVo.setBoardName("MPU01");
 		boardVo.setBoardId(0);
+		boardVo.setSeverity(Severity.CRITICAL);
 		
 		boardList.add(boardVo);
+		
+		BoardVo boardVo2 = new BoardVo();
+		boardVo2.setBoardType(BoardType.MPU);
+		boardVo2.setBoardName("MPU02");
+		boardVo2.setBoardId(1);
+		
+		boardList.add(boardVo2);
+		
+		BoardVo boardVo3 = new BoardVo();
+		boardVo3.setBoardType(BoardType.SALC);
+		boardVo3.setBoardName("SALC01");
+		boardVo3.setBoardId(2);
+		
+		boardList.add(boardVo3);
+		
+		
+		BoardVo boardVo4 = new BoardVo();
+		boardVo4.setBoardType(BoardType.SRGU);
+		boardVo4.setBoardName("SRGU01");
+		boardVo4.setBoardId(18);
+		
+		boardList.add(boardVo4);
 		
 		return boardList;
 	}
@@ -56,6 +80,8 @@ public class TestPanel extends JPanel {
 	private void initData() {
 		// 연동에 의해 board 정보 조회
 		List<BoardVo> boardList = getBoardData();
+		
+		LOGGER.debug("boardList:" + boardList);
 		
 		for (BoardVo oneBoardVo : boardList) {
 			int boardId = oneBoardVo.getBoardId();
@@ -68,15 +94,28 @@ public class TestPanel extends JPanel {
 					boardPanel.getWidth(), boardPanel.getHeight()));
 			boardPanel.repaint();
 			
-			if (boardId < 20) {
-				boardPanel.setBounds(BOARD_START_X ,
+			int boardWidth = boardPanel.getBoardWidth();
+			int boardHeight = boardPanel.getBoardHeight();
+			
+			LOGGER.debug(String.format("boardId:%s, boardWidth:%s, boardHeight:%s", boardId, boardWidth, boardHeight));
+			
+			if (boardId < 2) {
+				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
 						TOP_BOARD_START_Y,
 						boardPanel.getBoardWidth(),
 						boardPanel.getBoardHeight());
 			}
-			else {
-				boardPanel.setBounds(BOARD_START_X,
+			else if (boardId < 20) {
+				LOGGER.debug("startX:" + (BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM))));
+				
+				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
 						BOTTOM_BOARD_START_Y,
+						boardPanel.getBoardWidth(),
+						boardPanel.getBoardHeight());
+			}
+			else {
+				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
+						TOP_BOARD_START_Y,
 						boardPanel.getBoardWidth(),
 						boardPanel.getBoardHeight());
 			}
