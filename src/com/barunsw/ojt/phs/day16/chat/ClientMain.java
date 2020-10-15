@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day16;
+package com.barunsw.ojt.phs.day16.chat;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;

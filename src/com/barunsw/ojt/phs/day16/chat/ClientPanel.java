@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day16;
+package com.barunsw.ojt.phs.day16.chat;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.phs.day16.MessageVO;
+import com.barunsw.ojt.phs.day16.chat.MessageVO;
 
 public class ClientPanel extends JPanel implements EventListener {
 	private static final Logger LOGGER = LogManager.getLogger(ClientPanel.class);

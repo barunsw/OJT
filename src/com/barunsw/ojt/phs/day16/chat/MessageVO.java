@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day16;
+package com.barunsw.ojt.phs.day16.chat;
 
 import java.io.Serializable;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day16;
+package com.barunsw.ojt.phs.day16.chat;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

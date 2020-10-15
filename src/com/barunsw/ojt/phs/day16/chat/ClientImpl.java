@@ -1,4 +1,4 @@
-package com.barunsw.ojt.phs.day16;
+package com.barunsw.ojt.phs.day16.chat;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
