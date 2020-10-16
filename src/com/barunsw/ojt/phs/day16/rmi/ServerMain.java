@@ -15,8 +15,7 @@ public class ServerMain {
 		try {
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			
-			ServerInterface serverIf = 
-					new ServerImpl();
+			ServerInterface serverIf = new ServerImpl();
 			registry.bind(BIND_NAME, serverIf);
 			
 			AlaramSignal alaramGenerator = new AlaramSignal(serverIf);

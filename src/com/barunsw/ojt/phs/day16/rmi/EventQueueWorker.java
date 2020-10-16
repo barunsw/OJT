@@ -3,8 +3,6 @@ package com.barunsw.ojt.phs.day16.rmi;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.barunsw.ojt.day16.QueueWorker;
-
 public class EventQueueWorker extends QueueWorker {
 	private List<EventListener> eventListenerList = new ArrayList<EventListener>();
 	
