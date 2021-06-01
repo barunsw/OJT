@@ -19,7 +19,7 @@ import com.barunsw.ojt.vo.BoardVo;
 import sun.applet.Main;
 
 /*
- *  background Rack에 부착될 unit panel을 생성하는 클래스
+ *  background Rack�뿉 遺�李⑸맆 unit panel�쓣 �깮�꽦�븯�뒗 �겢�옒�뒪
  */
 
 public class BoardPanel extends JPanel implements EventListener {
@@ -70,7 +70,7 @@ public class BoardPanel extends JPanel implements EventListener {
 			width = SRGU_BOARD_WIDTH;
 			break;
 		default :
-			LOGGER.error("알 수 없는 BoardType 입니다" + boardVo.getBoardType());
+			LOGGER.error("�븣 �닔 �뾾�뒗 BoardType �엯�땲�떎" + boardVo.getBoardType());
 		}
 		
 		return width;
@@ -88,7 +88,7 @@ public class BoardPanel extends JPanel implements EventListener {
 			height = BOARD_HEIGHT;
 			break;
 		default :
-			LOGGER.error("알 수 없는 BoardType 입니다" + boardVo.getBoardType());
+			LOGGER.error("�븣 �닔 �뾾�뒗 BoardType �엯�땲�떎" + boardVo.getBoardType());
 		}
 
 		return height;
@@ -108,7 +108,7 @@ public class BoardPanel extends JPanel implements EventListener {
 			retImage = ImageFactory.srguImageIcon[boardVo.getSeverity()].getImage();
 			break;
 		default :
-			LOGGER.error("알 수 없는 BoardType 입니다" + boardVo.getBoardType());
+			LOGGER.error("�븣 �닔 �뾾�뒗 BoardType �엯�땲�떎" + boardVo.getBoardType());
 		}
 		
 		return retImage;
