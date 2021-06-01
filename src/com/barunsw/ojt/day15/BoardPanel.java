@@ -21,7 +21,7 @@ public class BoardPanel extends JPanel {
 	private BoardVo boardVo;
 	
 	public BoardPanel(BoardVo boardVo) {
-		LOGGER.debug("board 생성");
+		LOGGER.debug("board �깮�꽦");
 		this.boardVo = boardVo;
 	}
 	
@@ -31,8 +31,8 @@ public class BoardPanel extends JPanel {
 		
 		int severity = boardVo.getSeverity();
 		//Graphics2D g2d = (Graphics2D)g;
-		switch (boardVo.getBoardType()) {
-		case MPU: {
+		switch (boardVo.getBoardType()){
+		case MPU: 
 			if (severity == Severity.NORMAL) {
 					g.drawImage(ImageFactory.mpuNormalImageIcon.getImage(),
 							0, 
