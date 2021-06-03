@@ -27,16 +27,14 @@ public class DBTests2 {
 	//입력을 하면 파일에도 저장 DB에도 저장
 	private static Logger LOG = LogManager.getLogger(DBTests2.class);
 	public static int NUMBER_PERSON = 1;
-	private final String url = "";
+	private static final String url = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
+	private static final String id = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
+	private static final String pw = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
 	
 	public static void main(String[] args) {
 		
 		
 		Scanner sc = new Scanner(System.in);
-		
-		String url = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
-		String id = "root";
-		String pw = "barun";
 		
 		//CLI는 Command Line Interface 줄임말.  
 		//사용자는 커맨드 즉 문자열을 통해 컴퓨터에게 명령을 하고 컴퓨터의 응답도 역시 문자열로 출력해주는 방식
