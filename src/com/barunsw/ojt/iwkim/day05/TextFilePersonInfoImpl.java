@@ -23,17 +23,7 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 	
 	private List<PersonInfo> personList;
 	
-//	BufferedReader reader = null; // 다형성을 이용하여 Reader타입의 객체를 생성하면 자식클래스의 메서드인 readLine을 사용할 수 없으므로 BufferReader를 사용했다.
-//	BufferedWriter writer = null; 
-//	String name;
-//	String gender;
-//	String birth;
-//	String email;
-//	String regDate;
-//	String updateDate;
 	
-	
-//	private File file = new File(PERSON_INFO_FILE);
 	
 	public TextFilePersonInfoImpl() {
 		try {
@@ -58,37 +48,46 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 				String[] splitData = readLine.trim().split(",");
 				
 				PersonInfo person = new PersonInfo();
-				person.setName(splitData[1]);
-				person.setGender(splitData[2]);
-				person.setBirth(splitData[3]);
-				person.setEmail(splitData[4]);
-				person.setRegDate(splitData[5]);
-				person.setUpdateDate(splitData[6]);
+				person.setName(splitData[0]);
+				person.setGender(splitData[1]);
+				person.setBirth(splitData[2]);
+				person.setEmail(splitData[3]);
+				person.setRegDate(splitData[4]);
+				person.setUpdateDate(splitData[5]);
 
 				personList.add(person);
 			}
 		}
 		finally {
-			if (reader != null)
+			if (reader != null) {
 				reader.close();
+			}
 		}
 	}
 	
 	//파일에 출력하는 메서드 
 	private void writeFile() throws Exception{
-		writer = new BufferedWriter(new FileWriter(PERSON_INFO_FILE));
-		for (PersonInfo person : personList) {
-			String name 		= person.getName();
-			String gender 		= person.getGender();
-			String birth 		= person.getBirth();
-			String email 		= person.getEmail();
-			String regDate 		= person.getRegDate();
-			String updateDate 	= person.getUpdateDate();
-			
-			writer.write(String.format("%s, %s, %s, %s, %s, %s", name, gender, birth, email, regDate, updateDate));
-			writer.flush();
+		BufferedWriter writer = null;
+		
+		try {
+			writer = new BufferedWriter(new FileWriter(PERSON_INFO_FILE));
+			for (PersonInfo person : personList) {
+				String name 		= person.getName();
+				String gender 		= person.getGender();
+				String birth 		= person.getBirth();
+				String email 		= person.getEmail();
+				String regDate 		= person.getRegDate();
+				String updateDate 	= person.getUpdateDate();
+				
+				writer.write(String.format("%s, %s, %s, %s, %s, %s", name, gender, birth, email, regDate, updateDate));
+				writer.flush();
+			}
 		}
-		writer.close();
+		finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
 	}
 	
 	@Override
@@ -96,18 +95,9 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 		// personList에서 name과 일치하는 데이터를 찾는다.
 		for (PersonInfo person : personList) {
 			if (person.getName().equals(name)) {
-//				PersonInfo onePerson = new PersonInfo();
-//				onePerson.setName(name);
-//				onePerson.setGender(person.getGender());
-//				onePerson.setBirth(person.getBirth());
-//				onePerson.setEmail(person.getEmail());
-//				onePerson.setRegDate(person.getRegDate());
-//				onePerson.setUpdateDate(person.getUpdateDate());
-				
 				return person;
 			}
 		}
-		System.out.println("검색 결과가 없습니다.");
 		return null;
 	}
 
@@ -132,8 +122,7 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 				person.setGender(param.getGender());
 				person.setBirth(param.getBirth());
 				person.setEmail(param.getEmail());
-				person.setRegDate(param.getRegDate());
-				person.setUpdateDate(DateUtil.DATE_FORMAT.format(new Date()));
+				person.setUpdateDate(DateUtil.DEFAULT_DATE_FORMAT.format(new Date()));
 			}
 		}
 		// 파일에 쓴다.
@@ -146,9 +135,8 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 		// personList에서 param과 일치하는 데이터를 찾아 삭제한다.
 		int count = 0;
 		for (PersonInfo person : personList) {
-			count++;
 			if (person.getName().equals(person.getName())) {
-				personList.remove(count);
+				personList.remove(count++);
 			}
 		}
 		// 파일에 쓴다.

@@ -1,27 +1,20 @@
 package com.barunsw.ojt.iwkim.day05.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-
+import com.barunsw.ojt.iwkim.common.DateUtil;
 import com.barunsw.ojt.iwkim.common.PersonInfo;
 
 
 public class CliService {
 	Scanner sc = new Scanner(System.in);
-
-	PersonInfo person;
 	
-	String name;
-	String gender;
-	String birth;
-	String email;
-	String regDate;
-	String updateDate;
+	// ctrl + shift + r -> 블록 지정된 명칭으로 Resource 검색
+	// alt + shift + r -> 커서가 위치한 변수명 또는 메소드 명을 일괄 변경
+	// alt + shift + a -> 한번 : 세로 블록지정 가능하도록 모드 변경 , 두번 : 모드 빠져나오기
+	// ctrl + shift + o -> 자동 import 
 	
-	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
-	public void start(){
+	public void start() {
 		System.out.println();
 		System.out.println("'C'  입력 -> 개인정보 입력");
 		System.out.println("'U'  입력 -> 개인정보 수정");
@@ -32,23 +25,23 @@ public class CliService {
 		System.out.print("입력 : ");
 	};
 	
-	public PersonInfo inputPersonInfo(){
+	public PersonInfo inputPersonInfo() {
 		System.out.println();
 		System.out.println("개인정보를 입력해주세요.");
 		System.out.print("이름 : ");
-		name = sc.next();
+		String name = sc.next();
 		System.out.print("성별 : ");
-		gender = sc.next();
+		String gender = sc.next();
 		System.out.print("생년월일 : ");
-		birth = sc.next();
+		String birth = sc.next();
 		System.out.print("이메일 : ");
-		email = sc.next();
+		String email = sc.next();
 		
-		person = new PersonInfo();
-		Date date = new Date();
-		String standardDate = format.format(date);
-		regDate = standardDate;
-		updateDate = standardDate;
+		String standardDate = DateUtil.DEFAULT_DATE_FORMAT.format(new Date());
+		String regDate = standardDate;
+		String updateDate = standardDate;
+		
+		PersonInfo person = new PersonInfo();
 		
 		person.setName(name);
 		person.setGender(gender);
@@ -60,47 +53,42 @@ public class CliService {
 		return person;	
 	}
 	
-	public PersonInfo inputPersonInfoForUpdate(String name){
+	public PersonInfo inputPersonInfoForUpdate(String name) {
 		System.out.println();
 		System.out.println("개인정보를 입력해주세요.");
 		System.out.print("성별 : ");
-		gender = sc.next();
+		String gender = sc.next();
 		System.out.print("생년월일 : ");
-		birth = sc.next();
+		String birth = sc.next();
 		System.out.print("이메일 : ");
-		email = sc.next();
+		String email = sc.next();
 		
-		person = new PersonInfo();
-		Date date = new Date();
-		regDate = format.format(date);
-		updateDate = format.format(date);
-		
+		PersonInfo person = new PersonInfo();
 		person.setName(name);
 		person.setGender(gender);
 		person.setBirth(birth);
 		person.setEmail(email);
-		person.setRegDate(regDate);
-		person.setUpdateDate(updateDate);
+		person.setUpdateDate(DateUtil.DEFAULT_DATE_FORMAT.format(new Date()));
 		
 		return person;	
 	}
 	
-	public String certify(){
+	public String certify() {
 		System.out.println();
 		System.out.println("먼저 이름을 입력해주세요.");
 		System.out.print("이름 : ");
-		name = sc.next();
+		String name = sc.next();
 		return name;
 	}
 	
-	public void resultSelect(PersonInfo person){
+	public void resultSelect(PersonInfo person) {
 		if (person != null) {
-			name = person.getName();
-			gender = person.getGender();
-			birth = person.getBirth();
-			email = person.getEmail();
-			regDate = person.getRegDate();
-			updateDate = person.getUpdateDate();
+			String name 		= person.getName();
+			String gender 		= person.getGender();
+			String birth 		= person.getBirth();
+			String email 		= person.getEmail();
+			String regDate 		= person.getRegDate();
+			String updateDate 	= person.getUpdateDate();
 			System.out.print("검색 결과 : ");
 			System.out.println(String.format("%s, %s, %s, %s, %s, %s", name, gender, birth, email, regDate, updateDate));
 		}

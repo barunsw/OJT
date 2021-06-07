@@ -10,22 +10,24 @@ import com.barunsw.ojt.iwkim.day05.service.CliService;
 import com.barunsw.ojt.iwkim.common.PersonInfo; 
 
 public class PersonInfoTests {
-	private static Logger LOG = LogManager.getLogger(PersonInfoTests.class);
+	private static Logger LOGGER = LogManager.getLogger(PersonInfoTests.class);
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
-		PersonInfoInterface personInfo = new ObjectFilePersonInfoImpl();
-		//PersonInfoInterface PersonInfo = new TextFilePersonInfoImple();
-		//PersonInfoInterface personInfo = new DBPersonInfoImple();
+ 		PersonInfoInterface personInfo = new ObjectFilePersonInfoImpl();
+// 		PersonInfoInterface personInfo = new TextFilePersonInfoImpl();
+//		PersonInfoInterface personInfo = new DBPersonInfoImpl();
 		
 		CliService cService = new CliService();
-		PersonInfo person;
-		String name;
+		
+		
 		try {
 			while (true) {
 				cService.start();
 				String input = sc.next();
+				String name;
+				PersonInfo person;
 				switch (input.toLowerCase()) {
 					case "c" :
 						person = cService.inputPersonInfo();
@@ -60,7 +62,12 @@ public class PersonInfoTests {
 					case "r" :
 						name = cService.certify();
 						person = personInfo.select(name);
-						cService.resultSelect(person);
+						if (person != null) {
+							cService.resultSelect(person);
+						}
+						else {
+							System.out.println("검색 결과가 존재하지 않습니다.");
+						}
 					break;
 						case "end" :
 						System.out.println("프로그램이 종료됩니다.");
@@ -72,9 +79,11 @@ public class PersonInfoTests {
 			}
 		}
 		catch (Exception e) {
-			LOG.info(e.getMessage(), e);
+			LOGGER.info(e.getMessage(), e);
 		}
-
+		finally {
+			sc.close();
+		}
 	}
 
 }

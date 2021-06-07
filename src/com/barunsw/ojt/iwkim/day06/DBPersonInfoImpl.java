@@ -1,4 +1,4 @@
-package com.barunsw.ojt.iwkim.day05;
+package com.barunsw.ojt.iwkim.day06;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,7 +32,7 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 	// DB 연결 메서드
 	private Connection getConnection() {
 		try {
-			if (connection == null || connection.isClosed()) {
+			if (connection == null || connection.isClosed()) { // null이거나 닫혀있으면 connection객체 가져오기
 				connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/study01?autoReconnect=true", 
 						"root", 
 						"barun");
@@ -53,7 +53,7 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 		
 		try {
 			Connection conn = getConnection();
-			pstmt = conn.prepareStatement("SELECT * FROM person WHERE name=?");
+			pstmt = conn.prepareStatement("SELECT * FROM person WHERE name=? ");
 			pstmt.setString(1, name);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -82,11 +82,12 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 	public int insertPerson(PersonInfo param) throws Exception {
 		PreparedStatement pstmt = null;
 		int queryExcResult = 0;
+		Date date = null;
 		
 		try {
 			Connection conn = getConnection();
-			Date date = new Date();
-			pstmt = conn.prepareStatement("INSERT INTO person(name, gender, birth, email, regDate, updateDate) VALUES(?,?,?,?,?,?)");
+			date = new Date();
+			pstmt = conn.prepareStatement("INSERT INTO person(name, gender, birth, email, regDate, updateDate) VALUES(?,?,?,?,?,?) ");
 			pstmt.setString(1, param.getName());
 			pstmt.setString(2, param.getGender());
 			pstmt.setString(3, param.getBirth());
@@ -110,7 +111,7 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 		
 		try {
 			Connection conn = getConnection();
-			pstmt = conn.prepareStatement("UPDATE person SET gender=?, birth=?, email=?, updateDate=? WHERE name=?");
+			pstmt = conn.prepareStatement("UPDATE person SET gender=?, birth=?, email=?, updateDate=? WHERE name=? ");
 			pstmt.setString(1, param.getGender());
 			pstmt.setString(2, param.getBirth());
 			pstmt.setString(3, param.getEmail());
