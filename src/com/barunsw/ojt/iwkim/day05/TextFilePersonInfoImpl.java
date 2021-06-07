@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,29 +12,28 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.iwkim.common.PersonInfoInterface;
+import com.barunsw.ojt.iwkim.common.DateUtil;
 import com.barunsw.ojt.iwkim.common.PersonInfo;
+import com.barunsw.ojt.iwkim.common.PersonInfoInterface;
 
-public class TextFilePersonInfoImpl implements PersonInfoInterface{
-
-private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.class);
+public class TextFilePersonInfoImpl implements PersonInfoInterface {
+	private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.class);
 	
 	private final String PERSON_INFO_FILE = "data/iwkim/personInfo2.csv";
 	
 	private List<PersonInfo> personList;
 	
-	BufferedReader reader = null; // 다형성을 이용하여 Reader타입의 객체를 생성하면 자식클래스의 메서드인 readLine을 사용할 수 없으므로 BufferReader를 사용했다.
-	BufferedWriter writer = null; 
-	Boolean isExistName;
-	String name;
-	String gender;
-	String birth;
-	String email;
-	String regDate;
-	String updateDate;
+//	BufferedReader reader = null; // 다형성을 이용하여 Reader타입의 객체를 생성하면 자식클래스의 메서드인 readLine을 사용할 수 없으므로 BufferReader를 사용했다.
+//	BufferedWriter writer = null; 
+//	String name;
+//	String gender;
+//	String birth;
+//	String email;
+//	String regDate;
+//	String updateDate;
 	
-	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	File file = new File(PERSON_INFO_FILE);
+	
+//	private File file = new File(PERSON_INFO_FILE);
 	
 	public TextFilePersonInfoImpl() {
 		try {
@@ -48,37 +46,45 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 	
 	//파일로부터 데이터 로딩
 	private void loadFile() throws Exception {
+		BufferedReader reader = null;
 		
-		reader = new BufferedReader(new FileReader(PERSON_INFO_FILE));
-		personList = new ArrayList<>();
-		String readLine = null;
-		while ( (readLine = reader.readLine()) != null ) {
-			LOGGER.info(String.format("line : [%s]", readLine));
-			String[] splitData = readLine.trim().split(",");
-			PersonInfo person = new PersonInfo();
-			person.setName(splitData[1]);
-			person.setGender(splitData[2]);
-			person.setBirth(splitData[3]);
-			person.setEmail(splitData[4]);
-			person.setRegDate(splitData[5]);
-			person.setUpdateDate(splitData[6]);
-			
-			personList.add(person);
+		try {
+			reader = new BufferedReader(new FileReader(new File(PERSON_INFO_FILE)));
+			personList = new ArrayList<>();
+			String readLine = null;
+			while ((readLine = reader.readLine()) != null) {
+				LOGGER.info(String.format("line : [%s]", readLine));
+				
+				String[] splitData = readLine.trim().split(",");
+				
+				PersonInfo person = new PersonInfo();
+				person.setName(splitData[1]);
+				person.setGender(splitData[2]);
+				person.setBirth(splitData[3]);
+				person.setEmail(splitData[4]);
+				person.setRegDate(splitData[5]);
+				person.setUpdateDate(splitData[6]);
+
+				personList.add(person);
+			}
 		}
-		reader.close();
-		
+		finally {
+			if (reader != null)
+				reader.close();
+		}
 	}
 	
 	//파일에 출력하는 메서드 
 	private void writeFile() throws Exception{
 		writer = new BufferedWriter(new FileWriter(PERSON_INFO_FILE));
 		for (PersonInfo person : personList) {
-			name = person.getName();
-			gender = person.getGender();
-			birth = person.getBirth();
-			email = person.getEmail();
-			regDate = person.getRegDate();
-			updateDate = person.getUpdateDate();
+			String name 		= person.getName();
+			String gender 		= person.getGender();
+			String birth 		= person.getBirth();
+			String email 		= person.getEmail();
+			String regDate 		= person.getRegDate();
+			String updateDate 	= person.getUpdateDate();
+			
 			writer.write(String.format("%s, %s, %s, %s, %s, %s", name, gender, birth, email, regDate, updateDate));
 			writer.flush();
 		}
@@ -90,13 +96,14 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 		// personList에서 name과 일치하는 데이터를 찾는다.
 		for (PersonInfo person : personList) {
 			if (person.getName().equals(name)) {
-				PersonInfo onePerson = new PersonInfo();
-				onePerson.setName(name);
-				onePerson.setGender(person.getGender());
-				onePerson.setBirth(person.getBirth());
-				onePerson.setEmail(person.getEmail());
-				onePerson.setRegDate(person.getRegDate());
-				onePerson.setUpdateDate(person.getUpdateDate());
+//				PersonInfo onePerson = new PersonInfo();
+//				onePerson.setName(name);
+//				onePerson.setGender(person.getGender());
+//				onePerson.setBirth(person.getBirth());
+//				onePerson.setEmail(person.getEmail());
+//				onePerson.setRegDate(person.getRegDate());
+//				onePerson.setUpdateDate(person.getUpdateDate());
+				
 				return person;
 			}
 		}
@@ -126,7 +133,7 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 				person.setBirth(param.getBirth());
 				person.setEmail(param.getEmail());
 				person.setRegDate(param.getRegDate());
-				person.setUpdateDate(date.format(new Date()));
+				person.setUpdateDate(DateUtil.DATE_FORMAT.format(new Date()));
 			}
 		}
 		// 파일에 쓴다.
@@ -151,8 +158,7 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 	
 	
 	@Override
-	public boolean isExistName(String name) {
-		
+	public boolean isExistName(String name) {		
 		if ( personList == null ) {
 			return false;
 		}
@@ -164,6 +170,4 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 		} 
 		return false;
 	}
-	
-
 }
