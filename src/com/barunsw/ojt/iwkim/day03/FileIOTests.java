@@ -26,9 +26,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.iwkim.common.Person;
 
-
-
-
 public class FileIOTests {
 	
 	private static Logger LOGGER = LogManager.getLogger(FileIOTests.class);
