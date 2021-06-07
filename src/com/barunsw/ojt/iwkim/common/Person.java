@@ -1,4 +1,4 @@
-package com.barunsw.ojt.iwkim.day03;
+package com.barunsw.ojt.iwkim.common;
 
 import java.io.Serializable;
 

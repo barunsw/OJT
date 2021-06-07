@@ -24,6 +24,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.iwkim.common.Person;
+
+
 
 
 public class FileIOTests {
@@ -71,7 +74,7 @@ public class FileIOTests {
 		LOGGER.info(exFile.getName());
 		LOGGER.info(exFile.getParent());
 		
-		//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+		LOGGER.info("====================================================");
 		//이제 파일은 생성을 하였고 IO를 테스트해보자
 		// Inputstream과 outputStream은 바이트 기반이다.
 		InputStream inputStream = null;
@@ -85,13 +88,16 @@ public class FileIOTests {
 			// InputStream에서 read메서드는 바이트배열 형태로 읽어 들이기 때문에
 			// 바이트 배열 생성
 			byte[] data = new byte[1024];
-			int readNumber = inputStream.read(data);
-			//객체를 출력하면 toString생략시 자동으로 호출되므로 아까 오버라이딩 해준 return값으로 출력  
+			int readNumber = inputStream.read(data); // data에 읽은 데이터가 저장된다.
+			//new String(byte[])은 들어간 바이트배열을 디코딩하여 새로운 String 객체를 만들게 된다.  
 			LOGGER.info(String.format("[%d]Byte msg : %s", readNumber, new String(data)));
 			
-			outputStream = new FileOutputStream(
-					new File("data/day03/iwkim/address1.txt"));
-			outputStream.write(data);
+			// 지정된 파일객체가 나타내는 파일에 쓸 파일 출력 스트림을 만든다.
+			// 파일이 있지만 디렉토리인 경우, 존재하지 않지만 작성할 수 없거나 다른이유로 열 수 없는경우 FileNotFoundException발생
+			File file1 = new File("data/day03/iwkim/address1.txt");
+			outputStream = new FileOutputStream(file1); // 여기서 address1.txt파일 생성함과 동시에 바이트배을 보낼 통로를 열게됨
+			outputStream.write(data); // 바이트 배열의 내용을 문자로 바꿔서 파일에 출력한다.
+		
 		}
 		catch (FileNotFoundException fnfe) {
 			LOGGER.info(fnfe.getMessage(), fnfe);
@@ -118,8 +124,10 @@ public class FileIOTests {
 			}
 		}
 		
+		LOGGER.info("====================================================");
+		
 		//Try-with-resources를 사용하여 자원을 쉽게 해제할 수 있다.
-		try (InputStream testStream = new FileInputStream(exFile)){
+		try (InputStream testStream = new FileInputStream(exFile)){ // 주어진 File객체가 가리키는 파일을 바이트 스트림으로 읽기 위한 FileInputStream객체를 생성
 			byte[] data = new byte[100];
 			int readNumber = testStream.read(data);
 			LOGGER.info(String.format("[%d]Byte msg : %s", readNumber, new String(data)));
@@ -144,24 +152,25 @@ public class FileIOTests {
 			LOGGER.info(ioe.getMessage(), ioe);
 		}
 		
+		LOGGER.info("====================================================");
 		//여기서 보조스트림인 BufferedReader를 사용하면 줄 별로 읽을 수 있다.
 		// 먼저 직렬화가 가능한 클래스로 리스트를 생성하자
 		List<Person> list = new ArrayList<>();
-		BufferedReader reader = null;
-		BufferedWriter writer = null;
+		BufferedReader reader = null; // 다형성을 이용하여 Reader타입의 객체를 생성하면 자식클래스의 메서드인 readLine을 사용할 수 없으므로 BufferReader를 사용했다.
+		BufferedWriter writer = null; 
 		
 		try {
-			reader = new BufferedReader(new FileReader(exFile));
+			reader = new BufferedReader(new FileReader(exFile)); 
 			writer = new BufferedWriter(new FileWriter(
 					new File("data/day03/iwkim/address2")));
 			String readLine = null;
-			while ((readLine = reader.readLine()) != null) {
-				LOGGER.info("line : [%s]", readLine);
+			while ((readLine = reader.readLine()) != null) { // 한줄씩 읽어들여서 null이 아닐때까지 반복
+				LOGGER.info(String.format("line : [%s]", readLine));
 				String[] splitData = readLine.split(",");
-				//자동으로 개행기능을 추가
+				//개행기능을 추가
 				// 현재 저장되어있는내용 전송하고 버퍼를 비우는 기능 추가
 				writer.write(readLine + "\n");
-				writer.flush();
+				writer.flush(); // close하기전에 버퍼에 있는 내용을 출력하고 버퍼를 비워야하므로 flush()메서드 사용
 				
 				if (splitData.length > 5) {
 					Person onePerson = new Person();
@@ -208,7 +217,7 @@ public class FileIOTests {
 		LOGGER.info("====================================================");
 		
 		//이제 객체 단위로 IO를 해보자
-		File objFile = new File("data/day03/iwkim/address.dat");
+		File objFile = new File("data/day03/iwkim/address5.dat");
 		
 		
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(objFile))) {

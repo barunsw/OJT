@@ -1,22 +1,17 @@
 package com.barunsw.ojt.iwkim.common;
 
-import java.util.List;
 
-/**
- * 주소록 인터페이스
- * 
- * @author sbae7
- *
- */
-public interface AddressBookInterface {
-	// 주소록 조회
-	public List<PersonInfo> selectList(PersonInfo param) throws Exception;
-	// 주소록 추가
+public interface PersonInfoInterface {
+	// 개인정보 조회
+	public PersonInfo select(String name) throws Exception;
+	// 개인정보 추가
 	public int insertPerson(PersonInfo param) throws Exception;
-	// 주소록 수정
+	// 개인정보 수정
 	public int updatePerson(PersonInfo param) throws Exception;
-	// 주소록 삭제
-	public int deletePerson(PersonInfo param) throws Exception;
+	// 개인정보 삭제
+	public int deletePerson(String name) throws Exception;
+	// 기본키 중복 확인
+	public boolean isExistName(String name) throws Exception;
 }
 
 

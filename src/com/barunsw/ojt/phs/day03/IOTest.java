@@ -30,7 +30,7 @@ public class IOTest {
 //		=================================================================
 		
 		//InputStream은 Byte 단위로 읽기때문에 Byte배열 선언
-		byte[] data = new byte[10]; 
+		byte[] data = new byte[10];
 		
 		//Stream 선언을 try 오른쪽 괄호 안에 넣어주면 finally를 이용해 close()를 사용할 필요가없음
 		//코드가 줄어들어 간편해짐

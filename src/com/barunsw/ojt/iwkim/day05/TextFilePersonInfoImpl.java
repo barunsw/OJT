@@ -2,6 +2,7 @@ package com.barunsw.ojt.iwkim.day05;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,7 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 	String updateDate;
 	
 	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	File file = new File(PERSON_INFO_FILE);
 	
 	public TextFilePersonInfoImpl() {
 		try {
@@ -46,25 +48,25 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 	
 	//파일로부터 데이터 로딩
 	private void loadFile() throws Exception {
-		if (personList!=null) {
-			reader = new BufferedReader(new FileReader(PERSON_INFO_FILE));
-			personList = new ArrayList<>();
-			String readLine = null;
-			while ( (readLine = reader.readLine()) != null ) {
-				LOGGER.info(String.format("line : [%s]", readLine));
-				String[] splitData = readLine.trim().split(",");
-				PersonInfo person = new PersonInfo();
-				person.setName(splitData[1]);
-				person.setGender(splitData[2]);
-				person.setBirth(splitData[3]);
-				person.setEmail(splitData[4]);
-				person.setRegDate(splitData[5]);
-				person.setUpdateDate(splitData[6]);
-				
-				personList.add(person);
-			}
-			reader.close();
+		
+		reader = new BufferedReader(new FileReader(PERSON_INFO_FILE));
+		personList = new ArrayList<>();
+		String readLine = null;
+		while ( (readLine = reader.readLine()) != null ) {
+			LOGGER.info(String.format("line : [%s]", readLine));
+			String[] splitData = readLine.trim().split(",");
+			PersonInfo person = new PersonInfo();
+			person.setName(splitData[1]);
+			person.setGender(splitData[2]);
+			person.setBirth(splitData[3]);
+			person.setEmail(splitData[4]);
+			person.setRegDate(splitData[5]);
+			person.setUpdateDate(splitData[6]);
+			
+			personList.add(person);
 		}
+		reader.close();
+		
 	}
 	
 	//파일에 출력하는 메서드 
@@ -82,10 +84,6 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 		}
 		writer.close();
 	}
-	
-	
-	
-	
 	
 	@Override
 	public PersonInfo select(String name) throws Exception {
@@ -154,6 +152,11 @@ private static Logger LOGGER = LogManager.getLogger(ObjectFilePersonInfoImpl.cla
 	
 	@Override
 	public boolean isExistName(String name) {
+		
+		if ( personList == null ) {
+			return false;
+		}
+		
 		for (PersonInfo person : personList) {
 			if (person.getName().equals(name)) {
 				return true;

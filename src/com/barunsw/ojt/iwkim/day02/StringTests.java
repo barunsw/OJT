@@ -150,6 +150,7 @@ public class StringTests {
 	
 	private static double StringBuilderSpeedTest(int count) 
 	{
+		System.out.println("hi");
 		StringBuilder strTest = new StringBuilder("a");
 		long start = System.currentTimeMillis();
 		for(int i=0; i<count; i++) 
@@ -158,7 +159,9 @@ public class StringTests {
 		}
 		long end = System.currentTimeMillis();
 		return end-start*1.0;
+		
 	}
+	
 }
 
 

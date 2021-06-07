@@ -7,8 +7,6 @@ import java.util.Scanner;
 import com.barunsw.ojt.iwkim.common.PersonInfo;
 
 
-
-
 public class CliService {
 	Scanner sc = new Scanner(System.in);
 

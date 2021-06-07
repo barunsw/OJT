@@ -30,7 +30,6 @@ public class DBPersonInfoImpl implements PersonInfoInterface{
 	private static final String DELETE_PERSON_INFO = "DELETE FROM " + TABLE_NAME + " WHERE name=?";
 	private static final String SELECT_IS_EXIST_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE name=?";
 	
-	
 	public DBPersonInfoImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");

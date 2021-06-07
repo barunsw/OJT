@@ -28,8 +28,8 @@ public class DBTests2 {
 	private static Logger LOG = LogManager.getLogger(DBTests2.class);
 	public static int NUMBER_PERSON = 1;
 	private static final String url = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
-	private static final String id = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
-	private static final String pw = "jdbc:mysql://localhost:3306/study01?autoReconnect=true";
+	private static final String id = "root";
+	private static final String pw = "barun";
 	
 	public static void main(String[] args) {
 		
@@ -180,7 +180,7 @@ public class DBTests2 {
 					
 					
 					
-					//DB에 개인정보 입력
+					//DB에 개인정보 수정
 					try {
 						currentUpdateDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 						String sql = "UPDATE person SET name=?, gender=?, birth=?, email=?, updateDate=? where seq=?";
@@ -365,18 +365,14 @@ public class DBTests2 {
 					System.out.print("번호 : ");
 					seqNum = sc.nextInt();
 					
-					//DB에서 개인정보 가져오기
-					
+					//DB에서 개인정보 가져오기		
 					try {
 						String sql = "SELECT * FROM person WHERE seq=?";
 						conn = DriverManager.getConnection(url,id,pw);
-						pstmt = conn.prepareStatement(sql);
-						
-						pstmt.setInt(1, seqNum);
-						
-						rs = pstmt.executeQuery();
-						
-						if(rs.next()) {
+						pstmt = conn.prepareStatement(sql);					
+						pstmt.setInt(1, seqNum);		
+						rs = pstmt.executeQuery();	
+						if (rs.next()) {
 							name = rs.getString("name");
 							gender = rs.getString("gender");
 							birth = rs.getString("birth");
@@ -390,8 +386,7 @@ public class DBTests2 {
 							System.out.println("생년월일 : " + birth);
 							System.out.println("이메일   : " + email);
 							System.out.println("등록일   : " + regDate);
-							System.out.println("수정일   : " + updateDate);
-							
+							System.out.println("수정일   : " + updateDate);	
 						}
 						else {
 							System.out.println("검색 결과가 존재하지 않습니다. 처음부터 다시 시도해주세요.");

@@ -1,74 +1,80 @@
 package com.barunsw.ojt.iwkim.day05;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.iwkim.common.AddressBookInterface;
-import com.barunsw.ojt.iwkim.common.PersonInfo;
+import com.barunsw.ojt.iwkim.common.PersonInfoInterface;
 import com.barunsw.ojt.iwkim.day05.service.CliService;
+import com.barunsw.ojt.iwkim.common.PersonInfo; 
 
-public class AddressBookTests {
-	private static Logger LOG = LogManager.getLogger(AddressBookTests.class);
+public class PersonInfoTests {
+	private static Logger LOG = LogManager.getLogger(PersonInfoTests.class);
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
-		AddressBookInterface objFile = new ObjectFileAddressBookImpl();
+		PersonInfoInterface personInfo = new ObjectFilePersonInfoImpl();
+		//PersonInfoInterface PersonInfo = new TextFilePersonInfoImple();
+		//PersonInfoInterface personInfo = new DBPersonInfoImple();
+		
 		CliService cService = new CliService();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
-		PersonInfo person; 
+		PersonInfo person;
+		String name;
 		try {
 			while (true) {
 				cService.start();
 				String input = sc.next();
-				
 				switch (input.toLowerCase()) {
 					case "c" :
-						person = cService.insertPersonInfo();
-						objFile.insertPerson(person);
-						System.out.println("입력이 완료되었습니다.");
+						person = cService.inputPersonInfo();
+						if (personInfo.isExistName(person.getName())) {
+							System.out.println("중복된 이름이 존재합니다. 다시입력해 주세요");
+						}
+						else {
+							personInfo.insertPerson(person);
+							System.out.println("입력이 완료되었습니다.");
+						}
 						break;
 					case "u" :
+						name = cService.certify();
+						if (personInfo.isExistName(name)) {
+							person = cService.inputPersonInfoForUpdate(name);
+							personInfo.updatePerson(person);
+							System.out.println("수정이 완료되었습니다.");
+						}
+						else {
+							System.out.println("정보가 존재하지 않습니다. 다시 입력해주세요.");
+						}
 						break;
 					case "d" :
+						name = cService.certify();
+						if (personInfo.deletePerson(name) != 0) {
+							System.out.println("삭제가 완료되었습니다.");
+						}
+						else {
+							System.out.println("정보가 존재하지 않습니다. 다시 입력해주세요.");
+						}
 						break;
-					case "rf":
+					case "r" :
+						name = cService.certify();
+						person = personInfo.select(name);
+						cService.resultSelect(person);
+					break;
+						case "end" :
+						System.out.println("프로그램이 종료됩니다.");
+						return;
+					default : 
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 						break;
-					case "rd":
-						break;
-					
 				}
 			}
 		}
 		catch (Exception e) {
 			LOG.info(e.getMessage(), e);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}
+
 }
