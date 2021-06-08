@@ -41,7 +41,6 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 		catch (Exception e) {
 			LOGGER.info(e.getMessage(), e);
 		}
-		
 		return connection;
 	}
 	

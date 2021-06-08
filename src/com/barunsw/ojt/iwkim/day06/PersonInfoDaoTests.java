@@ -19,11 +19,6 @@ public class PersonInfoDaoTests {
 		SqlSessionFactory sqlSessionFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 		LOGGER.info("sqlSessionFactory : " + sqlSessionFactory);
 		// sql 명령어를 실행하기 위해 필요한 모든 메서드를 가지고 있는 SqlSession객체를 생성해주자 
-		// 파라미터를 가지지 않는 디폴트 openSession()메소드는 다음과 같은 성격을 가진 SqlSession을 만든다.
-		// 트랜잭션 스코프는 시작될 것이다.
-		// Connection 객체는 활성화된 환경에 의해 설정된 DataSource인스턴스를 획득할 것이다.
-		// 트랜잭션 격리 레벨은 드라이버나 데이터소스가 디폴트로 제공하는 옵션을 사용할 것이다.
-		// PrepartedStatements는 재사용되지 않을 것이다. 그리고 update또한 배치처리되지 않을 것이다. 
 		CliService cliService = new CliService();
 		
 		

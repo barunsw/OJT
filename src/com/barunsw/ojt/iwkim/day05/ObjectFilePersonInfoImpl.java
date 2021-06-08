@@ -31,7 +31,7 @@ public class ObjectFilePersonInfoImpl implements PersonInfoInterface {
 			loadFile();
 		}
 		catch(EOFException eofe) {
-			LOGGER.info("더 이상 읽을게 없습니다.");
+			LOGGER.info("더 이상 읽을 내용이 없습니다.");
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -79,7 +79,6 @@ public class ObjectFilePersonInfoImpl implements PersonInfoInterface {
 	public PersonInfo select(String name) throws Exception {
 		// personList에서 name과 일치하는 데이터를 찾는다.
 		if ( personList == null ) {
-			System.out.println("검색 결과가 없습니다.");
 			return null;
 		}
 		

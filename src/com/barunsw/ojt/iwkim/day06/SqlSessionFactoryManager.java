@@ -2,21 +2,20 @@ package com.barunsw.ojt.iwkim.day06;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.CharBuffer;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SqlSessionFactoryManager { //static 변수 생성 초기화블록으로 초기화 후 메서드사용하여 반환
+public class SqlSessionFactoryManager { //static 변수 생성, 초기화블록으로 초기화 후 메서드사용하여 반환
 	private static Logger LOGGER = LogManager.getLogger(SqlSessionFactoryManager.class);
 	private static final SqlSessionFactory sqlMapper;
 	
 	static {
 		String resource = "com/barunsw/ojt/iwkim/day06/SqlMapConfig.xml";
 		Reader reader = null;
+		
 		try {
 			reader = Resources.getResourceAsReader(resource);
 		}
