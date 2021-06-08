@@ -18,8 +18,6 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 	
 	private Connection connection = null;
 
-	
-
 	public DBPersonInfoImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
@@ -167,14 +165,5 @@ public class DBPersonInfoImpl implements PersonInfoInterface {
 			}
 		}
 		return false;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }

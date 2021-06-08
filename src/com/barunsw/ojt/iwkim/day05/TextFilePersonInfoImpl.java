@@ -23,8 +23,6 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 	
 	private List<PersonInfo> personList;
 	
-	
-	
 	public TextFilePersonInfoImpl() {
 		try {
 			loadFile();
@@ -66,7 +64,8 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 	}
 	
 	//파일에 출력하는 메서드 
-	private void writeFile() throws Exception{
+	private void writeFile() throws Exception {
+		/*
 		BufferedWriter writer = null;
 		
 		try {
@@ -86,6 +85,21 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 		finally {
 			if (writer != null) {
 				writer.close();
+			}
+		}
+		*/
+		
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(PERSON_INFO_FILE));) {
+			for (PersonInfo person : personList) {
+				String name 		= person.getName();
+				String gender 		= person.getGender();
+				String birth 		= person.getBirth();
+				String email 		= person.getEmail();
+				String regDate 		= person.getRegDate();
+				String updateDate 	= person.getUpdateDate();
+				
+				writer.write(String.format("%s, %s, %s, %s, %s, %s", name, gender, birth, email, regDate, updateDate));
+				writer.flush();
 			}
 		}
 	}

@@ -6,22 +6,53 @@
  	<select id="selectPersonList" resultType="PersonInfo">
  		SELECT * FROM person
  	</select>
- 	<insert id="insertPerson" parameterType="PersonInfo">
- 		INSERT INTO person(seq, name, gender, birth, email, regDate, updateDate)
- 		VALUES(0, #{name}, #{gender}, #{birth}, #{email}, #{regDate}, #{updateDate})
- 	</insert>
- 	<update id="updatePerson" parameterType="PersonInfo">
- 		UPDATE person 
- 		SET gender=#{gender}, birth=#{birth}, email=#{email}, updateDate=#{updateDate} 
- 		WHERE name=#{name} 
- 	</update>
- 	<delete id="deletePerson" parameterType="String">
- 		DELETE FROM person 
- 		WHERE name = #{name}
- 	</delete>
+ 	
  	<select id="isExistName" parameterType="String" resultType="int">
- 		SELECT count(*) 
- 		FROM person 
- 		WHERE name=#{name}
+ 		SELECT 
+ 			count(*) 
+ 		FROM 
+ 			person 
+ 		WHERE 
+ 			name=#{name}
  	</select>
+ 	
+ 	<insert id="insertPerson" parameterType="PersonInfo">
+ 		INSERT INTO person (
+ 			seq
+ 			, name
+ 			, gender
+ 			, birth
+ 			, email
+ 			, regDate
+ 			, updateDate
+ 		)
+ 		VALUES(
+ 			0
+ 			, #{name}
+ 			, #{gender}
+ 			, #{birth}
+ 			, #{email}
+ 			, #{regDate}
+ 			, #{updateDate}
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updatePerson" parameterType="PersonInfo">
+ 		UPDATE 
+ 			person 
+ 		SET 
+ 			gender=#{gender}
+ 			, birth=#{birth}
+ 			, email=#{email}
+ 			, updateDate=#{updateDate} 
+ 		WHERE 
+ 			name=#{name} 
+ 	</update>
+ 	
+ 	<delete id="deletePerson" parameterType="String">
+ 		DELETE FROM 
+ 			person 
+ 		WHERE 
+ 			name = #{name}
+ 	</delete>
  </mapper> 

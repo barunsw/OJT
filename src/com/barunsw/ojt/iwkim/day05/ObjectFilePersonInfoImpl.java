@@ -23,8 +23,6 @@ public class ObjectFilePersonInfoImpl implements PersonInfoInterface {
 	private final String PERSON_INFO_FILE = "data/iwkim/personInfo.txt";
 	
 	private List<PersonInfo> personList;
-
-	
 	
 	public ObjectFilePersonInfoImpl() {
 		try {
@@ -147,20 +145,4 @@ public class ObjectFilePersonInfoImpl implements PersonInfoInterface {
 		} 
 		return false;
 	}
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
