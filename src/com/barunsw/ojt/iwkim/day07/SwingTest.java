@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 public class SwingTest {
-	public static void main(String[] args) {
+	public static void main(String[] args) {	
 		TestFrame frame = new TestFrame();
 		
 		// 화면 사이즈

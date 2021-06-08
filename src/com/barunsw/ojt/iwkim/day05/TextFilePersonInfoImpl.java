@@ -43,8 +43,10 @@ public class TextFilePersonInfoImpl implements PersonInfoInterface {
 			while ((readLine = reader.readLine()) != null) {
 				LOGGER.info(String.format("line : [%s]", readLine));
 				
-				String[] splitData = readLine.trim().split(",");
-				
+				String[] splitData = readLine.replace(" ","").split(",");
+				for (String str : splitData) {
+					LOGGER.info("str : " + str);
+				}
 				PersonInfo person = new PersonInfo();
 				person.setName(splitData[0]);
 				person.setGender(splitData[1]);

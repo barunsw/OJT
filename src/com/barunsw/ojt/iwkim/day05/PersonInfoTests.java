@@ -15,8 +15,8 @@ public class PersonInfoTests {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
- 		PersonInfoInterface personInfo = new ObjectFilePersonInfoImpl();
-// 		PersonInfoInterface personInfo = new TextFilePersonInfoImpl();
+// 		PersonInfoInterface personInfo = new ObjectFilePersonInfoImpl();
+ 		PersonInfoInterface personInfo = new TextFilePersonInfoImpl();
 //		PersonInfoInterface personInfo = new DBPersonInfoImpl();
 		
 		CliService cService = new CliService();
