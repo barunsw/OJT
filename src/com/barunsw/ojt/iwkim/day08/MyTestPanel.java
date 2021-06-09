@@ -213,7 +213,6 @@ public class MyTestPanel extends JPanel{
 	}
 }
 
-
 // AddListener는 메서드가 한개이므로 구현해서 사용한다.
 class MyTestPanel_jButton_Add_ActionListener implements ActionListener {
 	
@@ -237,25 +236,3 @@ class MyTestPanel_jButton_Add_ActionListener implements ActionListener {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
