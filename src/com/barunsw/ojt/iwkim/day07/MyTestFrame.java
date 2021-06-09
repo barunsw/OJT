@@ -35,14 +35,14 @@ public class MyTestFrame extends JFrame {
 		// JFrame의 contentPane에 컨테이너(여기에선 JPanel)를 넣어서 사용하겠다는 의미
 		this.setContentPane(myTestPanel); 
 		
- 				// 윈도우 이벤트 등록 메서드
-				this.addWindowListener(new MyTestFrame_this_WindowListener(this));
-//				this.addWindowListener(new WindowAdapter() {
-//					@Override
-//					public void windowClosing(WindowEvent e) {
-//						System.exit(0);
-//					}
-//				});
+ 		// 윈도우 이벤트 등록 메서드 
+		this.addWindowListener(new MyTestFrame_this_WindowListener(this));
+//		this.addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosing(WindowEvent e) {
+//				System.exit(0);
+//			}
+//		});
 	}
 	
 	private void changePanelColor() {
