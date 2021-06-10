@@ -18,8 +18,6 @@ public class TestFrame extends JFrame {
 	private MyTestPanel testPanel = new MyTestPanel();
 	
 	public TestFrame() {
-		//LOGGER.debug("TestFrame 생성");
-		
 		try {
 			initComponent();
 		}
@@ -39,11 +37,7 @@ public class TestFrame extends JFrame {
 		this.addWindowListener(new TestFrame_this_WindowListener(this));
 	}
 	
-	void windowClosing(WindowEvent e) {
-//		String age = JOptionPane.showInputDialog(this, "나이?", "나이 입력");
-//		
-//		JOptionPane.showMessageDialog(this, "입력하신 나이는 " + age + "입니다.", "나이 입력 확인", JOptionPane.INFORMATION_MESSAGE);		
-//		
+	void windowClosing(WindowEvent e) {		
 		int result = JOptionPane.showConfirmDialog(this, "종료하시겠습니까?", "종료 여부", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			System.exit(0);
@@ -60,7 +54,6 @@ class TestFrame_this_WindowListener extends WindowAdapter {
 	
 	@Override
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
 		adaptee.windowClosing(e);
 	}
 }

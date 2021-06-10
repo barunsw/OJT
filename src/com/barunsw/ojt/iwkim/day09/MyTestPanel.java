@@ -73,7 +73,6 @@ public class MyTestPanel extends JPanel{
 			initTable();
 			initTableData();
 			initEvent();
-			initPopupMenu();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -258,6 +257,7 @@ public class MyTestPanel extends JPanel{
 	// DB에 있는 내용들 Vector<Vector> data에 담기
 	private void initTableData() throws Exception{
 		List<PersonVO> personInfoList = new ArrayList<>();
+		tableModel.setData(new Vector<Vector>());
 		
 		personInfoList = addressBook.selectList();
 		
@@ -281,11 +281,6 @@ public class MyTestPanel extends JPanel{
 	
 	private void initEvent() throws Exception {
 		jButton_Add.addActionListener(new MyTestPanel_jButton_Add_ActionListener(this));
-	}
-
-	private void initPopupMenu() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	void jButton_Add_actionPerformed(ActionEvent e) {
@@ -317,9 +312,8 @@ public class MyTestPanel extends JPanel{
 			personInfo.add(input_Gender);
 			personInfo.add(input_phone);
 			personInfo.add(input_Address);
-			//tableModel.addOnePerson(personInfo);
-			//tableModel.fireTableDataChanged();
 			
+			// 테이블에 데이터 추가하고 다시 테이블모델 데이터 초기화!
 			try {
 				addressBook.insertPerson(onePerson);
 				initTableData();
@@ -327,7 +321,7 @@ public class MyTestPanel extends JPanel{
 			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
-			// resetModel() CommonTableModel tableModel의 data를 초기화메서드 생성?
+			// input박스 초기화!
 			inputReset(); 
 			tableModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(null, "정보가 추가되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
@@ -372,8 +366,8 @@ public class MyTestPanel extends JPanel{
 	}
 	
 	private boolean IsDuplicatedName(String name) {
-		for (int i = 1; i <= tableModel.getRowCount(); i++) {
-			if (tableModel.getValueAt(i, 0).equals(name)) {
+		for (int i = 0; i <= tableModel.getRowCount(); i++) {
+			if (tableModel.getValueAt(i, 0) != null && tableModel.getValueAt(i, 0).equals(name)) {
 				return true;
 			}
 		}
@@ -396,30 +390,3 @@ class MyTestPanel_jButton_Add_ActionListener implements ActionListener {
 		adaptee.jButton_Add_actionPerformed(e);	
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,43 +16,34 @@ public class CommonTableModel extends AbstractTableModel {
 		this.data = data;
 	}
 	
-	
 	// 한 사람의 정보를 받아 data에 추가
 	public void addOnePerson(Vector onePerson) {
 		data.add(onePerson);
 	}
-	
-	
 	
 	@Override
 	public String getColumnName(int index) {
 		if (index < columnData.size()) {
 			return columnData.get(index);
 		}
-		
 		return null;
 	}
 
 	@Override
 	public int getRowCount() {
-		// TODO Auto-generated method stub
 		return data.size();
 	}
 
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return columnData.size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		if (rowIndex < getRowCount() && columnIndex < getColumnCount()) {
 			return data.get(rowIndex).get(columnIndex);
-		}
-		
+		}	
 		return null;
 	}
-
 }
