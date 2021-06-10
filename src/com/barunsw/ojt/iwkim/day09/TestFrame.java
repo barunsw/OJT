@@ -12,13 +12,13 @@ import org.apache.logging.log4j.Logger;
 public class TestFrame extends JFrame {
 	private static Logger LOGGER = LogManager.getLogger(TestFrame.class);
 	
-	public static final int WIDTH 	= 600;
-	public static final int HEIGHT 	= 400;
+	public static final int WIDTH 	= 740;
+	public static final int HEIGHT 	= 625;
 	
-	private TestPanel testPanel = new TestPanel();
+	private MyTestPanel testPanel = new MyTestPanel();
 	
 	public TestFrame() {
-		LOGGER.debug("TestFrame 생성");
+		//LOGGER.debug("TestFrame 생성");
 		
 		try {
 			initComponent();
@@ -29,7 +29,7 @@ public class TestFrame extends JFrame {
 	}
 	
 	private void initComponent() throws Exception {
-		this.setTitle("Day 08");
+		this.setTitle("AddressBook");
 		// 기본적인 닫힘 오퍼레이션
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		

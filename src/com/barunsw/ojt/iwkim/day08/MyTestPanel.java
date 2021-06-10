@@ -1,6 +1,5 @@
 package com.barunsw.ojt.iwkim.day08;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -31,9 +30,6 @@ public class MyTestPanel extends JPanel{
 	
 	// 레이아웃 객체 생성!
 	private GridBagLayout gridbagLayout = new GridBagLayout();
-	
-	// 폰트 객체 지정 Font(String name, int style, int size)
-	Font font_Label = new Font("Gothic", Font.BOLD, 17);
 	
 	// 컴포넌트 객체 생성
 	private JLabel jLabel_Name = new JLabel("이름");
@@ -76,6 +72,9 @@ public class MyTestPanel extends JPanel{
 		this.setLayout(gridbagLayout);
 		// 추가한 패널도 레이아웃을 지정해주어야 한다.
 		jPanel_Command.setLayout(gridbagLayout);
+		
+		// 폰트 객체 지정 Font(String name, int style, int size)
+		Font font_Label = new Font("Gothic", Font.BOLD, 17);
 		
 		jLabel_Name.setPreferredSize(LABEL_DEMENSION);
 		
@@ -131,7 +130,7 @@ public class MyTestPanel extends JPanel{
 		
 		this.add(jLabel_Age, new GridBagConstraints(
 					3, 1, 1, 1,
-					1.0, 0.0,
+					0.0, 0.0,
 					GridBagConstraints.EAST, GridBagConstraints.NONE,
 					new Insets(0, 0, 5, 5),
 					0, 0));

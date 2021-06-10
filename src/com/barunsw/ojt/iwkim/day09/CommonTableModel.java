@@ -5,7 +5,7 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 public class CommonTableModel extends AbstractTableModel {
-	private Vector<String> columnData = new Vector<>();
+	private Vector<String> columnData = new Vector();
 	private Vector<Vector> data = new Vector<>();
 	
 	public void setColumnData(Vector<String> columnData) {
@@ -15,6 +15,14 @@ public class CommonTableModel extends AbstractTableModel {
 	public void setData(Vector<Vector> data) {
 		this.data = data;
 	}
+	
+	
+	// 한 사람의 정보를 받아 data에 추가
+	public void addOnePerson(Vector onePerson) {
+		data.add(onePerson);
+	}
+	
+	
 	
 	@Override
 	public String getColumnName(int index) {

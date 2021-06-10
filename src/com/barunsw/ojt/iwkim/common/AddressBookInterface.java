@@ -10,11 +10,11 @@ import java.util.List;
  */
 public interface AddressBookInterface {
 	// 주소록 조회
-	public List<Person> selectList(Person param) throws Exception;
+	public List<PersonVO> selectList() throws Exception;
 	// 주소록 추가
-	public int insertPerson(Person param) throws Exception;
+	public int insertPerson(PersonVO param) throws Exception;
 	// 주소록 수정
-	public int updatePerson(Person param) throws Exception;
+	public int updatePerson(PersonVO param) throws Exception;
 	// 주소록 삭제
-	public int deletePerson(Person param) throws Exception;
+	public int deletePerson(String name) throws Exception;
 }
