@@ -1,4 +1,4 @@
-package com.barunsw.ojt.iwkim.day08;
+package com.barunsw.ojt.iwkim.day09;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,7 +15,7 @@ public class TestFrame extends JFrame {
 	public static final int WIDTH 	= 600;
 	public static final int HEIGHT 	= 400;
 	
-	private MyTestPanel testPanel = new MyTestPanel();
+	private TestPanel testPanel = new TestPanel();
 	
 	public TestFrame() {
 		LOGGER.debug("TestFrame 생성");
