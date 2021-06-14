@@ -15,7 +15,8 @@ public class TestFrame extends JFrame {
 	public static final int WIDTH 	= 740;
 	public static final int HEIGHT 	= 625;
 	
-	private TestPanel testPanel = new TestPanel();
+	// private TestPanel testPanel = new TestPanel();
+	private AnalogClockPanel analogClockPanel = new AnalogClockPanel();
 	
 	public TestFrame() {
 		try {
@@ -31,7 +32,7 @@ public class TestFrame extends JFrame {
 		// 기본적인 닫힘 오퍼레이션
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
-		this.setContentPane(testPanel);
+		this.setContentPane(analogClockPanel);
 		
 		// 윈도우 이벤트
 		this.addWindowListener(new TestFrame_this_WindowListener(this));

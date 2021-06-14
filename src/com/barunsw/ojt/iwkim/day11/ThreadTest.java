@@ -21,7 +21,7 @@ public class ThreadTest {
 
 	public ThreadTest() {
 		try {
-			//initThread();
+			initThread();
 			initTimerTask();
 		}
 		catch (Exception ex) {
@@ -84,7 +84,7 @@ public class ThreadTest {
 		
 		LOGGER.debug("+++ timer.schedule");
 		timer.scheduleAtFixedRate(task, 0, 1000);
-		//timer.s
+
 	}
 	
 	public static void main(String[] args) {
