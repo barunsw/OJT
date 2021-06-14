@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import com.barunsw.ojt.iwkim.common.AddressBookInterface;
 import com.barunsw.ojt.iwkim.common.PersonVO;
 
-public class DBAdressBookImpl implements AddressBookInterface {
-	private static Logger LOGGER = LogManager.getLogger(DBAdressBookImpl.class);
+public class DBAddressBookImpl implements AddressBookInterface {
+	private static Logger LOGGER = LogManager.getLogger(DBAddressBookImpl.class);
 	
 	SqlSessionFactory sqlSessionFactory= SqlSessionFactoryManager.getSqlSessionFactory();
 	

@@ -1,13 +1,13 @@
 package com.barunsw.ojt.iwkim.day09;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -15,8 +15,10 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -33,7 +35,8 @@ import com.barunsw.ojt.iwkim.common.PersonVO;
 public class MyTestPanel extends JPanel{
 	private static Logger LOGGER = LogManager.getLogger(MyTestPanel.class);
 	
-	private AddressBookInterface addressBook = new DBAdressBookImpl();
+	private AddressBookInterface addressBook = new DBAddressBookImpl();
+	//private AddressBookInterface addressBook = new FileAddressBookImpl();
 	
 	private final Dimension LABEL_DIMENSION = new Dimension(90, 22);
 	
@@ -52,11 +55,13 @@ public class MyTestPanel extends JPanel{
 	// setValue와 setPrefferdSize로 설정해야함.
 	private JSpinner jSpinner_Age = new JSpinner();
 	
+	private JPopupMenu jPopupMenu = new JPopupMenu();
+	
 	private ButtonGroup buttonGroup_Gender  = new ButtonGroup();
 	private JRadioButton jRadioButton_Man   = new JRadioButton("남자");
 	private JRadioButton jRadioButton_Woman = new JRadioButton("여자");
 	
-	JPanel jPanel_Command  = new JPanel();
+	private JPanel jPanel_Command  = new JPanel();
 	JButton jButton_Add    = new JButton("추가");
 	JButton jButton_Change = new JButton("변경");
 	
@@ -73,6 +78,7 @@ public class MyTestPanel extends JPanel{
 			initTable();
 			initTableData();
 			initEvent();
+			initPopupMenu();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -83,25 +89,6 @@ public class MyTestPanel extends JPanel{
 		
 		this.setLayout(gridBagLayout);
 		jPanel_Command.setLayout(gridBagLayout);
-		
-		this.setBackground(Color.white);
-		jPanel_Command.setBackground(Color.white);
-		
-		Font font = new Font("NanumGothic", Font.PLAIN, 12);
-		
-		jLabel_Name.setFont(font);
-		jLabel_Age.setFont(font);
-		jLabel_Gender.setFont(font);
-		jLabel_Phone.setFont(font);
-		jLabel_Address.setFont(font);
-		jTextField_Name.setFont(font);
-		jTextField_Phone.setFont(font);
-		jTextField_Address.setFont(font);
-		jSpinner_Age.setFont(font);
-		jRadioButton_Man.setFont(font);
-		jRadioButton_Woman.setFont(font);
-		jButton_Add.setFont(font);
-		jButton_Change.setFont(font);
 		
 		jLabel_Name.setPreferredSize(LABEL_DIMENSION);
 		jLabel_Age.setPreferredSize(LABEL_DIMENSION);
@@ -254,38 +241,49 @@ public class MyTestPanel extends JPanel{
 		jTable_Result.setRowHeight(22);
 	}
 	
-	// DB에 있는 내용들 Vector<Vector> data에 담기
+	// DB에 있는 내용들 로드하기
 	private void initTableData() throws Exception{
 		List<PersonVO> personInfoList = new ArrayList<>();
-		tableModel.setData(new Vector<Vector>());
+		
+		Vector<Vector> data = new Vector<>();
+		//tableModel.setData(new Vector<Vector>());
 		
 		personInfoList = addressBook.selectList();
 		
-		if (personInfoList.size() > 0) {
-			for (PersonVO person : personInfoList) {
-				Vector onePerson = new Vector();
-				onePerson.add(person.getName());
-				onePerson.add(person.getAge());
-				onePerson.add(person.getGender());
-				onePerson.add(person.getPhone());
-				onePerson.add(person.getAddress());
-				tableModel.addOnePerson(onePerson);
-			}
-			tableModel.fireTableDataChanged();
+		for (PersonVO person : personInfoList) {
+			Vector onePerson = new Vector();
+			onePerson.add(person.getName());
+			onePerson.add(person.getAge());
+			onePerson.add(person.getGender());
+			onePerson.add(person.getPhone());
+			onePerson.add(person.getAddress());
+			data.add(onePerson);
 		}
+		tableModel.setData(data);
+		tableModel.fireTableDataChanged();
+		
 		// 단일 선택
 		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// 마우스 우클릭 이벤트 
-		
 	}
 	
 	private void initEvent() throws Exception {
 		jButton_Add.addActionListener(new MyTestPanel_jButton_Add_ActionListener(this));
+		
+		jTable_Result.addMouseListener(new MyTestPanel_jTable_Result_MouseListener(this));
+		
+		jButton_Change.addActionListener(new MyTestPanel_jButton_Change_ActionListener(this));
+	}
+	
+	private void initPopupMenu() {
+		JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
+		
+		jMenuItem_Delete.addMouseListener(new MyTestPanel_jMenuItem_Delete_MouseListener(this));
+		
+		jPopupMenu.add(jMenuItem_Delete);
 	}
 	
 	void jButton_Add_actionPerformed(ActionEvent e) {
 		
-		PersonVO onePerson = new PersonVO();
 		String input_Name = jTextField_Name.getText();
 		int input_Age = (int)jSpinner_Age.getValue();
 		String input_Gender = null;
@@ -296,36 +294,57 @@ public class MyTestPanel extends JPanel{
 			input_Gender = "여자";
 		}
 
-		String input_phone = jTextField_Phone.getText();
+		String input_Phone = jTextField_Phone.getText();
 		String input_Address = jTextField_Address.getText();
+		String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
 		
-		onePerson.setName(input_Name);
-		onePerson.setAge(input_Age);
-		onePerson.setGender(input_Gender);
-		onePerson.setPhone(input_phone);
-		onePerson.setAddress(input_Address);
+		//입력값 유효성 검사
+		boolean flag = true;
+		if ( input_Name.trim().isEmpty() ) {
+			JOptionPane.showMessageDialog(this, "이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Age < 1) {
+			JOptionPane.showMessageDialog(this, "나이는 음수가 될 수 없습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Gender == null) {
+			JOptionPane.showMessageDialog(this, "성별을 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Phone == null || !input_Phone.matches(regPhone)) {
+			LOGGER.debug("phone : " + input_Phone);
+			JOptionPane.showMessageDialog(this, "번호형식이 맞지 않습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Address.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "주소를 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}else if (IsDuplicatedName(input_Name)) {
+			JOptionPane.showMessageDialog(this, "이미 등록된 이름입니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
 		
-		if (IsEmptyInput(onePerson)) {
-			Vector personInfo = new Vector();
-			personInfo.add(input_Name);
-			personInfo.add(input_Age);
-			personInfo.add(input_Gender);
-			personInfo.add(input_phone);
-			personInfo.add(input_Address);
-			
+		// 입력값의 유효성 검사가 통과되면 DB에 추가 -> 테이블 로딩
+		if (flag) {
+			PersonVO onePerson = new PersonVO();
+			onePerson.setName(input_Name);
+			onePerson.setAge(input_Age);
+			onePerson.setGender(input_Gender);
+			onePerson.setPhone(input_Phone);
+			onePerson.setAddress(input_Address);
 			// 테이블에 데이터 추가하고 다시 테이블모델 데이터 초기화!
 			try {
 				addressBook.insertPerson(onePerson);
 				initTableData();
+				// input박스 초기화!
+				inputReset(); 
+				JOptionPane.showMessageDialog(null, "정보가 추가되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
-			// input박스 초기화!
-			inputReset(); 
-			tableModel.fireTableDataChanged();
-			JOptionPane.showMessageDialog(null, "정보가 추가되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-		}	
+		}
 	}
 	
 	private void inputReset() {
@@ -336,35 +355,6 @@ public class MyTestPanel extends JPanel{
 		jTextField_Address.setText(null);
 	}
 	
-	private boolean IsEmptyInput(PersonVO onePerson) {
-		String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
-		if ( onePerson.getName().isEmpty() ) {
-			JOptionPane.showMessageDialog(this, "이름을 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else if (onePerson.getAge()<1) {
-			JOptionPane.showMessageDialog(this, "나이는 음수가 될 수 없습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else if (onePerson.getGender() == null) {
-			JOptionPane.showMessageDialog(this, "성별을 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else if (onePerson.getPhone() == null || !onePerson.getPhone().matches(regPhone)) {
-			LOGGER.debug("phone : " + onePerson.getPhone());
-			JOptionPane.showMessageDialog(this, "번호형식이 맞지 않습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else if (onePerson.getAddress().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "주소를 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}else if (IsDuplicatedName(onePerson.getName())) {
-			JOptionPane.showMessageDialog(this, "이미 등록된 이름입니다..", "ERROR", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		return true;
-	}
-	
 	private boolean IsDuplicatedName(String name) {
 		for (int i = 0; i <= tableModel.getRowCount(); i++) {
 			if (tableModel.getValueAt(i, 0) != null && tableModel.getValueAt(i, 0).equals(name)) {
@@ -373,12 +363,112 @@ public class MyTestPanel extends JPanel{
 		}
 		return false;
 	}
+	
+	void jTable_Result_mouseReleased(MouseEvent e) {
+		if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+			int selectedRow = jTable_Result.getSelectedRow();
+			jTextField_Name.setText((String)tableModel.getValueAt(selectedRow, 0));
+			jSpinner_Age.setValue((int)tableModel.getValueAt(selectedRow, 1));
+			if (((String)tableModel.getValueAt(selectedRow, 2)).equals("남자")) {
+				jRadioButton_Man.setSelected(true);
+			}
+			else {
+				jRadioButton_Woman.setSelected(true);
+			}
+			jTextField_Phone.setText((String)tableModel.getValueAt(selectedRow, 3));
+			jTextField_Address.setText((String)tableModel.getValueAt(selectedRow, 4));
+		}
+		else {
+			// 삭제 팝업메뉴
+			jPopupMenu.show(jTable_Result, e.getX(), e.getY());
+		}
+	}
+	
+	void jButton_Change_actionPerformed(ActionEvent e) {
+		LOGGER.info("변경버튼눌림" + e.getSource());
+		int selectedRow = jTable_Result.getSelectedRow();
+		
+		String input_Name = jTextField_Name.getText();
+		int input_Age = (int)jSpinner_Age.getValue();
+		String input_Gender = null;
+		if (jRadioButton_Man.isSelected()) {
+			input_Gender = "남자";
+		}
+		else if (jRadioButton_Woman.isSelected()) {
+			input_Gender = "여자";
+		}
+
+		String input_Phone = jTextField_Phone.getText();
+		String input_Address = jTextField_Address.getText();
+		String regPhone = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
+		
+		//입력값 유효성 검사
+		boolean flag = true;
+		if ( !input_Name.trim().equals((String)tableModel.getValueAt(selectedRow, 0)) ) {
+			JOptionPane.showMessageDialog(this, "이름은 변경할 수 없습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Age < 1) {
+			JOptionPane.showMessageDialog(this, "나이는 음수가 될 수 없습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Gender == null) {
+			JOptionPane.showMessageDialog(this, "성별을 선택해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Phone == null || !input_Phone.matches(regPhone)) {
+			LOGGER.debug("phone : " + input_Phone);
+			JOptionPane.showMessageDialog(this, "번호형식이 맞지 않습니다.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		else if (input_Address.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "주소를 입력해주세요.", "ERROR", JOptionPane.WARNING_MESSAGE);
+			flag = false;
+		}
+		
+		// 입력값의 유효성 검사가 통과되면 DB에 추가 -> 테이블 로딩
+		if (flag) {
+			PersonVO onePerson = new PersonVO();
+			onePerson.setName(input_Name);
+			onePerson.setAge(input_Age);
+			onePerson.setGender(input_Gender);
+			onePerson.setPhone(input_Phone);
+			onePerson.setAddress(input_Address);
+			// 테이블에 데이터 추가하고 다시 테이블모델 데이터 초기화!
+			try {
+				addressBook.updatePerson(onePerson);
+				initTableData();
+				// input박스 초기화!
+				inputReset(); 
+				JOptionPane.showMessageDialog(null, "정보가 변경되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+			}
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
+	}
+	
+	void jMenuItem_Delete_mouseReleased(MouseEvent e) {
+		LOGGER.info("삭제팝업메뉴 클릭!");
+		int selectedRow = jTable_Result.getSelectedRow();
+		
+		try {
+			addressBook.deletePerson((String)tableModel.getValueAt(selectedRow, 0));
+			LOGGER.info("이름 : " + (String)tableModel.getValueAt(selectedRow, 0));
+			initTableData();
+			inputReset();
+			JOptionPane.showMessageDialog(null, "삭제가 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
 }
 
 class MyTestPanel_jButton_Add_ActionListener implements ActionListener {
 	private static Logger LOGGER = LogManager.getLogger();
 	
-	MyTestPanel adaptee;
+	private MyTestPanel adaptee;
 	
 	public MyTestPanel_jButton_Add_ActionListener(MyTestPanel adaptee) {
 		this.adaptee = adaptee;
@@ -388,5 +478,44 @@ class MyTestPanel_jButton_Add_ActionListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		LOGGER.info("e.getSource() : " + e.getSource());
 		adaptee.jButton_Add_actionPerformed(e);	
+	}
+}
+ 
+class MyTestPanel_jButton_Change_ActionListener implements ActionListener {
+	private MyTestPanel adaptee;
+	
+	public MyTestPanel_jButton_Change_ActionListener(MyTestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButton_Change_actionPerformed(e);
+	}
+}
+
+class MyTestPanel_jTable_Result_MouseListener extends MouseAdapter {
+	private MyTestPanel adaptee;
+	
+	public MyTestPanel_jTable_Result_MouseListener(MyTestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		adaptee.jTable_Result_mouseReleased(e);
+	}
+}
+
+class MyTestPanel_jMenuItem_Delete_MouseListener extends MouseAdapter {
+	private MyTestPanel adaptee;
+	
+	public MyTestPanel_jMenuItem_Delete_MouseListener(MyTestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		adaptee.jMenuItem_Delete_mouseReleased(e);
 	}
 }

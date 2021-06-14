@@ -17,8 +17,12 @@ public class CommonTableModel extends AbstractTableModel {
 	}
 	
 	// 한 사람의 정보를 받아 data에 추가
-	public void addOnePerson(Vector onePerson) {
-		data.add(onePerson);
+	public void addData(Vector oneData) {
+		data.add(oneData);
+	}
+	
+	public void addData(Vector oneData, int index) {
+		data.add(index, oneData);
 	}
 	
 	@Override

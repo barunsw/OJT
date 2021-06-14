@@ -1,8 +1,10 @@
 package com.barunsw.ojt.iwkim.common;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.io.Serializable;
 
-public class PersonVO {
+import org.apache.commons.lang3.builder.ToStringBuilder;
+@SuppressWarnings("serial")
+public class PersonVO implements Serializable{
 	private String name;
 	private String gender;
 	private int age;
