@@ -367,16 +367,18 @@ public class MyTestPanel extends JPanel{
 	void jTable_Result_mouseReleased(MouseEvent e) {
 		if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
 			int selectedRow = jTable_Result.getSelectedRow();
-			jTextField_Name.setText((String)tableModel.getValueAt(selectedRow, 0));
-			jSpinner_Age.setValue((int)tableModel.getValueAt(selectedRow, 1));
-			if (((String)tableModel.getValueAt(selectedRow, 2)).equals("남자")) {
-				jRadioButton_Man.setSelected(true);
+			if (selectedRow >= 0) {
+				jTextField_Name.setText((String)tableModel.getValueAt(selectedRow, 0));
+				jSpinner_Age.setValue((int)tableModel.getValueAt(selectedRow, 1));
+				if (((String)tableModel.getValueAt(selectedRow, 2)).equals("남자")) {
+					jRadioButton_Man.setSelected(true);
+				}
+				else {
+					jRadioButton_Woman.setSelected(true);
+				}
+				jTextField_Phone.setText((String)tableModel.getValueAt(selectedRow, 3));
+				jTextField_Address.setText((String)tableModel.getValueAt(selectedRow, 4));
 			}
-			else {
-				jRadioButton_Woman.setSelected(true);
-			}
-			jTextField_Phone.setText((String)tableModel.getValueAt(selectedRow, 3));
-			jTextField_Address.setText((String)tableModel.getValueAt(selectedRow, 4));
 		}
 		else {
 			// 삭제 팝업메뉴
@@ -451,16 +453,18 @@ public class MyTestPanel extends JPanel{
 	void jMenuItem_Delete_mouseReleased(MouseEvent e) {
 		LOGGER.info("삭제팝업메뉴 클릭!");
 		int selectedRow = jTable_Result.getSelectedRow();
-		
-		try {
-			addressBook.deletePerson((String)tableModel.getValueAt(selectedRow, 0));
-			LOGGER.info("이름 : " + (String)tableModel.getValueAt(selectedRow, 0));
-			initTableData();
-			inputReset();
-			JOptionPane.showMessageDialog(null, "삭제가 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
+
+		if (selectedRow >= 0) {
+			try {
+				addressBook.deletePerson((String)tableModel.getValueAt(selectedRow, 0));
+				LOGGER.info("이름 : " + (String)tableModel.getValueAt(selectedRow, 0));
+				initTableData();
+				inputReset();
+				JOptionPane.showMessageDialog(null, "삭제가 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+			}
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 	}
 }
