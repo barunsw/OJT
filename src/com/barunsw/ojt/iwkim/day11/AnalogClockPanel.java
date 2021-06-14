@@ -17,7 +17,7 @@ public class AnalogClockPanel extends JPanel{
 	// r      : 원의 반지름을 의미
 	private Calendar calendar;
 	private int x = 300;
-	private int y = 300;
+	private int y = 280;
 	private int r = 200;
 
 	private Font font = new Font("DialogInput", Font.PLAIN, 20);
@@ -62,7 +62,7 @@ public class AnalogClockPanel extends JPanel{
 		
 		// 시계 테두리 설정
 		g.setColor(Color.ORANGE);
-		g.drawOval(100, 100, 400, 400);
+		g.drawOval(100, 75, 400, 400);
 		
 		g.setColor(Color.PINK);
 		// i를 6씩 증가 시키는 이유 : 아날로그 시계를 보면

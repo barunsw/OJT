@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
 public class TestFrame extends JFrame {
 	private static Logger LOGGER = LogManager.getLogger(TestFrame.class);
 	
-	public static final int WIDTH 	= 740;
-	public static final int HEIGHT 	= 625;
+	public static final int WIDTH 	= 635;
+	public static final int HEIGHT 	= 600;
 	
 	// private TestPanel testPanel = new TestPanel();
 	private AnalogClockPanel analogClockPanel = new AnalogClockPanel();
