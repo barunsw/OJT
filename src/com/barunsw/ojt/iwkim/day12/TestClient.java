@@ -22,7 +22,7 @@ public class TestClient {
 	}
 	
 	private void initSocket() throws Exception {
-		socket = new Socket("localhost", TestServer.PORT);
+		//socket = new Socket("localhost", TestServer.PORT);
 		LOGGER.debug("--- initSocket");
 		
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
