@@ -18,21 +18,17 @@ public class ClientSocketHandler extends Thread {
 	
 	private Socket socket;
 	private DBAddressBookImpl dbConnection = new DBAddressBookImpl(); 
-	BufferedReader reader;
-	BufferedWriter writer;
 	
 	public ClientSocketHandler(Socket socket) throws Exception{
 		this.socket = socket;
-		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));  
-		writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 	}
 	
 	@Override
 	public void run() {
 		LOGGER.info("+++ run");
 		
-		try {
-			
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));  
+			 BufferedWriter	writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));) {
 			String readLine = null;
 			
 			while ((readLine = reader.readLine()) != null) {
@@ -76,19 +72,7 @@ public class ClientSocketHandler extends Thread {
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-		finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-				if (writer != null) {
-					writer.close();
-				}
-			}
-			catch (IOException ioe) {
-				LOGGER.error(ioe.getMessage());
-			}
-		}
+		
 		LOGGER.debug("--- run");
 	}
 }

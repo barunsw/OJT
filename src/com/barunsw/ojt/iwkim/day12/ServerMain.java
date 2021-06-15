@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ServerMain {
-	public static final int PORT = 50003;
+	public static final int PORT = 50005;
 	
 	private static final Logger LOGGER = LogManager.getLogger(TestServer.class);
 	

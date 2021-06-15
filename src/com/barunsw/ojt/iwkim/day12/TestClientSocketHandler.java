@@ -11,7 +11,6 @@ public class TestClientSocketHandler extends Thread {
 	private static final Logger LOGGER = LogManager.getLogger(TestClientSocketHandler.class);
 	
 	private Socket socket;
-	private boolean runFlag;
 	
 	public TestClientSocketHandler(Socket socket) {
 		this.socket = socket;
