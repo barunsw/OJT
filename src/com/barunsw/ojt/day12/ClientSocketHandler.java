@@ -1,7 +1,9 @@
 package com.barunsw.ojt.day12;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
@@ -63,6 +65,14 @@ public class ClientSocketHandler extends Thread {
 		}
 		
 		LOGGER.debug("--- ClientSocketHandler run");
+	}
+	
+	private void handleSelect() throws Exception {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+			// List<AddressBookVo> addrList = addrImpl.selectList();
+			// List -> String
+			//writer.write(message);
+		}
 	}
 	
 	private void handleInsert(AddressVo addressVo) {
