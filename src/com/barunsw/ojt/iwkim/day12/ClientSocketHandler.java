@@ -2,10 +2,11 @@ package com.barunsw.ojt.iwkim.day12;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,12 @@ public class ClientSocketHandler extends Thread {
 						
 						LOGGER.info("핸들러 개인정보 : " + sb.toString());
 						
+//						synchronized (writer) {
+//							writer.write(sb.toString());
+//							writer.flush();
+//						}
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+						LOGGER.info(format.format(new Date()));
 						writer.write(sb.toString());
 						writer.flush();
 						
