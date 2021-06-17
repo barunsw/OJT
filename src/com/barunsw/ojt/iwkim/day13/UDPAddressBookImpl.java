@@ -113,7 +113,6 @@ public class UDPAddressBookImpl implements AddressBookInterface {
 
 		String receivedData = new String(recvPacket.getData()); 
 		LOGGER.info("DB에서 받은 데이터 : " + receivedData);
-		LOGGER.info("Is receivedData instanceof int : " +  (receivedData instanceof String));
 		int queryExcResult = Integer.parseInt(receivedData.trim());
 		LOGGER.info("--- insertPerson()");
 		return queryExcResult;
@@ -121,13 +120,49 @@ public class UDPAddressBookImpl implements AddressBookInterface {
 
 	@Override
 	public int updatePerson(PersonVO param) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.info("+++ updatePerson()");
+
+		byte[] command = String.format("UPDATE:NAME=%s,AGE=%s,GENDER=%s,PHONE=%s,ADDRESS=%s\n" 
+				, param.getName()
+				, String.valueOf(param.getAge())
+				, param.getGender()
+				, param.getPhone()
+				, param.getAddress())
+				.getBytes();
+		
+		DatagramPacket sendPacket = new DatagramPacket(command, command.length, dest);
+		
+		socket.send(sendPacket);
+
+		byte[] buf = new byte[1024];
+		DatagramPacket recvPacket = new DatagramPacket(buf, buf.length); 
+		socket.receive(recvPacket);
+
+		String receivedData = new String(recvPacket.getData()); 
+		LOGGER.info("DB에서 받은 데이터 : " + receivedData);
+		int queryExcResult = Integer.parseInt(receivedData.trim());
+		LOGGER.info("--- updatePerson()");
+		return queryExcResult;
 	}
 
 	@Override
 	public int deletePerson(String name) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.info("+++ deletePerson()");
+
+		byte[] command = String.format("DELETE:NAME=%s\n", name).getBytes();
+		
+		DatagramPacket sendPacket = new DatagramPacket(command, command.length, dest);
+		
+		socket.send(sendPacket);
+
+		byte[] buf = new byte[1024];
+		DatagramPacket recvPacket = new DatagramPacket(buf, buf.length); 
+		socket.receive(recvPacket);
+
+		String receivedData = new String(recvPacket.getData()); 
+		LOGGER.info("DB에서 받은 데이터 : " + receivedData);
+		int queryExcResult = Integer.parseInt(receivedData.trim());
+		LOGGER.info("--- deletePerson()");
+		return queryExcResult;
 	}
 }

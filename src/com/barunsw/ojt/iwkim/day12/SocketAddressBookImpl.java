@@ -131,8 +131,12 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 	public int updatePerson(PersonVO param) throws Exception {
 
 		try{
-			String command = String.format("UPDATE:NAME=%s,AGE=%s,GENDER=%s,PHONE=%s,ADDRESS=%s\n", 
-					param.getName(), String.valueOf(param.getAge()), param.getGender(), param.getPhone(), param.getAddress());
+			String command = String.format("UPDATE:NAME=%s,AGE=%s,GENDER=%s,PHONE=%s,ADDRESS=%s\n"
+					, param.getName()
+					, String.valueOf(param.getAge())
+					, param.getGender()
+					, param.getPhone()
+					, param.getAddress());
 			LOGGER.info("UPDATE command : " + command);
 			writer.write(command);
 			writer.flush();

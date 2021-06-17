@@ -63,7 +63,7 @@ public class UDPClientSocketHandler extends Thread {
 					break;
 				case "INSERT" :
 					LOGGER.info("command[1] : " + command[1]);
-					LOGGER.info("upd++++++ {}", getPersonInfo(command[1]));
+					LOGGER.info("upd+++ {}", getPersonInfo(command[1]));
 					
 					queryExcResult = UDPServerMain.dbAddressBookImpl.insertPerson(getPersonInfo(command[1]));
 					LOGGER.info("INSERT RESULT : " + queryExcResult);
@@ -72,8 +72,28 @@ public class UDPClientSocketHandler extends Thread {
 					socket.send(sendPacket);
 					break;
 				case "UPDATE" :
+					LOGGER.info("command[1] : " + command[1]);
+					LOGGER.info("upd+++ {}", getPersonInfo(command[1]));
+					
+					queryExcResult = UDPServerMain.dbAddressBookImpl.updatePerson(getPersonInfo(command[1]));
+					LOGGER.info("UPDATE RESULT : " + queryExcResult);
+					
+					byte[] updateSendData = String.valueOf(queryExcResult).getBytes();
+					sendPacket = new DatagramPacket(updateSendData, updateSendData.length, recvPacket.getAddress(), recvPacket.getPort());
+					socket.send(sendPacket);
 					break;
 				case "DELETE" :
+					LOGGER.info("command[1] : " + command[1]);
+					LOGGER.info("upd+++ {}", getPersonInfo(command[1]));
+					
+					String[] columnData = command[1].split("=");
+					LOGGER.info("DELETE NAME : " + columnData[1]);
+					queryExcResult = UDPServerMain.dbAddressBookImpl.deletePerson(columnData[1]);
+					LOGGER.info("DELETE RESULT : " + queryExcResult);
+					
+					byte[] deleteSendData = String.valueOf(queryExcResult).getBytes();
+					sendPacket = new DatagramPacket(deleteSendData, deleteSendData.length, recvPacket.getAddress(), recvPacket.getPort());
+					socket.send(sendPacket);
 					break;
 				default :
 					LOGGER.error("입력값이 잘못 되었습니다.");	
