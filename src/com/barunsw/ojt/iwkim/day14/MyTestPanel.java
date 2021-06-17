@@ -1,4 +1,4 @@
-package com.barunsw.ojt.iwkim.day12;
+package com.barunsw.ojt.iwkim.day14;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -8,6 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.Remote;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -29,20 +32,19 @@ import javax.swing.ListSelectionModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.iwkim.common.AddressBookInterface;
 import com.barunsw.ojt.iwkim.common.PersonVO;
-import com.barunsw.ojt.iwkim.day13.UDPAddressBookImpl;
-import com.barunsw.ojt.iwkim.day13.UDPServerMain;
+import com.barunsw.ojt.iwkim.day12.CommonTableModel;
 
 public class MyTestPanel extends JPanel{
 	private static Logger LOGGER = LogManager.getLogger(MyTestPanel.class);
 	
-	//private AddressBookInterface addressBook = new DBAddressBookImpl();
-	//private AddressBookInterface addressBook = new SocketAddressBookImpl("localhost", ServerMain.PORT);
-	//private AddressBookInterface addressBook = new SocketAddressBookImpl();
-	
-	private AddressBookInterface addressBook = new UDPAddressBookImpl("localhost", UDPServerMain.PORT);
-	
+//    private AddressBookInterface addressBook = new DBAddressBookImpl();
+//    private AddressBookInterface addressBook = new SocketAddressBookImpl("localhost", ServerMain.PORT);
+//    private AddressBookInterface addressBook = new SocketAddressBookImpl();
+//    private AddressBookInterface addressBook = new UDPAddressBookImpl("localhost", UDPServerMain.PORT);
+	// 사용할 인터페이스가 Remote 인터페이스를 구현하고 있어야 한다. 그래야 원격 객체가 된다!
+	private AddressBookInterface addressBook;
+		
 	private final Dimension LABEL_DIMENSION = new Dimension(90, 22);
 	
 	private GridBagLayout gridBagLayout = new GridBagLayout();
@@ -79,6 +81,7 @@ public class MyTestPanel extends JPanel{
 	
 	public MyTestPanel() {
 		try {
+			initRmi();
 			initComponent();
 			initTable();
 			initTableData();
@@ -90,6 +93,21 @@ public class MyTestPanel extends JPanel{
 		}
 	}
 
+	private void initRmi() throws Exception {
+		LOGGER.info("+++ Client Try Connection Start");
+		Registry registry = LocateRegistry.getRegistry("localhost", RmiServerMain.PORT);
+		// 서버에서 등록한 이름을 찾는다!
+		Remote remote = registry.lookup(RmiServerMain.REMOTE_NAME);
+		
+		if (remote instanceof AddressBookInterface) {
+			addressBook = (AddressBookInterface) remote;
+		}
+		else {
+			LOGGER.info("remote : " + remote.toString());
+		}
+		LOGGER.info("--- Client Try Connection Start");
+	}
+	
 	private void initComponent() throws Exception {
 		
 		this.setLayout(gridBagLayout);
