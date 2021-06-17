@@ -3,6 +3,7 @@ package com.barunsw.ojt.iwkim.common;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 @SuppressWarnings("serial")
 public class PersonVO implements Serializable{
 	private String name;
@@ -46,6 +47,6 @@ public class PersonVO implements Serializable{
 	public String toString() {
 		// jTree일 경우 이름만나오게 하자
 		// return String.format("%s", name);
-		return ToStringBuilder.reflectionToString(this);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 }

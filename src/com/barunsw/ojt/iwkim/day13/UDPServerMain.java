@@ -1,22 +1,22 @@
 package com.barunsw.ojt.iwkim.day13;
 
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.gtkim.day10.DBAddressBookImpl;
+import com.barunsw.ojt.iwkim.day12.DBAddressBookImpl;
 
-public class UdpTestServer {
-	public static final int PORT = 50001;
+
+public class UDPServerMain {
+	public static final int PORT = 50011;
 	private static Logger LOGGER = LogManager.getLogger(UdpTestServer.class);
 	
-	public static DBAddressBookImpl addressBookImpl;
+	public static DBAddressBookImpl dbAddressBookImpl;
 	
 	private DatagramSocket socket;
 	
-	public UdpTestServer() {
+	public UDPServerMain() {
 		try {
 			initSocket();
 		}
@@ -29,16 +29,14 @@ public class UdpTestServer {
 		LOGGER.info("+++ initSocket");
 		
 		socket = new DatagramSocket(PORT);
+		dbAddressBookImpl = new DBAddressBookImpl();
 		
-		while (true) {
-			byte[] buf = new byte[1024];
-			DatagramPacket recvPacket = new DatagramPacket(buf, 0, buf.length);
-
-			socket.receive(recvPacket);
-		}
+		UDPClientSocketHandler udpHandler = new UDPClientSocketHandler(socket);
+		udpHandler.start();
+		
 	}
 	
 	public static void main(String[] args) throws Exception {
-		
+		new UDPServerMain();
 	}
 }

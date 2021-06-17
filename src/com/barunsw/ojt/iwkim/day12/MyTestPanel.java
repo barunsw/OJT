@@ -31,13 +31,17 @@ import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.iwkim.common.AddressBookInterface;
 import com.barunsw.ojt.iwkim.common.PersonVO;
+import com.barunsw.ojt.iwkim.day13.UDPAddressBookImpl;
+import com.barunsw.ojt.iwkim.day13.UDPServerMain;
 
 public class MyTestPanel extends JPanel{
 	private static Logger LOGGER = LogManager.getLogger(MyTestPanel.class);
 	
 	 //private AddressBookInterface addressBook = new DBAddressBookImpl();
-	private AddressBookInterface addressBook = new SocketAddressBookImpl("localhost", ServerMain.PORT);
-//	private AddressBookInterface addressBook = new SocketAddressBookImpl();
+//	private AddressBookInterface addressBook = new SocketAddressBookImpl("localhost", ServerMain.PORT);
+	//private AddressBookInterface addressBook = new SocketAddressBookImpl();
+	
+	private AddressBookInterface addressBook = new UDPAddressBookImpl("localhost", UDPServerMain.PORT);
 	
 	private final Dimension LABEL_DIMENSION = new Dimension(90, 22);
 	

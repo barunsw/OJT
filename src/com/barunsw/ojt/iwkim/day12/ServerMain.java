@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class ServerMain {
 	public static final int PORT = 50005;
+	public static DBAddressBookImpl dbAddressBookImpl;
 	
 	private static final Logger LOGGER = LogManager.getLogger(TestServer.class);
 	
@@ -28,6 +29,7 @@ public class ServerMain {
 		LOGGER.info("+++ initSocket");
 		
 		serverSocket = new ServerSocket(PORT);
+		dbAddressBookImpl = new DBAddressBookImpl();
 		
 		runFlag = true;
 		while (runFlag) {

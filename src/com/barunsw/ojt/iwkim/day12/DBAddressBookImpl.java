@@ -19,7 +19,7 @@ public class DBAddressBookImpl implements AddressBookInterface {
 	@Override
 	public List<PersonVO> selectList() throws Exception {
 		List<PersonVO> personList = new ArrayList<>();
-		
+
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			personList = mapper.selectList();
