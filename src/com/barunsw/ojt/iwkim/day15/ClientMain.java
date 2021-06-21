@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 public class ClientMain {
 	private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);
 	
+	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -21,7 +23,8 @@ public class ClientMain {
 	
 		
 		TestFrame frame = new TestFrame();
-
+		eventQueueWorker.start();
+		
 		// 화면의 전체 크기
 		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
 

@@ -43,6 +43,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 		// 메세지를 보내는 작업은 eventQeueWorker에게 전담시킨다.
 		LOGGER.debug("message:" + msg);
 		
-		TestPanel.eventQueueWorker.push(msg);
+		ClientMain.eventQueueWorker.push(msg);
 	}
 }

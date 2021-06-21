@@ -26,8 +26,6 @@ import org.apache.logging.log4j.Logger;
 public class TestPanel extends JPanel implements EventListener {
 	private static Logger LOGGER = LogManager.getLogger(TestPanel.class);
 
-	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
-
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 	private JToggleButton jToggleButton_Connection = new JToggleButton("접속");
 
@@ -56,9 +54,9 @@ public class TestPanel extends JPanel implements EventListener {
 	}
 
 	private void initEventQueueWorker() {
-		eventQueueWorker.addEventListener(this);
-
-		eventQueueWorker.start();
+		ClientMain.eventQueueWorker.addEventListener(this);
+		// start()는 메인으로 빼주자
+		
 	}
 
 	private void initConnectRMI() {
