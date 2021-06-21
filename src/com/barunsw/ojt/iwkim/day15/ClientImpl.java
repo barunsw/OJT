@@ -36,20 +36,13 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 			
 		return serverIf.register(name, this);
 	}
-	
-	public void send(String message) throws Exception {
-		if (serverIf == null)
-			initRmi();
-			
-		serverIf.sendAll(message);
-	}
 
 	
 	@Override
-	public void push(String message) throws RemoteException {
-		// TODO Auto-generated method stub
-		LOGGER.debug("message:" + message);
+	public void push(String msg) throws RemoteException {
+		// 메세지를 보내는 작업은 eventQeueWorker에게 전담시킨다.
+		LOGGER.debug("message:" + msg);
 		
-		ClientMain.eventQueueWorker.push(message);
+		TestPanel.eventQueueWorker.push(msg);
 	}
 }

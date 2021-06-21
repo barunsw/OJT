@@ -11,8 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ClientMain {
 	private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);
-
-	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
 	
 	public static void main(String[] args) {
 		try {
@@ -20,8 +18,7 @@ public class ClientMain {
 		}
 		catch (Exception ex) {
 		}
-		// 이벤트 큐 동작
-		eventQueueWorker.start();
+	
 		
 		TestFrame frame = new TestFrame();
 

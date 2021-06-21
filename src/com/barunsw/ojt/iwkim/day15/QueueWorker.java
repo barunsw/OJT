@@ -19,6 +19,8 @@ public abstract class QueueWorker<T> extends Thread {
 	
 	public abstract void processObject(T t);
 	
+	// 서버에서 push한 데이터가 들어오면 notify메서드를 호출하여 
+	// wait하고 있던 쓰레드를 깨운다!
 	public void push(T t) {
 		LOGGER.debug("push : " + t);
 		messageRepository.add(t);
@@ -44,8 +46,7 @@ public abstract class QueueWorker<T> extends Thread {
 						waitObject.wait();
 					}
 					catch (Exception ex) {
-						LOGGER.error(ex.getMessage(), ex);
-					}
+						LOGGER.error(ex.getMessage(), ex);				}
 				}
 				
 				try { 

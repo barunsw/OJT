@@ -12,10 +12,10 @@ import org.apache.logging.log4j.Logger;
 public class TestFrame extends JFrame {
 	private static final Logger LOGGER = LogManager.getLogger(TestFrame.class);
 	
-	public static final int WIDTH 	= 480;
-	public static final int HEIGHT 	= 720;
+	public static final int WIDTH 	= 720;
+	public static final int HEIGHT 	= 650;
 	
-	private TestPanel testPanel;
+	private TestPanel testPanel = new TestPanel();
 	
 	public TestFrame() {
 		try {
@@ -27,12 +27,9 @@ public class TestFrame extends JFrame {
 	}
 	
 	private void initComponent() throws Exception {
-		this.setTitle("Chatting by RMI Test");
+		this.setTitle("Window Name");
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		String name = JOptionPane.showInputDialog("이름을 입력하세요 : ");
-		
-		testPanel = new TestPanel(name);
 		this.setContentPane(testPanel);
 		
 		// 윈도우 이벤트
@@ -45,7 +42,6 @@ public class TestFrame extends JFrame {
 		int result = JOptionPane.showConfirmDialog(TestFrame.this, 
 				"정말로 종료하시겠습니까?", "EXIT", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
-			testPanel.close();
 			System.exit(0);
 		}
 	}
