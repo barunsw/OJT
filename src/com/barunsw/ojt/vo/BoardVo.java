@@ -1,10 +1,12 @@
 package com.barunsw.ojt.vo;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.barunsw.ojt.constants.BoardType;
 
-public class BoardVo {
+public class BoardVo implements Serializable {
 	private BoardType boardType;
 	private String boardName;
 	private int boardId;

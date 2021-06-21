@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.Severity;
 import com.barunsw.ojt.vo.BoardVo;
 
 public class BoardPanel extends JPanel {
@@ -23,22 +22,33 @@ public class BoardPanel extends JPanel {
 	public BoardPanel(BoardVo boardVo) {
 		LOGGER.debug("board �깮�꽦");
 		this.boardVo = boardVo;
+		
+		try {
+			initComponent();
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
+	
+	private void initComponent() throws Exception {
+		this.setToolTipText(boardVo.getBoardName());
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		LOGGER.debug("paintComponent");
+		LOGGER.debug("paintComponent boardName:" + boardVo.getBoardName());
 		
 		int severity = boardVo.getSeverity();
 		//Graphics2D g2d = (Graphics2D)g;
 		switch (boardVo.getBoardType()){
 		case MPU: 
-			if (severity == Severity.NORMAL) {
+			//if (severity == Severity.NORMAL) {
 					g.drawImage(ImageFactory.mpuNormalImageIcon.getImage(),
 							0, 
 							0,
 							this);
-			}
+			//}
 			break;
 		case SALC:
 			g.drawImage(ImageFactory.salcNormalImageIcon.getImage(),
