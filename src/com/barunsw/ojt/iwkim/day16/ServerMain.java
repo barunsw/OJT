@@ -11,6 +11,6 @@ public class ServerMain {
 		
 		ServerInterface serverIf = new ServerImpl();
 		
-		registry.bind("CHAT", serverIf);
+		registry.bind("RACK_VIEW", serverIf);
 	}
 }

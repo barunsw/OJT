@@ -1,7 +1,10 @@
 package com.barunsw.ojt.iwkim.day16;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -9,28 +12,21 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.constants.BoardType;
-import com.barunsw.ojt.constants.Severity;
-import com.barunsw.ojt.vo.BoardVo;
-
 public class TestPanel extends JPanel {
 	private static Logger LOGGER = LogManager.getLogger(TestPanel.class);
 	
-	private List<BoardVo> boardList = new ArrayList<>();
+	private ServerInterface serverIf;
 	
-	private final int BOARD_START_X = 26;
-	private final int BOARD_START_Y = 26;
+	private final int BOARD_START_X 			= 26;
+	private final int TOP_BOARD_START_Y		= 26;
+	private final int BOTTOM_BOARD_START_Y	= 307;
 	
-	private final int BOARD_WIDTH	= 40;
-	private final int BOARD_HEIGHT	= 271;
+	private final int SLOT_NUM = 20;
 	
-	private final int LONG_BOARD_HEIGHT = 550;
-	
-	
-
 	public TestPanel() {
 		try {
-			initTestData();
+			initRmi();
+			initComponent();
 		} 
 		catch(Exception ex) {
 			LOGGER.error(ex.getMessage());
@@ -41,36 +37,69 @@ public class TestPanel extends JPanel {
 		this.setLayout(null);
 	}
 	
-	private void initTestData() {
-		BoardVo mpuBoardVo = new BoardVo();
-		mpuBoardVo.setBoardId(0);
-		mpuBoardVo.setBoardType(BoardType.MPU);
-		mpuBoardVo.setBoardName("MPU" + 0);
-		mpuBoardVo.setSeverity(Severity.NORMAL);
+	private void initRmi() throws Exception {
+		LOGGER.info("+++ Client Try Connection Start");
+		Registry registry = LocateRegistry.getRegistry("127.0.0.1", ServerMain.RMI_PORT);
 		
-		boardList.add(mpuBoardVo);
+		Remote remote = registry.lookup("RACK_VIEW");
 		
-		mpuBoardVo = new BoardVo();
-		mpuBoardVo.setBoardId(1);
-		mpuBoardVo.setBoardType(BoardType.MPU);
-		mpuBoardVo.setBoardName("MPU" + 1);
-		mpuBoardVo.setSeverity(Severity.CRITICAL);
-		
-		boardList.add(mpuBoardVo);
+		if (remote instanceof ServerInterface) {
+			LOGGER.info("clear remote : " + remote.toString());
+			serverIf = (ServerInterface) remote;
+		}
+		else {
+			LOGGER.info("error remote : " + remote.toString());
+		}
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
 		
-		for (BoardVo oneBoard : boardList) {
-			BoardType boardType = oneBoard.getBoardType();
-			int boardId 		= oneBoard.getBoardId();
-			int severity		= oneBoard.getSeverity();
-			
-			if (boardType == BoardType.MPU) {
-				g.drawImage(ImageFactory.mpuImageIcon[severity].getImage(), BOARD_START_X + (boardId * BOARD_WIDTH), BOARD_START_Y, this);
+		try {
+			List<BoardVo> boardList = serverIf.getBoardData();
+
+			for (BoardVo oneBoardVo : boardList) {
+				int boardId = oneBoardVo.getBoardId();
+						
+				if (boardId == SLOT_NUM - 1) {
+					continue;
+				}
+				
+				BoardPanel boardPanel = new BoardPanel(oneBoardVo);
+				
+				this.add(boardPanel, null);
+				
+				int boardWidth = boardPanel.getBoardWidth();
+				int boardHeight = boardPanel.getBoardHeight();
+				
+				LOGGER.debug(String.format("boardId:%s, boardWidth:%s, boardHeight:%s", boardId, boardWidth, boardHeight));
+				
+				if (boardId < 2) {
+					boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
+							TOP_BOARD_START_Y,
+							boardPanel.getBoardWidth(),
+							boardPanel.getBoardHeight());
+					LOGGER.debug(String.format("x : %s, y : %s", BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)), TOP_BOARD_START_Y));
+				}
+				else if (boardId < SLOT_NUM - 1) {			
+					boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
+							BOTTOM_BOARD_START_Y,
+							boardPanel.getBoardWidth(),
+							boardPanel.getBoardHeight());
+					LOGGER.debug(String.format("x : %s, y : %s", BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)), BOTTOM_BOARD_START_Y));
+				}
+				else {
+					boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * ((boardId + 2) % SLOT_NUM)),
+							TOP_BOARD_START_Y,
+							boardPanel.getBoardWidth(),
+							boardPanel.getBoardHeight());
+					LOGGER.debug(String.format("x : %s, y : %s", BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)), TOP_BOARD_START_Y));
+				}
+				
 			}
+		} catch (RemoteException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 }

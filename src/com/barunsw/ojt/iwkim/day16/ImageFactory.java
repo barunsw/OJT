@@ -21,11 +21,11 @@ public final class ImageFactory {
 	public static final ImageIcon[] srguImageIcon 	= new ImageIcon[4];
 	
 	static {
-		backgroundImageIcon = new ImageIcon(Thread.currentThread()
-				.getContextClassLoader().getResource("images/tamms/background.png"));
+//		backgroundImageIcon = new ImageIcon(Thread.currentThread()
+//				.getContextClassLoader().getResource("images/tamms/background.png"));
 		
-//		backgroundImageIcon = new ImageIcon(ImageFactory.class.getClassLoader()
-//				.getResource("images/tamms/background.png"));
+		backgroundImageIcon = new ImageIcon(ImageFactory.class.getClassLoader()
+				.getResource("images/tamms/background.png"));
 		for (int i = 0; i < 4; ++i) {
 			String severity = null;
 			
@@ -42,14 +42,14 @@ public final class ImageFactory {
 				severity = "normal.png";
 			}
 			
-			mpuImageIcon[i] = new ImageIcon(Thread.currentThread()
-					.getContextClassLoader().getResource("images/tamms/MPU_" + severity));		
+			mpuImageIcon[i] = new ImageIcon(ImageFactory.class.getClassLoader()
+					.getResource("images/tamms/MPU_" + severity));		
 
-			salcImageIcon[i] = new ImageIcon(Thread.currentThread()
-					.getContextClassLoader().getResource("images/tamms/SALC_" + severity));		
+			salcImageIcon[i] = new ImageIcon(ImageFactory.class.getClassLoader()
+					.getResource("images/tamms/SALC_" + severity));		
 
-			srguImageIcon[i] = new ImageIcon(Thread.currentThread()
-					.getContextClassLoader().getResource("images/tamms/SRGU_" + severity));			
+			srguImageIcon[i] = new ImageIcon(ImageFactory.class.getClassLoader()
+					.getResource("images/tamms/SRGU_" + severity));			
 		}
 	}	
 }
