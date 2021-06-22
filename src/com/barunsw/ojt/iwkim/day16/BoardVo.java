@@ -12,6 +12,15 @@ public class BoardVo implements Serializable {
 	private int boardId;
 	private int severity;
 	
+	public BoardVo() {}
+	public BoardVo(BoardType boardType, int boardId, int severity) {
+		this.boardType = boardType;
+		this.boardId = boardId;
+		this.severity = severity;
+		this.boardName = String.format("%s-%s", boardType.toString(), boardId);
+	}
+	
+	
 	public BoardType getBoardType() {
 		return boardType;
 	}

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ServerInterface extends Remote {
 	public List<BoardVo> getBoardData() throws RemoteException;
+	public AlarmVo getAlarmInfo() throws RemoteException;
 }

@@ -14,7 +14,7 @@ public class BoardPanel extends JPanel {
 	public static final int BOARD_HEIGHT	= 271;
 
 	public static final int LONG_BOARD_HEIGHT 	= 550;
-
+	
 	private BoardVo boardVo;
 
 	public BoardPanel(BoardVo boardVo) {
@@ -36,10 +36,10 @@ public class BoardPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		LOGGER.debug("paintComponent boardName:" + boardVo.getBoardName());
 
-		int severity = boardVo.getSeverity();
+		int severity = boardVo.getSeverity();	
 		
 		switch (boardVo.getBoardType()){
-		case MPU: 
+		case MPU:
 			g.drawImage(ImageFactory.mpuImageIcon[severity].getImage(),
 					0, 
 					0,
@@ -53,6 +53,7 @@ public class BoardPanel extends JPanel {
 					this);
 			break;
 		case SRGU:
+		
 			g.drawImage(ImageFactory.srguImageIcon[severity].getImage(),
 					0, 
 					0,
@@ -61,35 +62,35 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	public int getBoardWidth() {
-		int width = 0;
-
-		switch (boardVo.getBoardType()) {
-		case MPU:
-		case SALC:
-			width = BOARD_WIDTH;
-			break;
-		case SRGU:
-			width = BOARD_WIDTH * 2;
-			break;
-		}
-
-		return width;
-	}
-
-	public int getBoardHeight() {
-		int height = 0;
-
-		switch (boardVo.getBoardType()) {
-		case MPU:
-			height = LONG_BOARD_HEIGHT ;
-			break;
-		case SALC:
-		case SRGU:
-			height = BOARD_HEIGHT;
-			break;
-		}
-
-		return height;	
-	}
+//	public int getBoardWidth() {
+//		int width = 0;
+//
+//		switch (boardVo.getBoardType()) {
+//		case MPU:
+//		case SALC:
+//			width = BOARD_WIDTH;
+//			break;
+//		case SRGU:
+//			width = BOARD_WIDTH * 2;
+//			break;
+//		}
+//
+//		return width;
+//	}
+//
+//	public int getBoardHeight() {
+//		int height = 0;
+//
+//		switch (boardVo.getBoardType()) {
+//		case MPU:
+//			height = LONG_BOARD_HEIGHT ;
+//			break;
+//		case SALC:
+//		case SRGU:
+//			height = BOARD_HEIGHT;
+//			break;
+//		}
+//
+//		return height;	
+//	}
 }
