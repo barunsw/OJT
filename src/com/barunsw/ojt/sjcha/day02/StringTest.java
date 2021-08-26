@@ -137,12 +137,5 @@ public class StringTest {
 		Logger.debug("valueOf method");
 		Integer value = Integer.valueOf(7);
 		Logger.debug(value);
-		
-		
-		
 	}
-	
-	
-	
-	
 }
