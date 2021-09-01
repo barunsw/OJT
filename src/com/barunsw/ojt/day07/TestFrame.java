@@ -16,6 +16,7 @@ public class TestFrame extends JFrame {
 	public static final int HEIGHT 	= 400;
 	
 	private TestPanel testPanel = new TestPanel();
+	//private TestPanel2 testPanel = new TestPanel2();
 	
 	public TestFrame() {
 		try {
