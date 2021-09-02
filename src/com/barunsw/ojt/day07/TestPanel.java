@@ -6,11 +6,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,6 +27,12 @@ import org.apache.logging.log4j.Logger;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
+	
+	private final int COLUMN_INDEX_NAME			= 0;
+	private final int COLUMN_INDEX_AGE			= 1;
+	private final int COLUMN_INDEX_GENDER		= 2;
+	private final int COLUMN_INDEX_ADDRESS		= 3;
+	private final int COLUMN_INDEX_PERSON		= 4;
 	
 	private final Dimension LABEL_SIZE 	= new Dimension(80, 22);
 	private final Dimension BUTTON_SIZE = new Dimension(80, 22);
@@ -49,11 +60,17 @@ public class TestPanel extends JPanel {
 	private CommonTableModel tableModel = new CommonTableModel();
 
 	private GridBagLayout gridBagLayout = new GridBagLayout();
+	
+	private AddressBookInterface addressBookIf = new MemAddressBookImpl();
+	
+	private JPopupMenu popupMenu = new JPopupMenu();
+	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 
 	public TestPanel() {
 		try {
 			initComponent();
 			initTable();
+			initPopupMenu();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -207,6 +224,18 @@ public class TestPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				try {
+					AddressVo newAddress = new AddressVo();
+					newAddress.setName(jTextField_Name.getText());
+					newAddress.setAge(30);
+				
+					addressBookIf.insertAddress(newAddress);
+					
+					initData();
+				}
+				catch (Exception ex) {
+					LOGGER.error(ex.getMessage(), ex);
+				}
 			}
 		});
 		
@@ -223,26 +252,74 @@ public class TestPanel extends JPanel {
 		tableModel.setColumn(columnData);
 		
 		jTable_Result.setModel(tableModel);		
+		
+		jTable_Result.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// 마우스 우클릭
+				if (e.getModifiersEx() != MouseEvent.BUTTON1_DOWN_MASK) {
+					int selectedRow = jTable_Result.getSelectedRow();
+					if (selectedRow >= 0) {
+						popupMenu.show(TestPanel.this.jTable_Result, e.getX(), e.getY());
+					}
+				}
+			}
+		});
+	}
+	
+	private void initPopupMenu() {
+		popupMenu.add(jMenuItem_Delete);
+
+		jMenuItem_Delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = jTable_Result.getSelectedRow();
+				if (selectedRow >= 0) {
+					changeData(selectedRow);
+					initData();
+				}
+			}
+		});
+	}
+
+	private void changeData(int selectedRow) {
+		Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
+		if (value instanceof AddressVo) {
+			try {
+				AddressVo addressVo = (AddressVo)value;
+				addressBookIf.updateAddress(addressVo);
+			}
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
+	}
+	
+	private void deleteData(int selectedRow) {
+		Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
+		if (value instanceof AddressVo) {
+			try {
+				AddressVo addressVo = (AddressVo)value;
+				addressBookIf.deleteAddress(addressVo);
+			}
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
 	}
 	
 	private void initData() {
 		Vector data = new Vector();
 		
-		Vector data1 = new Vector();
-		data1.add("홍길동");
-		data1.add("남");
-		data1.add("30");
-		data1.add("서울");
-		
-		data.add(data1);
-
-		Vector data2 = new Vector();
-		data2.add("유관순");
-		data2.add("여");
-		data2.add("20");
-		data2.add("경기");
-		
-		data.add(data2);
+		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
+		for (AddressVo oneAddress : addressList) {
+			Vector data1 = new Vector();
+			data1.add(oneAddress.getName());
+			data1.add("남");
+			data1.add("30");
+			data1.add("서울");
+			
+			data.add(data1);
+		}
 
 		tableModel.setData(data);
 		tableModel.fireTableDataChanged();

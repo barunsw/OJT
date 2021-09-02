@@ -1,4 +1,4 @@
-package com.barunsw.ojt.day10;
+package com.barunsw.ojt.day07;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface AddressBookInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception;
+	public List<AddressVo> selectAddressList(AddressVo addressVo);
 	
 	/**
 	 * 생성

@@ -1,4 +1,4 @@
-package com.barunsw.ojt.day10;
+package com.barunsw.ojt.day07;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

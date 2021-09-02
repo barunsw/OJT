@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,6 +14,9 @@ import javax.swing.ListSelectionModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.day07.AddressBookInterface;
+import com.barunsw.ojt.day07.MemAddressBookImpl;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -33,6 +35,9 @@ public class TestPanel extends JPanel {
 	private JTable jTable_Result = new JTable();
 	
 	private CommonTableModel tableModel = new CommonTableModel();
+	
+	private AddressBookInterface addressBookIf = new MemAddressBookImpl();
+	
 	
 	public TestPanel() {
 		try {
