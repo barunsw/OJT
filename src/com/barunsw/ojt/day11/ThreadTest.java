@@ -27,7 +27,7 @@ public class ThreadTest {
 		Timer timer = new Timer();
 //		for (int i = 0; i < 3; i++) {
 			TestTimerTask t = new TestTimerTask(0);
-
+			
 			//timer.schedule(t, 0, 1000L);
 			timer.scheduleAtFixedRate(t, 0, 1000L);
 			
