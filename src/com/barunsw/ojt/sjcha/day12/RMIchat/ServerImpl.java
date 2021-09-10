@@ -20,7 +20,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	@Override
 	public int register(String userId, ClientInterface clientIf) throws RemoteException {
-		LOGGER.debug("Client Register");
+		LOGGER.debug("register(userId, clientIf) : Register user from Server to Client");
 		
 		clientData.put(userId, clientIf);
 
@@ -31,7 +31,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	@Override
 	public int deregister(String userId) throws RemoteException {
-		LOGGER.debug("Client Deregister");
+		LOGGER.debug("deregister(userId) : Deregister user from Server to Client");
 
 		clientData.remove(userId);
 
@@ -40,7 +40,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	@Override
 	public int send(String userId, String message) throws RemoteException {
-		LOGGER.debug("Send Userid : "+ userId + "SendMessage : " + message);
+		LOGGER.debug("Send(userId, message) : Userid - " + userId + " SendMessage - " + message);
 
 		for (ClientInterface oneClient : clientData.values()) {
 			oneClient.push(String.format("%s : %s", userId, message));

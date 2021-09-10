@@ -6,12 +6,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -20,6 +23,9 @@ import javax.swing.JToggleButton;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.sjcha.day12.RMIchat.ChatPanel;
+import com.barunsw.ojt.sjcha.day12.RMIchat.ChatPanel_EnterKey_KeyListener;
 
 public class ChatPanel extends JPanel {
 
@@ -115,6 +121,9 @@ public class ChatPanel extends JPanel {
 
 		// 전송 버튼을 누른 경우.
 		jButton_Send.addActionListener(new ChatPanel_jButton_Send_ActionListener(this));
+		
+		// entet를 눌렀을 경우.
+		jTextField_SendText.addKeyListener(new ChatPanel_EnterKey_KeyListener(this));		
 	}
 	
 	public void jToggleButton_Connect_ActionListioner(ActionEvent e) {
@@ -155,21 +164,35 @@ public class ChatPanel extends JPanel {
 	}
 
 	public void jButton_Send_ActionListener(ActionEvent e) {
-		String userName = jTextField_UserId.getText();
-		LOGGER.debug(userName);
-
-		String message = jTextField_SendText.getText();
-		LOGGER.debug(message);
-
-		try {
-			serverIf.send(userName, message);
-			jTextField_SendText.setText("");
-		} 
-		catch (RemoteException re) {
-			LOGGER.error(re.getMessage(), re);
+		send();
+	}
+	
+	public void EnterKey_KeyListener(KeyEvent e) {
+		switch (e.getKeyChar()) {
+		case '\n':
+			send();
 		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
+	}
+	
+	public void send() {
+		if(jTextField_UserId.getText().equals("") == false) {
+			String userName = jTextField_UserId.getText();
+			LOGGER.debug("textfield username : " + userName);
+
+			String message = jTextField_SendText.getText();
+			LOGGER.debug("send message : " + message);
+
+			try {
+				serverIf.send(userName, message);
+				jTextField_SendText.setText("");
+			} 
+			catch (Exception ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
+		}
+		// 값을 입력하라는 경고창 다이얼로그. 
+		else {
+			JOptionPane.showMessageDialog(ChatPanel.this, "사용자 이름을 입력하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
@@ -197,5 +220,17 @@ class ChatPanel_jButton_Send_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Send_ActionListener(e);
+	}
+}
+
+class ChatPanel_EnterKey_KeyListener extends KeyAdapter {
+	private ChatPanel adaptee;
+	
+	public ChatPanel_EnterKey_KeyListener(ChatPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	public void keyPressed(KeyEvent e) {
+		adaptee.EnterKey_KeyListener(e);
 	}
 }
