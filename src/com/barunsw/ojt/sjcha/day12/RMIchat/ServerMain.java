@@ -21,7 +21,7 @@ public class ServerMain {
 			registry.bind("RMICHAT", server);
 
 			LOGGER.debug("initServerStart(): Server has been started.");
-		} 
+		}
 		catch (Exception ex) {
 			LOGGER.error("initServerStart(): Failed to start server: " + ex.getMessage(), ex);
 		}
