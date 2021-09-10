@@ -27,25 +27,27 @@ import com.barunsw.ojt.sjcha.day06.TestFrame;
 public class ChatPanel extends JPanel implements ClientInterface {
 	public static final Logger LOGGER = LogManager.getLogger(ChatPanel.class);
 
-	private GridBagLayout gridBagLayout = new GridBagLayout();
+	private GridBagLayout gridBagLayout 		= new GridBagLayout();
 	private final Dimension SIZE = new Dimension(120, 300);
-	private final Dimension BUTTON_SIZE = new Dimension(80, 30);
+	private final Dimension BUTTON_SIZE 		= new Dimension(80, 30);
 
 	private ServerInterface socketIf;
 
 	private Socket socket;
 
 	BufferedWriter writer;
-	private JTextField jTextField_UserId = new JTextField();
-	private JTextField jTextField_SendText = new JTextField();
+	private JTextField jTextField_UserId 		= new JTextField(10);
+	private JTextField jTextField_SendText 		= new JTextField(20);
 
 	private JToggleButton jToggleButton_Connect = new JToggleButton("접속");
-	private JButton jButton_Send = new JButton("전송");
+	private JButton jButton_Send 				= new JButton("전송");
 
-	private JScrollPane jScrollPane_Dispaly = new JScrollPane();
-	private JTextArea jTextArea_Display = new JTextArea();
+	private JScrollPane jScrollPane_Dispaly 	= new JScrollPane();
+	private JTextArea jTextArea_Display 		= new JTextArea();
 
-	public static String sendMessage = new String();
+	private JPanel jPanel_InputField 		    = new JPanel();
+	
+	public static String sendMessage 			= new String();
 
 	public ChatPanel() {
 		try {
@@ -66,7 +68,7 @@ public class ChatPanel extends JPanel implements ClientInterface {
 		this.setLayout(gridBagLayout);
 
 		this.add(jScrollPane_Dispaly, 
-				new GridBagConstraints(0, 0, 5, 1,
+				new GridBagConstraints(0, 0, 1, 1,
 						1.0, 1.0, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(10, 10, 10, 10),
@@ -74,32 +76,39 @@ public class ChatPanel extends JPanel implements ClientInterface {
 
 		jScrollPane_Dispaly.getViewport().add(jTextArea_Display);
 
-		this.add(jTextField_UserId,
-				new GridBagConstraints(0, 1, 1, 1,
+		this.add(jPanel_InputField,
+				new GridBagConstraints(0, 10, 10, 1,
+						0.0, 0.0 ,
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+						new Insets(0, 0, 5, 5),
+						0,0));
+		
+		jPanel_InputField.add(jTextField_UserId,
+				new GridBagConstraints(0, 10, 1, 1,
 						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 10, 10, 10),
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+						new Insets(0, 0, 0, 5),
 						0, 0));
-
-		this.add(jToggleButton_Connect,
-				new GridBagConstraints(1, 1, 1, 1,
-						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 10, 10),
+		
+		jPanel_InputField.add(jToggleButton_Connect,
+				new GridBagConstraints(1, 10, 1, 1,
+						0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+						new Insets(0, 5, 0, 100),
 						0, 0));
-
-		this.add(jTextField_SendText,
-				new GridBagConstraints(2, 1, 1, 1,
-						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 10, 10),
+		
+		jPanel_InputField.add(jTextField_SendText,
+				new GridBagConstraints(2, 10, 1, 1,
+						0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+						new Insets(0, 5, 0, 20),
 						0, 0));
-
-		this.add(jButton_Send,
-				new GridBagConstraints(3, 1, 1, 1,
-						1.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 10, 10),
+		
+		jPanel_InputField.add(jButton_Send,
+				new GridBagConstraints(3, 10, 1, 1,
+						0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+						new Insets(0, 20, 0, 5),
 						0, 0));
 
 		// togglebutton을 눌렀을 경우.
