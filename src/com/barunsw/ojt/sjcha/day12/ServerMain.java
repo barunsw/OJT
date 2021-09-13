@@ -27,7 +27,7 @@ public class ServerMain {
 			// PORT에 대한 registry 생성
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			
-			AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+			AddressBookInterface addressBookInterface = new RmiImpl();
 			
 			// "ADDRESSBOOK"의 register를 연결
 			registry.bind("ADDRESSBOOK", addressBookInterface);

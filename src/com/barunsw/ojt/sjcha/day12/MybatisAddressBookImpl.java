@@ -21,13 +21,7 @@ import com.barunsw.ojt.sjcha.day12.AddressBookInterface;
 import com.barunsw.ojt.sjcha.day12.SqlSessionFactoryManager;
 import com.barunsw.ojt.sjcha.day12.AddressVo;
 
-public class MybatisAddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
-	
-	// 생성자가 반드시 필요!!
-	protected MybatisAddressBookImpl() throws RemoteException {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+public class MybatisAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LogManager.getLogger(MybatisAddressBookImpl.class);
 
