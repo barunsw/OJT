@@ -14,8 +14,11 @@ public class ClientMain {
 	
 	public static void main(String[] args) {
 		try {
+			eventQueueWorker.start();
+			
 			String name = args[0];
 			
+			ClientTestPanel testPanel = new ClientTestPanel();
 			ClientInterface clientIf = new ClientImpl();
 			
 			Registry registry = LocateRegistry.getRegistry(ServerMain.PORT);
