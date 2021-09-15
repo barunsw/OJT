@@ -56,42 +56,42 @@ public class AlarmGenerator extends Thread {
 
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_BOARD_ALARM);
 		oneAlarm.setAlarmMsg("BOARD ALARM OCCUR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 
 		oneAlarm = new AlarmVo();
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_BOARD_ALARM);
 		oneAlarm.setAlarmMsg("BOARD ALARM CLEAR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 
 		oneAlarm = new AlarmVo();
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_PORT_ALARM);
 		oneAlarm.setAlarmMsg("PORT ALARM OCCUR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 
 		oneAlarm = new AlarmVo();
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_PORT_ALARM);
 		oneAlarm.setAlarmMsg("PORT ALARM CLEAR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 
 		oneAlarm = new AlarmVo();
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_ENV_ALARM);
 		oneAlarm.setAlarmMsg("ENV ALARM OCCUR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 
 		oneAlarm = new AlarmVo();
 		oneAlarm.setAlarmId(AlarmId.ALARM_ID_ENV_ALARM);
 		oneAlarm.setAlarmMsg("ENV ALARM CLEAR");
-		oneAlarm.setSeverity((int)(Math.random() * 4) / 3);
+		oneAlarm.setSeverity((int)(Math.random() * 4));
 
 		alarmData.add(oneAlarm);
 	}
@@ -126,5 +126,22 @@ public class AlarmGenerator extends Thread {
 
 	public void close() {
 		runFlag = false;
+	}
+	
+	public static void main(String[] argv) {
+		int a1 = (int) ((Math.random() * 4));
+		
+		int a2 = (int) ((Math.random() * 4));
+		int a3 = (int) ((Math.random() * 4));
+		int a4 = (int) ((Math.random() * 4));
+		int a5 = (int) ((Math.random() * 4));
+		int a6 = (int) ((Math.random() * 4));
+		
+		System.out.println(a1);
+		System.out.println(a2);
+		System.out.println(a3);
+		System.out.println(a4);
+		System.out.println(a5);
+		System.out.println(a6);
 	}
 }
