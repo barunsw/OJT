@@ -16,7 +16,7 @@ import com.barunsw.ojt.sjcha.day16.ServerImpl;
 public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	private static final Logger LOGGER = LogManager.getLogger(ServerImpl.class);
 
-	private List<ClientInterface> clientData = new ArrayList<>();
+	public static List<ClientInterface> clientData = new ArrayList<>();
 
 	private List<BoardVo> boardList = new ArrayList<>();
 
@@ -37,6 +37,12 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	public List<BoardVo> selectBoardList() throws RemoteException {
 		LOGGER.debug("selectBoard");
 
+		boardList = boardData();
+		
+		return boardList;
+	}
+
+	public List<BoardVo> boardData() {
 		for (ClientInterface oneClient : clientData) {
 			int index = (int) (Math.random() * 37);
 
@@ -64,7 +70,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 			}
 
 			boardList.add(boardVo);
-			oneClient.pushAlarm(boardVo);
 		}
 		return boardList;
 	}
