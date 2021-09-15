@@ -38,35 +38,33 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		LOGGER.debug("selectBoard");
 
 		for (ClientInterface oneClient : clientData) {
-			for(int i = 0; i < 38; i++) {
-				int index = (int) (Math.random() * 37);
+			int index = (int) (Math.random() * 37);
 
-				BoardVo boardVo = new BoardVo();
-				boardVo.setBoardId(index);
-				boardVo.setSeverity((int) (Math.random() * 4));
+			BoardVo boardVo = new BoardVo();
+			boardVo.setBoardId(index);
+			boardVo.setSeverity((int) (Math.random() * 4));
 
-				if (index < 2) {
-					boardVo.setBoardType(BoardType.MPU);
-					boardVo.setBoardName("MPU");
-				}
-
-				else if (index % 18 == 0 || index % 36 == 0) {
-					boardVo.setBoardType(BoardType.SRGU);
-					boardVo.setBoardName("SRGU");
-				}
-
-				else if (index % 19 == 0 || index % 37 == 0) {
-					continue;
-				}
-
-				else {
-					boardVo.setBoardType(BoardType.SALC);
-					boardVo.setBoardName("SALC");
-				}
-
-				boardList.add(boardVo);
-				oneClient.pushAlarm(boardVo);
+			if (index < 2) {
+				boardVo.setBoardType(BoardType.MPU);
+				boardVo.setBoardName("MPU");
 			}
+
+			else if (index % 18 == 0 || index % 36 == 0) {
+				boardVo.setBoardType(BoardType.SRGU);
+				boardVo.setBoardName("SRGU");
+			}
+
+			else if (index % 19 == 0 || index % 37 == 0) {
+				continue;
+			}
+
+			else {
+				boardVo.setBoardType(BoardType.SALC);
+				boardVo.setBoardName("SALC");
+			}
+
+			boardList.add(boardVo);
+			oneClient.pushAlarm(boardVo);
 		}
 		return boardList;
 	}
