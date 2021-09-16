@@ -23,7 +23,12 @@ public class RandomTest extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				serverIf.selectBoardList();
+				List<BoardVo> boardList = serverIf.selectBoardList();
+				for (ClientInterface oneClient : ServerImpl.clientData) {
+					for(BoardVo boardVo : boardList) {
+						oneClient.pushAlarm(boardVo);
+					}
+				}
 				LOGGER.debug("randomTest thread in");
 				Thread.sleep(5000);
 			} 

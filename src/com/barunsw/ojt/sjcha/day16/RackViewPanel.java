@@ -45,8 +45,10 @@ public class RackViewPanel extends JPanel implements EventListener {
 
 	private List<BoardVo> boardList = new ArrayList<>();
 
+	private BoardPanel boardPanel;
 	public RackViewPanel() {
 		try {
+			getBoardData();
 			initEvent();
 			initRmi();
 			initComponent();
@@ -116,13 +118,13 @@ public class RackViewPanel extends JPanel implements EventListener {
 	}
 
 	private void initData() throws RemoteException {
-		boardList = getBoardData();
+		//boardList = getBoardData();
 
 		for (BoardVo oneBoardVo : boardList) {
 			int boardId = oneBoardVo.getBoardId();
 			LOGGER.debug(oneBoardVo);
 
-			BoardPanel boardPanel = new BoardPanel(oneBoardVo);
+			boardPanel = new BoardPanel(oneBoardVo);
 
 			this.add(boardPanel, null);
 
@@ -144,26 +146,24 @@ public class RackViewPanel extends JPanel implements EventListener {
 		}
 	}
 
-	private void ResetData(BoardVo boardVo) {
-		int boardId = boardVo.getBoardId();
-		LOGGER.debug(boardVo);
-
-		BoardPanel boardPanel = new BoardPanel(boardVo);
-
-		this.add(boardPanel, null);
-
-		boardPanel.repaint();
-
-		if (boardId < 20) {
-			boardPanel.setBounds(TOP_BOARD_START_X + (boardId * BOARD_WIDTH_GAP), TOP_BOARD_START_Y,
-					boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
-		}
-
-		else {
-			boardPanel.setBounds(BOTTOM_BOARD_START_X + (boardId % 20 * BOARD_WIDTH_GAP), BOTTOM_BOARD_START_Y,
-					boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
-		}
-	}
+	/*
+	 * private void ResetData(BoardVo boardVo) { int boardId = boardVo.getBoardId();
+	 * LOGGER.debug(boardVo);
+	 * 
+	 * boardPanel = new BoardPanel(boardVo);
+	 * 
+	 * this.add(boardPanel, null);
+	 * 
+	 * boardPanel.repaint();
+	 * 
+	 * if (boardId < 20) { boardPanel.setBounds(TOP_BOARD_START_X + (boardId *
+	 * BOARD_WIDTH_GAP), TOP_BOARD_START_Y, boardPanel.getBoardWidth(),
+	 * boardPanel.getBoardHeight()); }
+	 * 
+	 * else { boardPanel.setBounds(BOTTOM_BOARD_START_X + (boardId % 20 *
+	 * BOARD_WIDTH_GAP), BOTTOM_BOARD_START_Y, boardPanel.getBoardWidth(),
+	 * boardPanel.getBoardHeight()); } }
+	 */
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -180,7 +180,13 @@ public class RackViewPanel extends JPanel implements EventListener {
 
 		if (o instanceof BoardVo) {
 			BoardVo boardVo = (BoardVo) o;
-			ResetData(boardVo);
+			boardList.add(boardVo);
+			try {
+				initData();
+			} 
+			catch (RemoteException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 	}
 }
