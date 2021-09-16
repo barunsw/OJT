@@ -127,21 +127,4 @@ public class AlarmGenerator extends Thread {
 	public void close() {
 		runFlag = false;
 	}
-	
-	public static void main(String[] argv) {
-		int a1 = (int) ((Math.random() * 4));
-		
-		int a2 = (int) ((Math.random() * 4));
-		int a3 = (int) ((Math.random() * 4));
-		int a4 = (int) ((Math.random() * 4));
-		int a5 = (int) ((Math.random() * 4));
-		int a6 = (int) ((Math.random() * 4));
-		
-		System.out.println(a1);
-		System.out.println(a2);
-		System.out.println(a3);
-		System.out.println(a4);
-		System.out.println(a5);
-		System.out.println(a6);
-	}
 }

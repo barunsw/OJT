@@ -209,7 +209,7 @@ public class TestPanel extends JPanel implements EventListener {
 
 		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
 	}
-	
+
 	@Override
 	public void push(Object o) {
 		LOGGER.debug("push : "+ o);
