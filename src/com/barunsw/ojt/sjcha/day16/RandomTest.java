@@ -1,18 +1,15 @@
 package com.barunsw.ojt.sjcha.day16;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.sjcha.day16.ServerInterface;
-
 public class RandomTest extends Thread {
 	private static Logger LOGGER = LogManager.getLogger(RandomTest.class);
 
-	public static List<BoardVo> boardData = new ArrayList<>();
+	private BoardVo boardData = new BoardVo();
+
 	private ServerInterface serverIf;
 
 	public RandomTest(ServerInterface serverIf) {
@@ -23,11 +20,9 @@ public class RandomTest extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				List<BoardVo> boardList = serverIf.selectBoardList();
+				boardData();
 				for (ClientInterface oneClient : ServerImpl.clientData) {
-					for(BoardVo boardVo : boardList) {
-						oneClient.pushAlarm(boardVo);
-					}
+					oneClient.pushAlarm(boardData);
 				}
 				LOGGER.debug("randomTest thread in");
 				Thread.sleep(5000);
@@ -36,5 +31,12 @@ public class RandomTest extends Thread {
 				LOGGER.debug(e.getMessage(), e);
 			}
 		}
+	}
+	
+	public BoardVo boardData() {
+		boardData.setBoardId((int) (Math.random() * 38));
+		boardData.setSeverity((int) (Math.random() * 4));
+
+		return boardData;
 	}
 }
