@@ -6,7 +6,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -43,15 +47,20 @@ public class RackViewPanel extends JPanel implements EventListener {
 	private ServerInterface serverIf = null;
 	private ClientInterface clientIf;
 
-	private List<BoardVo> boardList = new ArrayList<>();
+	private BoardVo board;
+
+	private Map<Integer, BoardVo> boardData = new HashMap<Integer, BoardVo>();
+
+	private int boardIndex = 0;
 
 	private BoardPanel boardPanel;
+
 	public RackViewPanel() {
 		try {
-			getBoardData();
 			initEvent();
 			initRmi();
 			initComponent();
+			initBoardData();
 			initData();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -86,7 +95,7 @@ public class RackViewPanel extends JPanel implements EventListener {
 		this.setLayout(null);
 	}
 
-	private List<BoardVo> getBoardData() throws RemoteException {
+	private Map<Integer, BoardVo> initBoardData() throws RemoteException {
 		for (int i = 0; i < SLOT_NUM; i++) {
 			BoardVo boardVo = new BoardVo();
 			boardVo.setBoardId(i);
@@ -95,12 +104,12 @@ public class RackViewPanel extends JPanel implements EventListener {
 			if (i < 2) {
 				boardVo.setBoardType(BoardType.MPU);
 				boardVo.setBoardName("MPU");
-			} 
+			}
 
 			else if (i % 18 == 0 || i % 36 == 0) {
 				boardVo.setBoardType(BoardType.SRGU);
 				boardVo.setBoardName("SRGU");
-			} 
+			}
 
 			else if (i % 19 == 0 || i % 37 == 0) {
 				continue;
@@ -111,59 +120,37 @@ public class RackViewPanel extends JPanel implements EventListener {
 				boardVo.setBoardName("SALC");
 			}
 
-			boardList.add(boardVo);
+			boardData.put(boardVo.getBoardId(), boardVo);
 		}
 
-		return boardList;
+		return boardData;
 	}
 
 	private void initData() throws RemoteException {
-		//boardList = getBoardData();
+		Set set = boardData.keySet();
+		// 순차 탐색
+		Iterator iterator = set.iterator();
 
-		for (BoardVo oneBoardVo : boardList) {
-			int boardId = oneBoardVo.getBoardId();
-			LOGGER.debug(oneBoardVo);
+		while (iterator.hasNext()) {
+			int key = (int) iterator.next();
 
-			boardPanel = new BoardPanel(oneBoardVo);
+			board = boardData.get(key);
 
+			boardPanel = new BoardPanel(board);
 			this.add(boardPanel, null);
-
-			LOGGER.debug(String.format("+++ TestPanel에 boardPanel(%s, %s) 추가", boardPanel.getWidth(), boardPanel.getHeight()));
 
 			boardPanel.repaint();
 
-			if (boardId < 20) {
-				boardPanel.setBounds(TOP_BOARD_START_X + (boardId * BOARD_WIDTH_GAP), TOP_BOARD_START_Y,
+			if (key < 20) {
+				boardPanel.setBounds(TOP_BOARD_START_X + (key * BOARD_WIDTH_GAP), TOP_BOARD_START_Y,
 						boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
 			}
-
 			else {
-				boardPanel.setBounds(BOTTOM_BOARD_START_X + (boardId % 20 * BOARD_WIDTH_GAP), BOTTOM_BOARD_START_Y,
+				boardPanel.setBounds(BOTTOM_BOARD_START_X + (key % 20 * BOARD_WIDTH_GAP), BOTTOM_BOARD_START_Y,
 						boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
 			}
-
-			LOGGER.debug("--- TestPanel에 boardPanel 추가");
 		}
 	}
-
-	/*
-	 * private void ResetData(BoardVo boardVo) { int boardId = boardVo.getBoardId();
-	 * LOGGER.debug(boardVo);
-	 * 
-	 * boardPanel = new BoardPanel(boardVo);
-	 * 
-	 * this.add(boardPanel, null);
-	 * 
-	 * boardPanel.repaint();
-	 * 
-	 * if (boardId < 20) { boardPanel.setBounds(TOP_BOARD_START_X + (boardId *
-	 * BOARD_WIDTH_GAP), TOP_BOARD_START_Y, boardPanel.getBoardWidth(),
-	 * boardPanel.getBoardHeight()); }
-	 * 
-	 * else { boardPanel.setBounds(BOTTOM_BOARD_START_X + (boardId % 20 *
-	 * BOARD_WIDTH_GAP), BOTTOM_BOARD_START_Y, boardPanel.getBoardWidth(),
-	 * boardPanel.getBoardHeight()); } }
-	 */
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -171,7 +158,6 @@ public class RackViewPanel extends JPanel implements EventListener {
 		super.paintComponent(g);
 
 		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
-
 	}
 
 	@Override
@@ -180,13 +166,12 @@ public class RackViewPanel extends JPanel implements EventListener {
 
 		if (o instanceof BoardVo) {
 			BoardVo boardVo = (BoardVo) o;
-			boardList.add(boardVo);
-			try {
-				initData();
-			} 
-			catch (RemoteException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+
+			boardIndex = boardVo.getBoardId();
+
+			boardData.get(boardIndex).setSeverity(boardVo.getSeverity());
+
+			repaint();
 		}
 	}
 }
