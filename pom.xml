@@ -18,7 +18,7 @@
   </build>
   
 	<properties>
-	 	<org.apache.logging.log4j-version>2.13.3</org.apache.logging.log4j-version>
+	 	<org.apache.logging.log4j-version>2.15.0</org.apache.logging.log4j-version>
 	</properties>
   
   <dependencies>
