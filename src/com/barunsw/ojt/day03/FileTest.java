@@ -18,13 +18,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.constants.Gender;
 
 public class FileTest {
-	private static final Logger LOGGER = LogManager.getLogger(FileTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileTest.class);
 	
 	public static void main(String[] args) {
 		LOGGER.debug("main");
@@ -34,7 +34,7 @@ public class FileTest {
 		// 절대경로
 		//File addressFile = new File("D:\\git\\OJT\\data\\day03"); 
 		LOGGER.debug("addressFile exists:" + addressFile.exists());
-		
+
 		// Stream 단위 입출력
 		//byte[] data = new byte[1024];
 		byte[] data = new byte[10];
@@ -74,7 +74,6 @@ public class FileTest {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		
-
 		char[] charData = new char[5];
 		try (Reader reader = new FileReader(addressFile)) {
 			int readNum = reader.read(charData);
@@ -136,11 +135,15 @@ public class FileTest {
 		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		
+
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outputFile))) {
 			Object o;
 			while ((o = ois.readObject()) != null) {
 				LOGGER.debug("--- oneObject:" + o);
+				
+				if (o instanceof Person) {
+					Person p = (Person)o;
+				}
 			}
 		}
 		catch (FileNotFoundException fnfe) {
