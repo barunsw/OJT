@@ -12,11 +12,11 @@ public class Person implements Serializable {
 	private int age;
 	private String phone;
 	private String address;
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -52,7 +52,7 @@ public class Person implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

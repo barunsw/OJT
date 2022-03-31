@@ -1,4 +1,4 @@
-package com.barunsw.ojt.cjs.day03;
+package com.barunsw.ojt.cjs.day04;
 
 import java.io.Serializable;
 
@@ -12,11 +12,11 @@ public class Person implements Serializable {
 	private int age;
 	private String phone;
 	private String address;
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -52,11 +52,9 @@ public class Person implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	
 	@Override
 	public String toString() {
-//		return this.name + "," + this.gender + "," + this.age + "," + this.phone + "," + this.address;
 		return ToStringBuilder.reflectionToString(this);
-
 	}
 }
