@@ -8,10 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -61,6 +58,7 @@ public class OutputStreamTest {
 			for (int i = 0; i < list.size(); i++) {
 				bw.write(i + 1 + ",");
 				bw.write(list.get(i).getName() + ",");
+				bw.write(list.get(i).getGender() + ",");
 				bw.write(list.get(i).getAge() + ",");
 				bw.write(list.get(i).getPhone() + ",");
 				bw.write(list.get(i).getAddress());

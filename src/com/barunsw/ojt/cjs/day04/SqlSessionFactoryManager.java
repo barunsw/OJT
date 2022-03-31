@@ -14,7 +14,7 @@ public class SqlSessionFactoryManager {
 	private static final SqlSessionFactory sqlMapper;
 
 	static {
-		String resource = "com/barunsw/ojt/cjs/day04/SqlMapConfig.xml";
+		String resource = "com/barunsw/ojt/cjs/day04/SqlMapConfig.xml"; //클래스패스와 다른 위치에서 자원을 로드하는 것을 쉽게 해줌
 
 		Reader reader = null;
 
@@ -25,7 +25,7 @@ public class SqlSessionFactoryManager {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 		
-		long startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis(); //현재 시간구하는 메소드
 		
 		sqlMapper = new SqlSessionFactoryBuilder().build(reader, "development", System.getProperties());
 		
