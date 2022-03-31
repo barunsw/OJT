@@ -23,6 +23,8 @@ public class OutputStreamTest {
 		File readFile = new File("data/day03/cjs/address.dat");
 		File writeFile = new File("data/day03/cjs/writeFile.txt");
 
+		// List<Person> 객체를 만들고, ObjectInputStream으로 읽어서 Person 정보를 넣고
+		
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(writeFile, true));
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(readFile))) {
 			Object o;
@@ -43,6 +45,9 @@ public class OutputStreamTest {
 			LOGGER.error(cnfe.getMessage(), cnfe);
 		}
 
+		// BufferedWriter를 통해 List<Person> 객체가 가지고 있는 정보를 txt 파일에 write한다. 
+		// 단, address.txt와 동일한 결과의 txt파일이 만들어져야 한다.
+		
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile, true));
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(readFile))) {
 			Object o;
