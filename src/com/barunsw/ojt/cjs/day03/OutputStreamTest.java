@@ -16,8 +16,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.day03.Person;
 
 public class OutputStreamTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutputStreamTest.class);
@@ -37,6 +36,7 @@ public class OutputStreamTest {
 
 				if (o instanceof Person) {
 					Person p = (Person) o;
+					list.add(p);
 					LOGGER.debug("--- oneObject:" + p);
 				}
 			}
@@ -59,7 +59,11 @@ public class OutputStreamTest {
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile))) {
 			for (int i = 0; i < list.size(); i++) {
-				bw.write(list.get(i).toString());
+				bw.write(i + 1 + ",");
+				bw.write(list.get(i).getName() + ",");
+				bw.write(list.get(i).getAge() + ",");
+				bw.write(list.get(i).getPhone() + ",");
+				bw.write(list.get(i).getAddress());
 				bw.newLine();
 			}
 			bw.flush();
