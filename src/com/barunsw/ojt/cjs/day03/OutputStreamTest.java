@@ -37,18 +37,20 @@ public class OutputStreamTest {
 					LOGGER.debug("--- oneObject:" + p);
 				}
 			}
-		} catch (
-
-		FileNotFoundException fnfe) {
+		} 
+		catch (FileNotFoundException fnfe) {
 			LOGGER.error(fnfe.getMessage(), fnfe);
-		} catch (EOFException eofe) {
-		} catch (IOException ioe) {
+		} 
+		catch (EOFException eofe) {
+		} 
+		catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
-		} catch (ClassNotFoundException cnfe) {
+		} 
+		catch (ClassNotFoundException cnfe) {
 			LOGGER.error(cnfe.getMessage(), cnfe);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		// BufferedWriter를 통해 List<Person> 객체가 가지고 있는 정보를 txt 파일에 write한다.
@@ -56,6 +58,11 @@ public class OutputStreamTest {
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile))) {
 			for (int i = 0; i < list.size(); i++) {
+				Person p = list.get(i);
+				
+				bw.write(String.format("%s,%s,%s,%s,%s,%s\n", 
+						(i+1), p.getName(), p.getGender(), p.getAge(), p.getPhone(), p.getAddress()));
+				/*
 				bw.write(i + 1 + ",");
 				bw.write(list.get(i).getName() + ",");
 				bw.write(list.get(i).getGender() + ",");
@@ -63,9 +70,12 @@ public class OutputStreamTest {
 				bw.write(list.get(i).getPhone() + ",");
 				bw.write(list.get(i).getAddress());
 				bw.newLine();
+				*/
 			}
+			
 			bw.flush();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

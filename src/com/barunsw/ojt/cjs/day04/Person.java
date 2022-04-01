@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.barunsw.ojt.constants.Gender;
 
 public class Person implements Serializable {
+	private int seq;
 	private String name;
 	private Gender gender;
 	private int age;
