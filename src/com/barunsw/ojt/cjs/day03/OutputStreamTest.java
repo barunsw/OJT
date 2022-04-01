@@ -5,15 +5,15 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.barunsw.ojt.day03.Person;
 
 public class OutputStreamTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutputStreamTest.class);
@@ -24,49 +24,50 @@ public class OutputStreamTest {
 		File writeFile = new File("data/day03/cjs/writeFile.txt");
 
 		// List<Person> 객체를 만들고, ObjectInputStream으로 읽어서 Person 정보를 넣고
-		
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(writeFile, true));
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(readFile))) {
+		List<Person> list = new ArrayList<Person>();
+
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(readFile))) {
 			Object o;
 
 			while ((o = ois.readObject()) != null) {
-				LOGGER.debug("--- oneObject:" + o);
+
 				if (o instanceof Person) {
 					Person p = (Person) o;
-					oos.writeObject(p);
+					list.add(p);
+					LOGGER.debug("--- oneObject:" + p);
 				}
 			}
-		} catch (FileNotFoundException fnfe) {
+		} catch (
+
+		FileNotFoundException fnfe) {
 			LOGGER.error(fnfe.getMessage(), fnfe);
 		} catch (EOFException eofe) {
 		} catch (IOException ioe) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		} catch (ClassNotFoundException cnfe) {
 			LOGGER.error(cnfe.getMessage(), cnfe);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		// BufferedWriter를 통해 List<Person> 객체가 가지고 있는 정보를 txt 파일에 write한다. 
+		// BufferedWriter를 통해 List<Person> 객체가 가지고 있는 정보를 txt 파일에 write한다.
 		// 단, address.txt와 동일한 결과의 txt파일이 만들어져야 한다.
-		
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile, true));
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(readFile))) {
-			Object o;
 
-			while ((o = ois.readObject()) != null) {
-				LOGGER.debug("--- oneObject:" + o);
-				if (o instanceof Person) {
-					Person p = (Person) o;
-					bw.write(p.toString());
-				}
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile))) {
+			for (int i = 0; i < list.size(); i++) {
+				bw.write(i + 1 + ",");
+				bw.write(list.get(i).getName() + ",");
+				bw.write(list.get(i).getGender() + ",");
+				bw.write(list.get(i).getAge() + ",");
+				bw.write(list.get(i).getPhone() + ",");
+				bw.write(list.get(i).getAddress());
+				bw.newLine();
 			}
-		} catch (FileNotFoundException fnfe) {
-			LOGGER.error(fnfe.getMessage(), fnfe);
-		} catch (EOFException eofe) {
-		} catch (IOException ioe) {
-			LOGGER.error(ioe.getMessage(), ioe);
-		} catch (ClassNotFoundException cnfe) {
-			LOGGER.error(cnfe.getMessage(), cnfe);
+			bw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-
 }
