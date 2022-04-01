@@ -40,15 +40,13 @@
 	  			GENDER= #{gender},
 	  			PHONE = #{phone},
 	  			ADDRESS = #{address}
-	  			WHERE SEQ = 117
+	  			WHERE SEQ = #{seq}
 	
 	</update>
 	
 	<delete id="deletePerson" 	
 			parameterType="com.barunsw.ojt.cjs.day05.Person"
-			
 			>
-			
 			DELETE 
 				FROM
 				TB_PERSON
