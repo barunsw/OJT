@@ -2,21 +2,20 @@ package com.barunsw.ojt.day06;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestFrame extends JFrame {
-	private static final Logger LOGGER = LogManager.getLogger(TestFrame.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestFrame.class);
 	
 	public static final int WIDTH 	= 600;
 	public static final int HEIGHT 	= 400;
 	
-	private TestPanel testPanel = new TestPanel();
+	private LayoutTestPanel testPanel = new LayoutTestPanel();
 	
 	public TestFrame() {
 		try {

@@ -1,12 +1,12 @@
 package com.barunsw.ojt.day06;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,11 +15,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestPanel extends JPanel {
-	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 	
 	private final Dimension LABEL_SIZE = new Dimension(80, 22);
 	
@@ -31,6 +31,8 @@ public class TestPanel extends JPanel {
 	private JRadioButton jRadioButton_Man 	= new JRadioButton("남");
 	private JRadioButton jRadioButton_Woman = new JRadioButton("여");
 	private JTextArea jTextArea_Address		= new JTextArea();
+	
+	private ButtonGroup buttonGroup = new ButtonGroup();
 	
 	private JScrollPane jScrollPane_Address = new JScrollPane();
 	
@@ -69,7 +71,8 @@ public class TestPanel extends JPanel {
 		this.add(jLabel_Name, BorderLayout.WEST);
 		this.add(jTextField_Name, BorderLayout.CENTER);
 		*/
-
+		buttonGroup.add(jRadioButton_Man);
+		buttonGroup.add(jRadioButton_Woman);
 		
 		this.add(jLabel_Name, new GridBagConstraints(
 					0, 0, 1, 1,
