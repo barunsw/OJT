@@ -6,16 +6,16 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestFrame extends JFrame {
-	private static final Logger LOGGER = LogManager.getLogger(TestFrame.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestFrame.class);
 	
 	public static final int WIDTH 	= 600;
 	public static final int HEIGHT 	= 400;
 	
-	private TestPanel testPanel = new TestPanel();
+	private TableTestPanel testPanel = new TableTestPanel();
 	//private TestPanel2 testPanel = new TestPanel2();
 	
 	public TestFrame() {

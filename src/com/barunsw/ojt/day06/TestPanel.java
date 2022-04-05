@@ -42,6 +42,8 @@ public class TestPanel extends JPanel {
 
 	private CardLayout cardLayout = new CardLayout();
 
+	private GridBagLayout gridBagLayout = new GridBagLayout();
+	
 	public TestPanel() {
 		try {
 			initComponent();
@@ -55,13 +57,22 @@ public class TestPanel extends JPanel {
 		//this.setLayout(new BorderLayout());
 		//this.setLayout(new GridLayout(4, 2));
 		//this.setLayout(cardLayout);
-		this.setLayout(new GridBagLayout());
+		this.setLayout(gridBagLayout);
 		
-		jPanel_Command.setLayout(new GridBagLayout());
+		jPanel_Command.setLayout(gridBagLayout);
 		
 		jLabel_Name.setPreferredSize(LABEL_SIZE);
+		jLabel_Name.setMinimumSize(LABEL_SIZE);
+		jLabel_Name.setMaximumSize(LABEL_SIZE);
+
 		jLabel_Gender.setPreferredSize(LABEL_SIZE);
+		jLabel_Gender.setMinimumSize(LABEL_SIZE);
+		jLabel_Gender.setMaximumSize(LABEL_SIZE);
+		
 		jLabel_Address.setPreferredSize(LABEL_SIZE);
+		jLabel_Address.setMinimumSize(LABEL_SIZE);
+		jLabel_Address.setMaximumSize(LABEL_SIZE);
+		
 		
 		jTextField_Name.setPreferredSize(new Dimension(120, 22));
 		jRadioButton_Man.setPreferredSize(new Dimension(60, 22));

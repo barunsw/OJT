@@ -108,8 +108,10 @@ public class CommonTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        if (dataInfo != null)return dataInfo.size();
-        else return 0;
+        if (dataInfo != null)
+        	return dataInfo.size();
+        else 
+        	return 0;
     }
 
     public String getColumnName(int column) {

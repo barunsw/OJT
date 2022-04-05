@@ -3,6 +3,9 @@ package com.barunsw.ojt.day06;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JPanel;
 
@@ -26,7 +29,7 @@ public class LayoutTestPanel extends JPanel {
 	private void initComponent() throws Exception {
 		JPanel jPanel_Red = new JPanel();
 		jPanel_Red.setBackground(Color.red);
-		jPanel_Red.setPreferredSize(new Dimension(300, 100));
+		jPanel_Red.setPreferredSize(new Dimension(100, 100));
 		
 		JPanel jPanel_Blue = new JPanel();
 		jPanel_Blue.setBackground(Color.blue);
@@ -61,11 +64,34 @@ public class LayoutTestPanel extends JPanel {
 //		jPanel_Blue.setBounds(100, 100, 100, 100);
 //		jPanel_Green.setBounds(200, 200, 100, 100);
 		
-		this.setLayout(cardLayout);
-		this.add(jPanel_Red, "red");
-		this.add(jPanel_Blue, "blue");
-		this.add(jPanel_Green, "green");
+//		this.setLayout(cardLayout);
+//		this.add(jPanel_Red, "red");
+//		this.add(jPanel_Blue, "blue");
+//		this.add(jPanel_Green, "green");
+//		
+//		cardLayout.show(this, "green");
 		
-		cardLayout.show(this, "green");
+		this.setLayout(new GridBagLayout());
+		
+		this.add(jPanel_Red, new GridBagConstraints(
+				0, 0, 1, 1,
+				0.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(5, 5, 5, 5),
+				0, 0));
+		
+		this.add(jPanel_Blue, new GridBagConstraints(
+				1, 1, 1, 1,
+				1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 0),
+				0, 0));
+		
+		this.add(jPanel_Green, new GridBagConstraints(
+				2, 2, 1, 1,
+				1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 0),
+				0, 0));
 	}
 }
