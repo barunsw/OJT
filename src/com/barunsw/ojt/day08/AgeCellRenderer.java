@@ -55,7 +55,8 @@ public class AgeCellRenderer extends JPanel
 			}
     	}	
     	else {
-    		this.setBackground(UIManager.getColor("Table.selectionBackground"));
+    		//this.setBackground(UIManager.getColor("Table.selectionBackground"));
+    		this.setBackground(Color.blue);
     	}
   
     	return this;

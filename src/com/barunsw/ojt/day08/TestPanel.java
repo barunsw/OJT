@@ -12,14 +12,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.day07.AddressBookInterface;
 import com.barunsw.ojt.day07.MemAddressBookImpl;
 
 public class TestPanel extends JPanel {
-	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 
 	private int columnIdx = 0;
 	private final int TABLE_COLUMN_SEQ 		= columnIdx++; 
@@ -72,14 +72,16 @@ public class TestPanel extends JPanel {
 		//columnData.add("비고");
 		
 		tableModel.setColumn(columnData);
-//		tableModel.setCellEditable(TABLE_COLUMN_NAME);
+		tableModel.setCellEditable(TABLE_COLUMN_SEQ);
 //		tableModel.setCellEditable(TABLE_COLUMN_REMARKS);
 //		
 		jTable_Result.setModel(tableModel);
 		jTable_Result.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
-//			.setCellRenderer(new AgeCellRenderer());
-	
+		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_AGE)
+			.setCellRenderer(new AgeCellRenderer());		
+		jTable_Result.getColumnModel().getColumn(TABLE_COLUMN_SEQ)
+			.setCellEditor(new NumberCellEditor());
+		
 		jTable_Result.setRowHeight(32);
 			
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseAdapter(this));

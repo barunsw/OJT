@@ -78,8 +78,9 @@ public class Panel extends JPanel {
 			initComponent();
 			initTable();
 			initPopupMenu();
-
-		} catch (Exception e) {
+			initEvent();
+		} 
+		catch (Exception e) {
 			log.error(e.getMessage() + e);
 		}
 	}
@@ -229,22 +230,6 @@ public class Panel extends JPanel {
 		ButtonGroup_Gender.add(jRadio_Man);
 		ButtonGroup_Gender.add(jRadio_Woman);
 		//===================================================================
-		jButton_Add.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					AddressVo newAddress = new AddressVo();
-					newAddress.setName(jTextField_Name.getText()); //jTextField_Name에 적힌 텍스트값 가져옴
-					newAddress.setAddress(jTextArea_Address.getText());// jTextArea_Address에 적힌 텍스트값 가져옴
-					addressBookIf.insertAddress(newAddress);
-					initData();
-				}
-				catch (Exception ex) {
-					log.error(ex.getMessage(), ex);
-				}
-			}
-		});
-		jButton_Reload.addActionListener(new Panel_jButton_Reload_ActionListener(this));
 	}
 
 	private void initTable() {
@@ -267,6 +252,11 @@ public class Panel extends JPanel {
 			}
 		});
 	}
+	
+	private void initEvent() {
+		jButton_Add.addActionListener(new Panel_jButton_Add_ActionListener(this));
+		jButton_Reload.addActionListener(new Panel_jButton_Reload_ActionListener(this));
+	}
 
 	private void initData() {
 		Vector data = new Vector();
@@ -277,6 +267,7 @@ public class Panel extends JPanel {
 			inputData.add(address.getAge());
 			inputData.add(address.getGender());
 			inputData.add(address.getAddress());
+			inputData.add(address);
 			
 			log.debug(inputData +"");
 			data.add(inputData);
@@ -286,6 +277,16 @@ public class Panel extends JPanel {
 	}
 
 	void jButton_Add_ActionListener(ActionEvent e) {
+		try {
+			AddressVo newAddress = new AddressVo();
+			newAddress.setName(jTextField_Name.getText()); //jTextField_Name에 적힌 텍스트값 가져옴
+			newAddress.setAddress(jTextArea_Address.getText());// jTextArea_Address에 적힌 텍스트값 가져옴
+			addressBookIf.insertAddress(newAddress);
+			initData();
+		}
+		catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+		}
 	}
 
 	void jButton_Reload_ActionListener(ActionEvent e) {

@@ -29,6 +29,10 @@
 			(NAME, AGE, GENDER, PHONE, ADDRESS)
 			VALUES
 			(#{name}, #{age}, #{gender}, #{phone}, #{address})
+			
+		<selectKey resultType="Integer" keyProperty="seq" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 	
 	
