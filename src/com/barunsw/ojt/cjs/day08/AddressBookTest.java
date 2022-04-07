@@ -21,6 +21,7 @@ public class AddressBookTest {
 		} 
 		catch (Exception ex) {
 		}
+		
 		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
 		
 		AddressBookFrame adressFrame = new AddressBookFrame();
@@ -31,7 +32,5 @@ public class AddressBookTest {
 		adressFrame.setVisible(true);
 
 		LOGGER.debug("active count:" + Thread.activeCount());
-		
 	}
-
 }

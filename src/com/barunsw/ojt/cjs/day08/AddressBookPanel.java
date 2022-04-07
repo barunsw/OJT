@@ -1,6 +1,5 @@
 package com.barunsw.ojt.cjs.day08;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,8 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +37,6 @@ public class AddressBookPanel extends JPanel {
 	private final int COLUMN_INDEX_GENDER		= 2;
 	private final int COLUMN_INDEX_ADDRESS		= 3;
 	private final int COLUMN_INDEX_PERSON		= 4;
-	
 	
 	private AddressBookInterface addressBookIf = new JdbcAddressBookImpl();
 	
@@ -79,8 +74,6 @@ public class AddressBookPanel extends JPanel {
 	private ButtonGroup ButtonGroup_Gender = new ButtonGroup();
 	private JTable jTable_List = new JTable();
 	
-	private static final SqlSessionFactory fac = SqlSessionFactoryManager.getSqlSessionFactory();
-
 	private JPopupMenu popupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 	
@@ -88,7 +81,6 @@ public class AddressBookPanel extends JPanel {
 		try {
 			initComponent();
 			initTable();
-			SqlSession session = fac.openSession(true);
 			initEventListner();
 			initPopupMenu();
 

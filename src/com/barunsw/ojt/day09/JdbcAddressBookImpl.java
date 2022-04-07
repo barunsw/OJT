@@ -1,4 +1,4 @@
-package com.barunsw.ojt.cjs.day08;
+package com.barunsw.ojt.day09;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,17 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.barunsw.ojt.vo.AddressVo;
+
 public class JdbcAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	
 	private SqlSessionFactory sqlFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 
+	public JdbcAddressBookImpl() {
+		LOGGER.debug("JdbcAddressBookImpl 생성");
+	}
+	
 	@Override
 	public List<AddressVo> selectAddressList(AddressVo addressVo) {
 		List<AddressVo> addressList = new ArrayList();
