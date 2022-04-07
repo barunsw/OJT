@@ -1,4 +1,4 @@
-package com.barunsw.ojt.day09;
+package com.barunsw.ojt.cjs.day09;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,7 +14,7 @@ public class SqlSessionFactoryManager {
 	private static final SqlSessionFactory sqlMapper;
 
 	static {
-		String resource = "com/barunsw/ojt/cjs/day09/SqlMapConfig.xml"; 
+		String resource = "com/barunsw/ojt/cjs/day09/SqlMapConfig.xml"; //클래스패스와 다른 위치에서 자원을 로드하는 것을 쉽게 해줌
 		Reader reader = null;
 
 		try {
