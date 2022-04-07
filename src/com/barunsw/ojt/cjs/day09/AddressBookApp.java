@@ -43,7 +43,7 @@ public class AddressBookApp {
 
 	public static void main(String[] args) throws Exception {
 		if (args.length < 1) {
-			System.err.println("Usage: java SwingTest config_path");
+			System.err.println("Usage: java AddressBookApp config_path");
 			System.exit(1);
 		}
 

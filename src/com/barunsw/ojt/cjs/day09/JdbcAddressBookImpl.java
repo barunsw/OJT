@@ -34,7 +34,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 		String SQL = "SELECT * FROM ADDRESSBOOK";
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWD);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) { // statement 객체 생성
-			ResultSet resultSet = psmt.executeQuery();
+			ResultSet resultSet = psmt.executeQuery(); //select구문은 executeQuery, 그 외에는 executeUpdate  
 			while (resultSet.next()) {
 				String seq = resultSet.getString(1);
 				String name = resultSet.getString(2);
@@ -67,8 +67,9 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 			LOGGER.debug(addressVo.getGender() + "");
 			psmt.setString(1, addressVo.getName());
 			psmt.setInt(2, addressVo.getAge());
+			psmt.setObject(2, addressVo.getGender());
 			psmt.setString(4, addressVo.getAddress());
-			psmt.executeQuery();
+			psmt.executeUpdate();
 		}
 		return 0;
 	}
@@ -80,7 +81,9 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			psmt.setString(1, addressVo.getName());
 			psmt.setInt(2, addressVo.getAge());
-			psmt.setString(3, addressVo.getAddress());
+			psmt.setObject(3, addressVo.getGender());
+			LOGGER.debug(addressVo.getGender()+"");
+			psmt.setString(4, addressVo.getAddress());
 
 			psmt.executeUpdate();
 

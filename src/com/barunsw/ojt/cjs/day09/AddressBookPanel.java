@@ -234,14 +234,14 @@ public class AddressBookPanel extends JPanel {
 
 	private Vector inputData() {
 		Vector data = new Vector();
-		
+
 		data.add(jTextField_Name.getText());
 		data.add((int) jSpinner_Age.getValue());
 		data.add(jRadio_Man.isSelected() ? "MAN" : "WOMAN");
 		data.add(jTextArea_Address.getText());
-		
+
 		data.add(data);
-		
+
 		return data;
 	}
 
@@ -260,46 +260,47 @@ public class AddressBookPanel extends JPanel {
 
 	void jButton_Delete_ActionListener() {
 		String remove_Name = jTextField_Name.getText();
-		AddressVo deleteAddress = new AddressVo();
-		deleteAddress.setName(remove_Name);
+		Object_AddressVo().setName(remove_Name);
 
 		for (int i = 0; i <= tableModel.getRowCount(); i++) {
 			try {
 				if (tableModel.getValueAt(i, 0).equals(remove_Name)) {
 					tableModel.removeData(i);
-					addressBookIf.deleteAddress(deleteAddress);
+					addressBookIf.deleteAddress(Object_AddressVo());
 					JOptionPane.showMessageDialog(null, "DELETE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 
 				}
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage() + e);
 			}
-			initData();
-			jTable_Reset();
 		}
+		initData();
+		jTable_Reset();
 	}
 
 	void jButton_update_ActionListner() {
-		AddressVo updateAddress = new AddressVo();
 		String update_Name = jTextField_Name.getText();
-		updateAddress.setName(update_Name);
+		Object_AddressVo().setName(update_Name);
 
 		for (int i = 0; i <= tableModel.getRowCount(); i++) {
 			try {
 				if (tableModel.getValueAt(i, 0).equals(update_Name)) {
-					updateAddress.setAddress(jTextArea_Address.getText());
-					updateAddress.setAge((int) jSpinner_Age.getValue());
-					updateAddress.setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
+					Object_AddressVo().setAddress(jTextArea_Address.getText());
+					Object_AddressVo().setAge((int) jSpinner_Age.getValue());
+					Object_AddressVo().setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
+					LOGGER.debug(update_Name);
+					LOGGER.debug(inputData() + "");
 					tableModel.changeData(inputData(), i);
-					addressBookIf.updateAddress(updateAddress);
+					addressBookIf.updateAddress(Object_AddressVo());
 
 					JOptionPane.showMessageDialog(null, "UPDATE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
 			}
-			initData();
-			jTable_Reset();
 		}
+		initData();
+		jTable_Reset();
 	}
 
 	void jButton_Reload_ActionListener() {
@@ -315,8 +316,8 @@ public class AddressBookPanel extends JPanel {
 
 				addressBookIf.deleteAddress(addressVo);
 				initData();
-			} catch (Exception ex) {
-				LOGGER.error(ex.getMessage(), ex);
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
 			}
 		}
 	}
