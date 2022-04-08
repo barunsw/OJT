@@ -1,4 +1,4 @@
-package com.barunsw.ojt.cjs.day08;
+package com.barunsw.ojt.cjs.day09;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JdbcAddressBookImpl implements AddressBookInterface {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
+import com.barunsw.ojt.vo.AddressVo;
+
+public class MybatisAddressBookImpl implements AddressBookInterface {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MybatisAddressBookImpl.class);
 	
 	private SqlSessionFactory sqlFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 
@@ -47,7 +49,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		int result = 0;
 		
-		try (SqlSession session = sqlFactory.openSession()) {
+		try (SqlSession session = sqlFactory.openSession(true)) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			result = mapper.updateAddress(addressVo);
 		} 
@@ -63,6 +65,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 		try (SqlSession session = sqlFactory.openSession(true)) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			addressVo.setName(addressVo.getName());
+			LOGGER.debug(addressVo.getName());
 			mapper.deleteAddress(addressVo);
 		} 
 		catch (Exception e) {

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,6 +29,7 @@ import javax.swing.SpinnerNumberModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 public class AddressBookPanel extends JPanel {
@@ -257,8 +259,39 @@ public class AddressBookPanel extends JPanel {
 			}
 		});
 	}
+	private AddressVo addressListAllLoad() {
+		List<AddressVo> addressList = new ArrayList<AddressVo>();
+		try {
+			addressList = addressBookIf.selectAddressList(newAddress);
+		}
+		catch ( Exception e ) {
+			LOGGER.error( e.getMessage() );
+		}
+		
+		for ( int i=0 ; i<addressList.size() ; i++ ) {
+			Vector onePerson = new Vector();
+			onePerson.add(addressList.get(i).getName());
+			onePerson.add(addressList.get(i).getAge());
+			onePerson.add(addressList.get(i).getGender());
+			onePerson.add(addressList.get(i).getAddress());
+			tableModel.addData(onePerson);
+		}
+		return addressList.get(COLUMN_INDEX_NAME);
+	}
+	public AddressVo makeAddressVo() {
 
-	private AddressVo data_AddressVo() {
+		AddressVo onePerson = new AddressVo();
+		Vector inputData = inputData();
+
+		onePerson.setName((String) inputData.get(0));
+		onePerson.setAge((int) inputData.get(1));
+		onePerson.setGender((String) inputData.get(2));
+		onePerson.setAddress((String) inputData.get(3));
+
+		return onePerson;
+	}
+	
+	private Vector inputData() {
 		Vector data = new Vector();
 		List<AddressVo> addressList = addressBookIf.selectAddressList(newAddress);
 		for (AddressVo address : addressList) {
@@ -267,11 +300,10 @@ public class AddressBookPanel extends JPanel {
 			inputData.add(address.getAge());
 			inputData.add(address.getGender());
 			inputData.add(address.getAddress());
+
 			data.add(inputData);
 		}
-		tableModel.setData(data);
-		data.setElementAt(addressList, 0);
-		return newAddress;
+		return data;
 	}
 
 	private void initData() {
@@ -305,11 +337,19 @@ public class AddressBookPanel extends JPanel {
 
 	void jButton_Add_ActionListener() {
 		try {
-			newAddress.setName(jTextField_Name.getText()); 
-			newAddress.setAddress(jTextArea_Address.getText());
-			newAddress.setAge((int) jSpinner_Age.getValue());
-			newAddress.setGender(jRadio_Man.isSelected() ? "Man": "Woman");
-			addressBookIf.insertAddress(newAddress);
+			Vector input = new Vector();
+			input.add(jTextField_Name.getText());
+			input.add(jTextArea_Address.getText());
+			input.add((int) jSpinner_Age.getValue());
+			input.add(jRadio_Man.isSelected() ? "Man": "Woman");
+			AddressVo addAddress = new AddressVo();
+
+			addAddress.setName(jTextField_Name.getText()); 
+			addAddress.setAddress(jTextArea_Address.getText());
+			addAddress.setAge((int) jSpinner_Age.getValue());
+			addAddress.setGender(jRadio_Man.isSelected() ? "Man": "Woman");
+			addressBookIf.insertAddress(addAddress);
+			tableModel.addData(input);
 			JOptionPane.showMessageDialog(null, "Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 
 		} catch (Exception e) {
@@ -321,12 +361,12 @@ public class AddressBookPanel extends JPanel {
 	
 	void jButton_Delete_ActionListener() {
 		String delete_Name =jTextField_Name.getText();
-		LOGGER.debug(delete_Name);
 		for(int i =0; i<=tableModel.getRowCount(); i++) {
 			try {
 				if(tableModel.getValueAt(i, 0).equals(delete_Name)) {
 					tableModel.removeData(i);
-					addressBookIf.deleteAddress(newAddress);
+					addressBookIf.deleteAddress(addressListAllLoad());
+					initData();
 				}
 			} 
 			catch (Exception e) {

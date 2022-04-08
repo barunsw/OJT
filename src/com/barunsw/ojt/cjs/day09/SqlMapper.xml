@@ -6,8 +6,8 @@
 <mapper namespace="com.barunsw.ojt.cjs.day09.AddressBookInterface">
 
 	<select id="selectAddressList"
-		parameterType="com.barunsw.ojt.cjs.day09.AddressVo"
-  		resultType="com.barunsw.ojt.cjs.day09.AddressVo"
+		parameterType="com.barunsw.ojt.vo.AddressVo"
+  		resultType="com.barunsw.ojt.vo.AddressVo"
   		>
 		SELECT * 
 		FROM 
@@ -20,7 +20,7 @@
 	</select>
 	
 	<insert id ="insertAddress" 
-			parameterType="com.barunsw.ojt.cjs.day08.AddressVo"
+			parameterType="com.barunsw.ojt.vo.AddressVo"
 			>	  		
 		INSERT INTO 
 			ADDRESSBOOK(NAME, AGE, GENDER, ADDRESS)
@@ -30,12 +30,11 @@
 	
 	
 	<update id="updateAddress" 
-			parameterType="com.barunsw.ojt.cjs.day08.AddressVo"
+			parameterType="com.barunsw.ojt.vo.AddressVo"
 	  		>
 	  	UPDATE 
 	  		ADDRESSBOOK 
 	  	SET 
-  			NAME = #{name},
   			AGE = #{age},
   			GENDER= #{gender},
   			ADDRESS = #{address}
@@ -45,7 +44,7 @@
 	</update>
 	
 	<delete id="deleteAddress" 	
-			parameterType="com.barunsw.ojt.cjs.day08.AddressVo"
+			parameterType="com.barunsw.ojt.vo.AddressVo"
 			>
 			DELETE FROM
 				ADDRESSBOOK
