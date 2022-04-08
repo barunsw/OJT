@@ -209,10 +209,10 @@ public class AddressBookPanel extends JPanel {
 	}
 
 	private void initEventListner() {
-		jButton_Add.addActionListener(new AddressBookPanel_jButton_ActionListener(this));
-		jButton_Delete.addActionListener(new AddressBookPanel_jButton_ActionListener(this));
-		jButton_Update.addActionListener(new AddressBookPanel_jButton_ActionListener(this));
-		jButton_Reload.addActionListener(new AddressBookPanel_jButton_ActionListener(this));
+		jButton_Add.addActionListener(new AddressBookPanel_jButton_Add_ActionListener(this));
+//		jButton_Delete.addActionListener(new AddressBookPanel_jButton_Delete_ActionListener(this));
+//		jButton_Update.addActionListener(new AddressBookPanel_jButton_Update_ActionListener(this));
+//		jButton_Reload.addActionListener(new AddressBookPanel_jButton_Reload_ActionListener(this));
 	}
 
 	void jTable_Reset() {
@@ -222,6 +222,15 @@ public class AddressBookPanel extends JPanel {
 		jTextArea_Address.setText("");
 	}
 
+	private AddressVo createAddressVo() {
+		AddressVo address = new AddressVo();
+		address.setName(jTextField_Name.getText());
+		address.setAddress(jTextArea_Address.getText());
+		address.setAge((int) jSpinner_Age.getValue());
+		address.setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
+		return address;
+	}
+	
 	public AddressVo Object_AddressVo() {
 
 		AddressVo address = new AddressVo();
@@ -247,9 +256,9 @@ public class AddressBookPanel extends JPanel {
 
 	void jButton_Add_ActionListener() {
 		try {
-			tableModel.addData(inputData());
+			// tableModel.addData(inputData());
 			addressBookIf.insertAddress(Object_AddressVo());
-			JOptionPane.showMessageDialog(null, "ADD Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "ADD Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
@@ -282,6 +291,8 @@ public class AddressBookPanel extends JPanel {
 		String update_Name = jTextField_Name.getText();
 		Object_AddressVo().setName(update_Name);
 
+		AddressVo address = new AddressVo();
+		
 		for (int i = 0; i <= tableModel.getRowCount(); i++) {
 			try {
 				if (tableModel.getValueAt(i, 0).equals(update_Name)) {
@@ -338,18 +349,19 @@ public class AddressBookPanel extends JPanel {
 	}
 }
 
-class AddressBookPanel_jButton_ActionListener implements ActionListener {
-	private AddressBookPanel addressBookPanel;
+class AddressBookPanel_jButton_Add_ActionListener implements ActionListener {
+	private AddressBookPanel adaptee;
 
-	public AddressBookPanel_jButton_ActionListener(AddressBookPanel addressBookPanel) {
-		this.addressBookPanel = addressBookPanel;
+	public AddressBookPanel_jButton_Add_ActionListener(AddressBookPanel adaptee) {
+		this.adaptee = adaptee;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		adaptee.jButton_Add_ActionListener();
+/*		
 		if (e.getSource() == addressBookPanel.jButton_Add) {
-			addressBookPanel.jButton_Add_ActionListener();
+			
 		} else if (e.getSource() == addressBookPanel.jButton_Delete) {
 			addressBookPanel.jButton_Delete_ActionListener();
 		} else if (e.getSource() == addressBookPanel.jButton_Update) {
@@ -357,5 +369,6 @@ class AddressBookPanel_jButton_ActionListener implements ActionListener {
 		} else if (e.getSource() == addressBookPanel.jButton_Reload) {
 			addressBookPanel.jButton_Reload_ActionListener();
 		}
+*/		
 	}
 }

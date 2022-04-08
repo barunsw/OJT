@@ -23,7 +23,8 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	public JdbcAddressBookImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
+		} 
+		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -51,9 +52,11 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 				addressList.add(addressObject);
 			}
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return addressList;
 	}
 
@@ -70,6 +73,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 			psmt.setString(4, addressVo.getAddress());
 			psmt.executeUpdate();
 		}
+		
 		return 0;
 	}
 
@@ -84,6 +88,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 			psmt.setString(4, addressVo.getAddress());
 			psmt.executeUpdate();
 		}
+		
 		return 0;
 	}
 
@@ -95,6 +100,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 			psmt.setString(1, addressVo.getName());
 			psmt.executeUpdate();
 		}
+		
 		return 0;
 	}
 

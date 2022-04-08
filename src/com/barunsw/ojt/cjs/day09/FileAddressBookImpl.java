@@ -1,6 +1,5 @@
 package com.barunsw.ojt.cjs.day09;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,8 +19,24 @@ public class FileAddressBookImpl implements AddressBookInterface {
 	private File file = new File("data/day03/cjs/address.dat");
 	private List<AddressVo> addressList = new ArrayList<AddressVo>(); // 리스트 객체를 먼저 선언해놓고 저장한다.
 
+	public FileAddressBookImpl() {
+		// 1. AddressBookApp.properties로 부터 파일 정보를 가져온다. 전역의 addressFilePath에 담는다.
+		// 2. loadFile을 호출한다.
+	}
+	
+	private void loadFile() {
+		// 최초 한번 파일(전역 addressFilePath)의 내용을 읽어와(loadFile 메소드 호출) addressList에 담는다.
+		// filePath에서 ObjectInputStream으로 주소 정보를 가져온다.
+	}
+	
+	private void saveFile() {
+		// addressList의 내용을 전역 addressFilePath에 ObjectOutputStream으로 저장한다.
+	}
+	
 	@Override
 	public List<AddressVo> selectAddressList(AddressVo addressVo) {
+		// 단순히 addressList를 반환한다.
+		
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 			Object obj;
 			addressList.clear(); //클리어안해주면 계속 반복해서 동일내용이 계속 추가됨
@@ -46,6 +61,9 @@ public class FileAddressBookImpl implements AddressBookInterface {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		
+		// saveFile을 호출한다.
+		
 		return 0;
 	}
 
@@ -62,6 +80,9 @@ public class FileAddressBookImpl implements AddressBookInterface {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		
+		// saveFile을 호출한다.
+		
 		return 0;
 	}
 
@@ -80,6 +101,9 @@ public class FileAddressBookImpl implements AddressBookInterface {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		
+		// saveFile을 호출한다.
+		
 		return 0;
 	}
 }
