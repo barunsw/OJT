@@ -33,8 +33,8 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 		List<AddressVo> addressList = new ArrayList<>();
 		String SQL = "SELECT * FROM ADDRESSBOOK";
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWD);
-				PreparedStatement psmt = conn.prepareStatement(SQL);) { // statement 객체 생성
-			ResultSet resultSet = psmt.executeQuery(); //select구문은 executeQuery, 그 외에는 executeUpdate  
+				PreparedStatement psmt = conn.prepareStatement(SQL);) { 
+			ResultSet resultSet = psmt.executeQuery(); // select구문은 executeQuery, 그 외에는 executeUpdate
 			while (resultSet.next()) {
 				String seq = resultSet.getString(1);
 				String name = resultSet.getString(2);
@@ -59,15 +59,14 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
 	@Override
 	public int insertAddress(AddressVo addressVo) throws Exception {
-		String SQL = "INSERT INTO ADDRESSBOOK(NAME, AGE, GENDER, ADDRESS)" + "VALUES (?,?,?,?)";
+		String SQL = "INSERT INTO ADDRESSBOOK (NAME, AGE, GENDER, ADDRESS)" + "VALUES (?,?,CAST(? AS VARCHAR),?)";
 
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWD);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) { // statement 객체 생성
 
-			LOGGER.debug(addressVo.getGender() + "");
 			psmt.setString(1, addressVo.getName());
 			psmt.setInt(2, addressVo.getAge());
-			psmt.setObject(2, addressVo.getGender());
+			psmt.setString(3, String.valueOf(addressVo.getGender()));
 			psmt.setString(4, addressVo.getAddress());
 			psmt.executeUpdate();
 		}
@@ -76,17 +75,14 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
-		String SQL = String.format("UPDATE ADDRESSBOOK SET AGE=?, GENDER=?, PHONE=?, ADDRESS=? WHERE NAME=?");
+		String SQL = String.format("UPDATE ADDRESSBOOK SET AGE=?, GENDER=?, ADDRESS=? WHERE NAME=?");
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWD);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			psmt.setString(1, addressVo.getName());
 			psmt.setInt(2, addressVo.getAge());
-			psmt.setObject(3, addressVo.getGender());
-			LOGGER.debug(addressVo.getGender()+"");
+			psmt.setString(3, String.valueOf(addressVo.getGender()));
 			psmt.setString(4, addressVo.getAddress());
-
 			psmt.executeUpdate();
-
 		}
 		return 0;
 	}
@@ -98,7 +94,6 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			psmt.setString(1, addressVo.getName());
 			psmt.executeUpdate();
-
 		}
 		return 0;
 	}
