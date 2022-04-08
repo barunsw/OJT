@@ -212,7 +212,7 @@ public class AddressBookPanel extends JPanel {
 		jButton_Reload.addActionListener(new AddressBookPanel_jButton_Reload_ActionListener(this));
 	}
 
-	void jTable_Reset() {
+	void ResetForm() {
 		jTextField_Name.setText("");
 		jSpinner_Age.setValue(20);
 		ButtonGroup_Gender.clearSelection();
@@ -232,13 +232,12 @@ public class AddressBookPanel extends JPanel {
 		try {
 			addressBookIf.insertAddress(createAddressVo());
 			JOptionPane.showMessageDialog(this, "ADD Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
-
+			ResetForm();
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
 		initData();
-		jTable_Reset();
 	}
 
 	void jButton_Delete_ActionListener() {
@@ -248,7 +247,7 @@ public class AddressBookPanel extends JPanel {
 		try {
 			addressBookIf.deleteAddress(address);
 			JOptionPane.showMessageDialog(null, "DELETE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
-			jTable_Reset();
+			ResetForm();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
@@ -266,13 +265,12 @@ public class AddressBookPanel extends JPanel {
 			address.setAddress(jTextArea_Address.getText());
 			addressBookIf.updateAddress(address);
 			JOptionPane.showMessageDialog(null, "UPDATE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
-			jTable_Reset();
+			ResetForm();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 		initData();
-
 	}
 
 	void jButton_Reload_ActionListener() {
