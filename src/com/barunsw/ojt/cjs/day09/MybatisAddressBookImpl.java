@@ -12,7 +12,6 @@ import com.barunsw.ojt.vo.AddressVo;
 
 public class MybatisAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MybatisAddressBookImpl.class);
-	
 	private SqlSessionFactory sqlFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 
 	@Override

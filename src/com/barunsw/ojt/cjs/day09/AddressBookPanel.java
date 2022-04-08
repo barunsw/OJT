@@ -40,9 +40,7 @@ public class AddressBookPanel extends JPanel {
 	private final int COLUMN_INDEX_ADDRESS = 3;
 	private final int COLUMN_INDEX_PERSON = 4;
 
-//	private AddressBookInterface addressBookIf = new MybatisAddressBookImpl();
 	private AddressBookInterface addressBookIf;
-//	private AddressBookInterface addressBookIf = new JdbcAddressBookImpl();
 
 	private CommonTableModel tableModel = new CommonTableModel();
 
@@ -70,7 +68,6 @@ public class AddressBookPanel extends JPanel {
 	public JButton jButton_Delete = new JButton("Delete");
 	public JButton jButton_Update = new JButton("Update");
 	public JButton jButton_Reload = new JButton("Reload");
-	public AddressVo newAddress = new AddressVo();
 
 	private JPanel jPanel_Gender = new JPanel();
 	private JPanel jPanel_Button = new JPanel();
@@ -210,9 +207,9 @@ public class AddressBookPanel extends JPanel {
 
 	private void initEventListner() {
 		jButton_Add.addActionListener(new AddressBookPanel_jButton_Add_ActionListener(this));
-//		jButton_Delete.addActionListener(new AddressBookPanel_jButton_Delete_ActionListener(this));
-//		jButton_Update.addActionListener(new AddressBookPanel_jButton_Update_ActionListener(this));
-//		jButton_Reload.addActionListener(new AddressBookPanel_jButton_Reload_ActionListener(this));
+		jButton_Delete.addActionListener(new AddressBookPanel_jButton_Delete_ActionListener(this));
+		jButton_Update.addActionListener(new AddressBookPanel_jButton_Update_ActionListener(this));
+		jButton_Reload.addActionListener(new AddressBookPanel_jButton_Reload_ActionListener(this));
 	}
 
 	void jTable_Reset() {
@@ -230,37 +227,14 @@ public class AddressBookPanel extends JPanel {
 		address.setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
 		return address;
 	}
-	
-	public AddressVo Object_AddressVo() {
-
-		AddressVo address = new AddressVo();
-		address.setName(jTextField_Name.getText());
-		address.setAddress(jTextArea_Address.getText());
-		address.setAge((int) jSpinner_Age.getValue());
-		address.setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
-		return address;
-	}
-
-	private Vector inputData() {
-		Vector data = new Vector();
-
-		data.add(jTextField_Name.getText());
-		data.add((int) jSpinner_Age.getValue());
-		data.add(jRadio_Man.isSelected() ? "MAN" : "WOMAN");
-		data.add(jTextArea_Address.getText());
-
-		data.add(data);
-
-		return data;
-	}
 
 	void jButton_Add_ActionListener() {
 		try {
-			// tableModel.addData(inputData());
-			addressBookIf.insertAddress(Object_AddressVo());
+			addressBookIf.insertAddress(createAddressVo());
 			JOptionPane.showMessageDialog(this, "ADD Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
 		initData();
@@ -268,50 +242,37 @@ public class AddressBookPanel extends JPanel {
 	}
 
 	void jButton_Delete_ActionListener() {
+		AddressVo address = new AddressVo();
 		String remove_Name = jTextField_Name.getText();
-		Object_AddressVo().setName(remove_Name);
-
-		for (int i = 0; i <= tableModel.getRowCount(); i++) {
-			try {
-				if (tableModel.getValueAt(i, 0).equals(remove_Name)) {
-					tableModel.removeData(i);
-					addressBookIf.deleteAddress(Object_AddressVo());
-					JOptionPane.showMessageDialog(null, "DELETE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
-
-				}
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage() + e);
-			}
+		address.setName(remove_Name);
+		try {
+			addressBookIf.deleteAddress(address);
+			JOptionPane.showMessageDialog(null, "DELETE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
+			jTable_Reset();
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getMessage() + e);
 		}
 		initData();
-		jTable_Reset();
 	}
 
 	void jButton_update_ActionListner() {
-		String update_Name = jTextField_Name.getText();
-		Object_AddressVo().setName(update_Name);
-
 		AddressVo address = new AddressVo();
-		
-		for (int i = 0; i <= tableModel.getRowCount(); i++) {
-			try {
-				if (tableModel.getValueAt(i, 0).equals(update_Name)) {
-					Object_AddressVo().setAddress(jTextArea_Address.getText());
-					Object_AddressVo().setAge((int) jSpinner_Age.getValue());
-					Object_AddressVo().setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
-					LOGGER.debug(update_Name);
-					LOGGER.debug(inputData() + "");
-					tableModel.changeData(inputData(), i);
-					addressBookIf.updateAddress(Object_AddressVo());
-
-					JOptionPane.showMessageDialog(null, "UPDATE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
-				}
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+		String update_Name = jTextField_Name.getText();
+		address.setName(update_Name);
+		try {
+			address.setAge((int) jSpinner_Age.getValue());
+			address.setGender(jRadio_Man.isSelected() ? Gender.MAN : Gender.WOMAN);
+			address.setAddress(jTextArea_Address.getText());
+			addressBookIf.updateAddress(address);
+			JOptionPane.showMessageDialog(null, "UPDATE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
+			jTable_Reset();
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		initData();
-		jTable_Reset();
+
 	}
 
 	void jButton_Reload_ActionListener() {
@@ -324,10 +285,10 @@ public class AddressBookPanel extends JPanel {
 			try {
 				AddressVo addressVo = (AddressVo) value;
 				LOGGER.debug(value + "");
-
 				addressBookIf.deleteAddress(addressVo);
 				initData();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);
 			}
 		}
@@ -359,16 +320,44 @@ class AddressBookPanel_jButton_Add_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Add_ActionListener();
-/*		
-		if (e.getSource() == addressBookPanel.jButton_Add) {
-			
-		} else if (e.getSource() == addressBookPanel.jButton_Delete) {
-			addressBookPanel.jButton_Delete_ActionListener();
-		} else if (e.getSource() == addressBookPanel.jButton_Update) {
-			addressBookPanel.jButton_update_ActionListner();
-		} else if (e.getSource() == addressBookPanel.jButton_Reload) {
-			addressBookPanel.jButton_Reload_ActionListener();
-		}
-*/		
+	}
+}
+
+class AddressBookPanel_jButton_Delete_ActionListener implements ActionListener {
+	private AddressBookPanel adaptee;
+
+	public AddressBookPanel_jButton_Delete_ActionListener(AddressBookPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButton_Delete_ActionListener();
+	}
+}
+
+class AddressBookPanel_jButton_Update_ActionListener implements ActionListener {
+	private AddressBookPanel adaptee;
+
+	public AddressBookPanel_jButton_Update_ActionListener(AddressBookPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButton_update_ActionListner();
+	}
+}
+
+class AddressBookPanel_jButton_Reload_ActionListener implements ActionListener {
+	private AddressBookPanel adaptee;
+
+	public AddressBookPanel_jButton_Reload_ActionListener(AddressBookPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButton_Reload_ActionListener();
 	}
 }
