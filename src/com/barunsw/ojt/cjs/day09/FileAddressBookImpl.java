@@ -23,7 +23,7 @@ public class FileAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
 	public static Properties addressBook_Properties = new Properties();
 	private List<AddressVo> addressList = new ArrayList<AddressVo>(); // 리스트 객체를 먼저 선언해놓고 저장한다.
-	private File addressFilePath;
+	private String addressFilePath;
 
 	public FileAddressBookImpl() throws Exception {
 		Reader reader = Resources.getResourceAsReader("AddressBookApp.properties"); //파일의 클래스패스가져와서
@@ -37,7 +37,7 @@ public class FileAddressBookImpl implements AddressBookInterface {
 		}
 		LOGGER.debug("==============================");
 		String pathName = FileAddressBookImpl.addressBook_Properties.getProperty("addressFilePath"); //해당 키값의 맞는 value 리턴 
-		addressFilePath = new File(pathName);
+		addressFilePath = pathName;
 		loadFile();
 		// 1. AddressBookApp.properties로 부터 파일 정보를 가져온다. 전역의 addressFilePath에 담는다.
 		// 2. loadFile을 호출한다.

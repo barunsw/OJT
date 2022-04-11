@@ -65,8 +65,8 @@ public class AddressBookApp {
 		// 화면의 전체 크기
 		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
 
-		int xPos = (scrDim.width - TestFrame.WIDTH) / 2;
-		int yPos = (scrDim.height - TestFrame.HEIGHT) / 2;
+		int xPos = (scrDim.width - addressBookFrame.WIDTH) / 2;
+		int yPos = (scrDim.height - addressBookFrame.HEIGHT) / 2;
 
 		// 1)과 2)를 동시에 처리
 		addressBookFrame.setBounds(new Rectangle(xPos, yPos, TestFrame.WIDTH, TestFrame.HEIGHT));
