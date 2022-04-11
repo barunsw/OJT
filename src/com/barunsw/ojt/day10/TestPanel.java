@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,6 +15,9 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.cjs.day09.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(TestPanel.class);
@@ -27,14 +31,28 @@ public class TestPanel extends JPanel {
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("root");
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 	
+	private AddressBookInterface addressBookIf;
+	
 	public TestPanel() {
 		try {
+			initAddressBookIf();
 			initComponent();
 			initTree();
 			initData();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
+	
+	private void initAddressBookIf() throws Exception {
+		String className = SwingTest.properties.getProperty("address_if_class");
+		
+		LOGGER.debug("className:" + className);
+				
+		Object o = Class.forName(className).newInstance();
+		if (o instanceof AddressBookInterface) {
+			addressBookIf = (AddressBookInterface)o; 
 		}
 	}
 	
@@ -58,6 +76,7 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void initData() {
+		/*
 		Person onePerson = new Person();
 		onePerson.setAge(1);
 		onePerson.setName("홍길동");
@@ -75,6 +94,22 @@ public class TestPanel extends JPanel {
 		oneNode.setUserObject(onePerson);
 
 		rootNode.add(oneNode);
+		
+		treeModel.reload();
+*/
+		List<AddressVo> addressList = addressBookIf.selectAddressList(null);
+		for (AddressVo oneAddress : addressList) {
+			Person onePerson = new Person();
+			onePerson.setAge(oneAddress.getAge());
+			onePerson.setName(oneAddress.getName());
+			
+			DefaultMutableTreeNode oneNode = new DefaultMutableTreeNode(onePerson);
+			
+//			DefaultMutableTreeNode oneNode = new DefaultMutableTreeNode();
+//			oneNode.setUserObject(oneAddress);
+			
+			rootNode.add(oneNode);
+		}
 		
 		treeModel.reload();
 	}

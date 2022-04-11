@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -22,6 +21,10 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	private static Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	public static Properties jdbcProperties = new Properties();
 	private String jdbcInfo[] = new String[3];
+	private String driverName;
+	private String dbUrl;
+	private String dbUser;
+	private String dbPassword;
 
 	public JdbcAddressBookImpl() throws Exception {
 		
@@ -29,6 +32,8 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
 		Reader reader = Resources.getResourceAsReader("jdbc.properties");
 		jdbcProperties.load(reader);
+		
+		/*
 		int i = 0;
 		Iterator<Object> keySet = jdbcProperties.keySet().iterator();
 		while (keySet.hasNext()) {
@@ -38,6 +43,12 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 			i++;
 			LOGGER.debug(String.format("%s = %s", key, value));
 		}
+		*/
+		driverName	= (String)jdbcProperties.get("DRIVER_NAME");
+		dbUrl 		= (String)jdbcProperties.get("URL");
+		dbUser 		= (String)jdbcProperties.get("USER");
+		dbPassword	= (String)jdbcProperties.get("PASSWORD");
+		
 		LOGGER.debug("==============================");
 	}
 
