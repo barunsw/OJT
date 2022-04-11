@@ -3,11 +3,16 @@ package com.barunsw.ojt.cjs.day09;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
+import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,54 +21,67 @@ import com.barunsw.ojt.vo.AddressVo;
 public class FileAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
-	private File file = new File("data/day03/cjs/address.dat");
+	public static Properties addressBook_Properties = new Properties();
 	private List<AddressVo> addressList = new ArrayList<AddressVo>(); // 리스트 객체를 먼저 선언해놓고 저장한다.
+	private File addressFilePath;
 
-	public FileAddressBookImpl() {
+	public FileAddressBookImpl() throws Exception {
+		Reader reader = Resources.getResourceAsReader("AddressBookApp.properties"); //파일의 클래스패스가져와서
+		addressBook_Properties.load(reader); //경로를 읽어 Properites 객체에 저장
+		
+		Iterator<Object> keySet = addressBook_Properties.keySet().iterator();
+		while (keySet.hasNext()) {
+			Object key = keySet.next();
+			Object value = addressBook_Properties.get(key); 
+			LOGGER.debug(String.format("%s = %s", key, value));
+		}
+		LOGGER.debug("==============================");
+		String pathName = FileAddressBookImpl.addressBook_Properties.getProperty("addressFilePath"); //해당 키값의 맞는 value 리턴 
+		addressFilePath = new File(pathName);
+		loadFile();
 		// 1. AddressBookApp.properties로 부터 파일 정보를 가져온다. 전역의 addressFilePath에 담는다.
 		// 2. loadFile을 호출한다.
 	}
-	
-	private void loadFile() {
-		// 최초 한번 파일(전역 addressFilePath)의 내용을 읽어와(loadFile 메소드 호출) addressList에 담는다.
-		// filePath에서 ObjectInputStream으로 주소 정보를 가져온다.
-	}
-	
-	private void saveFile() {
-		// addressList의 내용을 전역 addressFilePath에 ObjectOutputStream으로 저장한다.
-	}
-	
-	@Override
-	public List<AddressVo> selectAddressList(AddressVo addressVo) {
-		// 단순히 addressList를 반환한다.
-		
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+
+	private void loadFile() throws Exception {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(addressFilePath))) {
 			Object obj;
-			addressList.clear(); //클리어안해주면 계속 반복해서 동일내용이 계속 추가됨
 			while ((obj = ois.readObject()) != null) {
 				AddressVo address = (AddressVo) obj;
 				addressList.add(address);
 				LOGGER.debug(obj + "");
 			}
-		} catch (Exception e) {
-			return addressList; //ObjectInputStream은 모든 문자를 읽고 나서 -1을 리턴하지않아 EOFException이 발생한다, 그래서 예외갈 발생할 때 리턴값에 처리를 해줌
+		} 
+		catch (Exception e) {
+			return;
 		}
+		// 최초 한번 파일(전역 addressFilePath)의 내용을 읽어와(loadFile 메소드 호출) addressList에 담는다.
+		// filePath에서 ObjectInputStream으로 주소 정보를 가져온다.
+	}
+
+	private void saveFile() {
+		// addressList의 내용을 전역 addressFilePath에 ObjectOutputStream으로 저장한다.
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(addressFilePath))) {
+			for (AddressVo address : addressList) {
+				oos.writeObject(address);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<AddressVo> selectAddressList(AddressVo addressVo) {
+		// 단순히 addressList를 반환한다.
 		return addressList;
 	}
 
 	@Override
 	public int insertAddress(AddressVo addressVo) throws Exception {
 		addressList.add(addressVo);
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-			for (AddressVo address : addressList) {
-				oos.writeObject(address);
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-		
+		saveFile();
 		// saveFile을 호출한다.
-		
 		return 0;
 	}
 
@@ -73,16 +91,8 @@ public class FileAddressBookImpl implements AddressBookInterface {
 			if (addressList.get(i).getName().equals(addressVo.getName())) // 리스트에 있는 i번째 행에 있는 이름이랑 같은지 확인
 				addressList.set(i, addressVo); // 리스트 i번째에 있는 객체 바꿔줌
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-			for (AddressVo address : addressList) {
-				oos.writeObject(address);
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-		
+		saveFile();
 		// saveFile을 호출한다.
-		
 		return 0;
 	}
 
@@ -94,16 +104,8 @@ public class FileAddressBookImpl implements AddressBookInterface {
 				break;
 			}
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-			for (AddressVo address : addressList) {
-				oos.writeObject(address);
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-		
+		saveFile();
 		// saveFile을 호출한다.
-		
 		return 0;
 	}
 }
