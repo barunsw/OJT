@@ -33,6 +33,8 @@ public class TestThread2 extends Thread {
 			
 			long endTime = System.currentTimeMillis();
 			
+			LOGGER.debug("걸린시간:" + (endTime - startTime));
+			
 			try {
 				Thread.sleep(1000L - (endTime - startTime));
 			}

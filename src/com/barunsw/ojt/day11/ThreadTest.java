@@ -23,17 +23,17 @@ public class ThreadTest {
 		}
 */
 
-		/*
+/*
 		Timer timer = new Timer();
-//		for (int i = 0; i < 3; i++) {
-			TestTimerTask t = new TestTimerTask(0);
+		for (int i = 0; i < 3; i++) {
+			TestTimerTask t = new TestTimerTask(i);
 			
 			//timer.schedule(t, 0, 1000L);
 			timer.scheduleAtFixedRate(t, 0, 1000L);
 			
 			LOGGER.debug(String.format("[%d] activeCount:%d", 0, Thread.activeCount()));
-//		}
- */
+		}
+*/
 /*
 		for (int i = 0; i < 3; i++) {
 			TestThread2 t = new TestThread2(i);
@@ -63,7 +63,7 @@ public class ThreadTest {
 		// 3) 프레임 표시
 		frame.setVisible(true);
 
-		LOGGER.debug("--- activeCount:" + Thread.activeCount());	
+		LOGGER.debug("--- activeCount:" + Thread.activeCount());		
 			
 	}
 }

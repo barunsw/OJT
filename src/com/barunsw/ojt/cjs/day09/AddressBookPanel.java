@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -50,7 +48,7 @@ public class AddressBookPanel extends JPanel {
 	private AddressBookInterface addressBookIf;
 
 	private JSplitPane jSplitPane = new JSplitPane();
-	private JTree jtree_Adddress = new JTree();
+	private JTree jTree_Address = new JTree();
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("root");
@@ -100,44 +98,14 @@ public class AddressBookPanel extends JPanel {
 			initAddressBookIf();
 			initComponent();
 			initTable();
-			initData();
-			initConsanantLetter();
+			initTree();
+			initTableData(null, 0);
+			initTreeData();
 			initEventListner();
 			initPopupMenu();
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
-		}
-	}
-
-	private void initConsanantLetter() {
-		treeModel.setRoot(rootNode);
-		jtree_Adddress.setModel(treeModel);
-		// root노드 숨김
-		jtree_Adddress.setRootVisible(false);
-		treeModel.reload();
-		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
-
-		for (int i = 0; i < chs.length; i++) {
-			DefaultMutableTreeNode consanantLetter = new DefaultMutableTreeNode(chs[i]);
-			rootNode.add(consanantLetter);
-
-			for (int j = 0; j < addressList.size(); j++) {
-				String text = addressList.get(j).getName();
-				if (text.length() > 0) {
-					char chName = text.charAt(0);
-					if (chName >= 0xAC00) {
-						int uniVal = chName - 0xAC00;
-						int cho = ((uniVal - (uniVal % 28)) / 28) / 21;
-						if (chs[cho].equals(chs[i])) {
-							LOGGER.debug(text);
-							DefaultMutableTreeNode personName = new DefaultMutableTreeNode(text);
-							consanantLetter.add(personName);
-						}
-					}
-				}
-			}
-			treeModel.reload();
 		}
 	}
 
@@ -166,9 +134,9 @@ public class AddressBookPanel extends JPanel {
 		jLabel_Gender.setPreferredSize(LABEL_SIZE);
 		jLabel_Address.setPreferredSize(LABEL_SIZE);
 
-		jtree_Adddress.setPreferredSize(Tree_Size);
-		jtree_Adddress.setMinimumSize(Tree_Size);
-		jtree_Adddress.setMaximumSize(Tree_Size);
+		jTree_Address.setPreferredSize(Tree_Size);
+		jTree_Address.setMinimumSize(Tree_Size);
+		jTree_Address.setMaximumSize(Tree_Size);
 
 		jTextField_Name.setPreferredSize(new Dimension(120, 22));
 		jRadio_Man.setPreferredSize(new Dimension(80, 22));
@@ -185,6 +153,8 @@ public class AddressBookPanel extends JPanel {
 
 		jSplitPane.setDividerSize(10);
 		jSplitPane.setOneTouchExpandable(true);
+		jSplitPane.setDividerLocation(300);
+		
 		this.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		this.add(jTextField_Name, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
@@ -219,8 +189,8 @@ public class AddressBookPanel extends JPanel {
 
 		jScrollPane_Table.getViewport().add(jTable_List);
 		jScrollPane_Address.getViewport().add(jTextArea_Address);
-		jScrollPane_Tree.getViewport().add(jtree_Adddress);
-		jtree_Adddress.setSize(400, 300);
+		jScrollPane_Tree.getViewport().add(jTree_Address);
+		jTree_Address.setSize(400, 300);
 		jSplitPane.setLeftComponent(jScrollPane_Tree);
 		jSplitPane.setRightComponent(jScrollPane_Table);
 		// ===================================================================
@@ -237,7 +207,6 @@ public class AddressBookPanel extends JPanel {
 	}
 
 	private void initTable() {
-
 		Vector<String> columnData = new Vector<>(); // 테이블의 컬럼값 저장
 		columnData.add("Name");
 		columnData.add("Gender");
@@ -247,13 +216,26 @@ public class AddressBookPanel extends JPanel {
 		tableModel.setColumn(columnData);
 		jTable_List.setModel(tableModel);
 	}
+	
+	private void initTree() {
+		treeModel.setRoot(rootNode);
+		jTree_Address.setModel(treeModel);
+		// root노드 숨김
+		jTree_Address.setRootVisible(false);
+		treeModel.reload();
+	}
 
 	private void treeReset() {
 		rootNode.removeAllChildren();
-		initConsanantLetter();
+		initTreeData();
 	}
 
-	private void initData() {
+	/**
+	 * 
+	 * @param searchWord 검색어 null인 경우 전체 검색
+	 * @param level 2인 경우 초성 검색, 3인 경우 이름 검색
+	 */
+	private void initTableData(String searchWord, int level) {
 		Vector data = new Vector();
 		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
 		for (AddressVo address : addressList) {
@@ -269,12 +251,43 @@ public class AddressBookPanel extends JPanel {
 		tableModel.setData(data);
 		tableModel.fireTableDataChanged();
 	}
+	
+	
+	private void initTreeData() {
+		AddressVo paramData = new AddressVo();
+		
+		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
+
+		for (int i = 0; i < chs.length; i++) {
+			DefaultMutableTreeNode consanantLetter = new DefaultMutableTreeNode(chs[i]);
+			rootNode.add(consanantLetter);
+
+			for (int j = 0; j < addressList.size(); j++) {
+				String text = addressList.get(j).getName();
+				if (text.length() > 0) {
+					char chName = text.charAt(0);
+					if (chName >= 0xAC00) {
+						int uniVal = chName - 0xAC00;
+						int cho = ((uniVal - (uniVal % 28)) / 28) / 21;
+						if (chs[cho].equals(chs[i])) {
+							LOGGER.debug(text);
+							DefaultMutableTreeNode personName = new DefaultMutableTreeNode(text);
+							consanantLetter.add(personName);
+						}
+					}
+				}
+			}
+			treeModel.reload();
+		}
+	}
 
 	private void initEventListner() {
 		jButton_Add.addActionListener(new AddressBookPanel_jButton_Add_ActionListener(this));
 		jButton_Delete.addActionListener(new AddressBookPanel_jButton_Delete_ActionListener(this));
 		jButton_Update.addActionListener(new AddressBookPanel_jButton_Update_ActionListener(this));
 		jButton_Reload.addActionListener(new AddressBookPanel_jButton_Reload_ActionListener(this));
+		
+		jTree_Address.addMouseListener(new AddressBookPanel_jTree_Address_MouseAdapter(this));
 	}
 
 	void ResetForm() {
@@ -301,7 +314,7 @@ public class AddressBookPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
-		initData();
+		initTableData(null, 0);
 		treeReset();
 	}
 
@@ -316,7 +329,7 @@ public class AddressBookPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
-		initData();
+		initTableData(null, 0);
 		treeReset();
 	}
 
@@ -334,14 +347,30 @@ public class AddressBookPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-		initData();
+		initTableData(null, 0);
 		treeReset();
 	}
 
 	void jButton_Reload_ActionListener() {
-		initData();
+		initTableData(null, 0);
 	}
 
+	void jTree_Address_mouseReleased(MouseEvent e) {
+		LOGGER.debug("selectionPath:" + jTree_Address.getSelectionPath());
+		LOGGER.debug("lastSelectedPathComponent:" + jTree_Address.getLastSelectedPathComponent());
+		
+		LOGGER.debug("component:" + jTree_Address.getPathForLocation(e.getX(), e.getY()));
+		
+		TreePath selectedTreePath = jTree_Address.getPathForLocation(e.getX(), e.getY());
+		if (selectedTreePath != null) {
+			//Object o = jTree_Address.getLastSelectedPathComponent();
+			TreePath selectionPath = jTree_Address.getSelectionPath();
+			int pathCount = selectionPath.getPathCount();
+			
+			LOGGER.debug("pathCount:" + pathCount);
+		}
+	}
+	
 	private void deleteData(int selectedRow) {
 		Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
 		if (value instanceof AddressVo) {
@@ -349,7 +378,7 @@ public class AddressBookPanel extends JPanel {
 				AddressVo addressVo = (AddressVo) value;
 				LOGGER.debug(value + "");
 				addressBookIf.deleteAddress(addressVo);
-				initData();
+				initTableData(null, 0);
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);
 			}
@@ -421,5 +450,18 @@ class AddressBookPanel_jButton_Reload_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Reload_ActionListener();
+	}
+}
+
+class AddressBookPanel_jTree_Address_MouseAdapter extends MouseAdapter {
+	private AddressBookPanel adaptee;
+	
+	public AddressBookPanel_jTree_Address_MouseAdapter(AddressBookPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		adaptee.jTree_Address_mouseReleased(e);
 	}
 }

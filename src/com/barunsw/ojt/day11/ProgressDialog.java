@@ -80,16 +80,23 @@ public class ProgressDialog extends JDialog implements PropertyChangeListener {
 	public void setProgress(int progress) {
 		jProgressBar.setValue(progress);
 	}
-	
+
 	@Override
 	public void setVisible(boolean flag) {
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				ProgressDialog.super.setVisible(flag);
-				LOGGER.debug("dialog.setVisible");				
-			}
-		});
-		t.start();
+		if (flag == true) {
+			LOGGER.debug("+++ ProgressDialog.setVisible");
+
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					ProgressDialog.super.setVisible(flag);
+					LOGGER.debug("dialog.setVisible");				
+				}
+			});
+			t.start();
+		}
+		else {
+			super.setVisible(false);
+		}
 	}
 	
 	@Override
