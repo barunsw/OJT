@@ -69,7 +69,7 @@ public class AddressBookApp {
 		int yPos = (scrDim.height - addressBookFrame.HEIGHT) / 2;
 
 		// 1)과 2)를 동시에 처리
-		addressBookFrame.setBounds(new Rectangle(xPos, yPos, TestFrame.WIDTH, TestFrame.HEIGHT));
+		addressBookFrame.setBounds(new Rectangle(xPos, yPos, addressBookFrame.WIDTH, addressBookFrame.HEIGHT));
 		// 3) 프레임 표시
 		addressBookFrame.setVisible(true);
 	}

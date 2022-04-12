@@ -43,6 +43,19 @@
 	
 	</update>
 	
+	<select id="selectOneAddress" 
+			parameterType="com.barunsw.ojt.vo.AddressVo"
+			resultType="com.barunsw.ojt.vo.AddressVo"
+			
+	  		>
+	  	SELECT 
+	  	FROM
+	  		ADDRESSBOOK 
+  		WHERE 
+  			NAME = #{name}
+	
+	</select>
+	
 	<delete id="deleteAddress" 	
 			parameterType="com.barunsw.ojt.vo.AddressVo"
 			>

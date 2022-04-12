@@ -1,0 +1,20 @@
+package com.barunsw.ojt.cjs.day12;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class TestThread extends Thread{
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestThread.class);
+
+	private int id;
+
+	public TestThread(int id) {
+		this.id = id;
+	}
+	@Override
+	public void run() {
+		for (int i = 0; i < 100; i++) {
+			LOGGER.debug(String.format("[%d]%d", id, i));
+		}
+	}
+}
