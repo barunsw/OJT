@@ -20,7 +20,6 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	public static Properties jdbcProperties = new Properties();
-	private String jdbcInfo[] = new String[3];
 	private String driverName;
 	private String dbUrl;
 	private String dbUser;
@@ -28,23 +27,12 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
 	public JdbcAddressBookImpl() throws Exception {
 		
-		Class.forName("org.mariadb.jdbc.Driver");
 
 		Reader reader = Resources.getResourceAsReader("jdbc.properties");
 		jdbcProperties.load(reader);
 		
-		/*
-		int i = 0;
-		Iterator<Object> keySet = jdbcProperties.keySet().iterator();
-		while (keySet.hasNext()) {
-			Object key = keySet.next();
-			Object value = jdbcProperties.get(key);
-			jdbcInfo[i] = (String) value;
-			i++;
-			LOGGER.debug(String.format("%s = %s", key, value));
-		}
-		*/
 		driverName	= (String)jdbcProperties.get("DRIVER_NAME");
+		//변수 = jdbc프로퍼티에서 DRIVER_NAME이라는 변수만들고 사용
 		dbUrl 		= (String)jdbcProperties.get("URL");
 		dbUser 		= (String)jdbcProperties.get("USER");
 		dbPassword	= (String)jdbcProperties.get("PASSWORD");
@@ -56,7 +44,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	public List<AddressVo> selectAddressList(AddressVo addressVo) {
 		List<AddressVo> addressList = new ArrayList<>();
 		String SQL = "SELECT * FROM ADDRESSBOOK";
-		try (Connection conn = DriverManager.getConnection(jdbcInfo[0], jdbcInfo[2], jdbcInfo[1]);
+		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			ResultSet resultSet = psmt.executeQuery(); // select구문은 executeQuery, 그 외에는 executeUpdate
 			while (resultSet.next()) {
@@ -85,7 +73,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	public int insertAddress(AddressVo addressVo) throws Exception {
 		String SQL = "INSERT INTO ADDRESSBOOK (NAME, AGE, GENDER, ADDRESS)" + "VALUES (?,?,?,?)";
 
-		try (Connection conn = DriverManager.getConnection(jdbcInfo[0], jdbcInfo[2], jdbcInfo[1]);
+		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) { // statement 객체 생성
 
 			psmt.setString(1, addressVo.getName());
@@ -103,7 +91,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		String SQL = String.format("UPDATE ADDRESSBOOK SET AGE=?, GENDER=?, ADDRESS=? WHERE NAME=?");
-		try (Connection conn = DriverManager.getConnection(jdbcInfo[0], jdbcInfo[2], jdbcInfo[1]);
+		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			psmt.setString(1, addressVo.getName());
 			psmt.setInt(2, addressVo.getAge());
@@ -120,7 +108,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		String SQL = String.format("DELETE FROM ADDRESSBOOK WHERE NAME=?");
-		try (Connection conn = DriverManager.getConnection(jdbcInfo[0], jdbcInfo[2], jdbcInfo[1]);
+		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(SQL);) {
 			psmt.setString(1, addressVo.getName());
 			psmt.executeUpdate();

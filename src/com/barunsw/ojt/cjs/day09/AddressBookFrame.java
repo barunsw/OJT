@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 public class AddressBookFrame extends JFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressBookFrame.class);
 	private AddressBookPanel panel = new AddressBookPanel();
+	
+	public static final int WIDTH 	= 900;
+	public static final int HEIGHT 	= 720;
+	
 
 	public AddressBookFrame() {
 		try {

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -22,13 +23,19 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.vo.AddressVo;
 
@@ -42,10 +49,16 @@ public class AddressBookPanel extends JPanel {
 
 	private AddressBookInterface addressBookIf;
 
+	private JSplitPane jSplitPane = new JSplitPane();
+	private JTree jtree_Adddress = new JTree();
+
 	private CommonTableModel tableModel = new CommonTableModel();
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("root");
+	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
 	private final Dimension LABEL_SIZE = new Dimension(80, 22);
 	private final Dimension BUTTON_SIZE = new Dimension(80, 22);
+	private final Dimension Tree_Size = new Dimension(120, 22);
 
 	private GridBagLayout grid = new GridBagLayout();
 
@@ -63,6 +76,8 @@ public class AddressBookPanel extends JPanel {
 
 	private JScrollPane jScrollPane_Address = new JScrollPane();
 	private JScrollPane jScrollPane_Table = new JScrollPane();
+	private JScrollPane jScrollPane_Tree = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 	public JButton jButton_Add = new JButton("Add");
 	public JButton jButton_Delete = new JButton("Delete");
@@ -78,17 +93,51 @@ public class AddressBookPanel extends JPanel {
 	private JPopupMenu popupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 
+	String[] chs = { "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
+
 	public AddressBookPanel() {
 		try {
 			initAddressBookIf();
 			initComponent();
 			initTable();
 			initData();
+			initConsanantLetter();
 			initEventListner();
 			initPopupMenu();
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
+		}
+	}
+
+	private void initConsanantLetter() {
+		treeModel.setRoot(rootNode);
+		jtree_Adddress.setModel(treeModel);
+		// root노드 숨김
+		jtree_Adddress.setRootVisible(false);
+		treeModel.reload();
+		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
+
+		for (int i = 0; i < chs.length; i++) {
+			DefaultMutableTreeNode consanantLetter = new DefaultMutableTreeNode(chs[i]);
+			rootNode.add(consanantLetter);
+
+			for (int j = 0; j < addressList.size(); j++) {
+				String text = addressList.get(j).getName();
+				if (text.length() > 0) {
+					char chName = text.charAt(0);
+					if (chName >= 0xAC00) {
+						int uniVal = chName - 0xAC00;
+						int cho = ((uniVal - (uniVal % 28)) / 28) / 21;
+						if (chs[cho].equals(chs[i])) {
+							LOGGER.debug(text);
+							DefaultMutableTreeNode personName = new DefaultMutableTreeNode(text);
+							consanantLetter.add(personName);
+						}
+					}
+				}
+			}
+			treeModel.reload();
 		}
 	}
 
@@ -102,12 +151,24 @@ public class AddressBookPanel extends JPanel {
 	}
 
 	private void initComponent() throws Exception {
+//		jtree_Adddress.addMouseListener(new MouseAdapter() {
+//			public void mouseReleased(MouseEvent e) {
+//				if (e.getModifiersEx() != MouseEvent.BUTTON1_DOWN_MASK) {
+////					TreePath selectedRow = jtree_Adddress.getPathForLocation(e.getX(), e.getY());// 클릭하면 테이블의 행 정보를 가져옴
+//					LOGGER.debug(jtree_Adddress.getPathForRow(e.getModifiers()) +"");
+//				}
+//			}
+//		});
 		this.setLayout(grid);
 		jPanel_Button.setLayout(grid);
 		jPanel_Gender.setLayout(grid);
 		jLabel_Name.setPreferredSize(LABEL_SIZE);
 		jLabel_Gender.setPreferredSize(LABEL_SIZE);
 		jLabel_Address.setPreferredSize(LABEL_SIZE);
+
+		jtree_Adddress.setPreferredSize(Tree_Size);
+		jtree_Adddress.setMinimumSize(Tree_Size);
+		jtree_Adddress.setMaximumSize(Tree_Size);
 
 		jTextField_Name.setPreferredSize(new Dimension(120, 22));
 		jRadio_Man.setPreferredSize(new Dimension(80, 22));
@@ -122,6 +183,8 @@ public class AddressBookPanel extends JPanel {
 		jScrollPane_Address.setMinimumSize(new Dimension(100, 100));
 		jScrollPane_Address.getViewport().add(jTextArea_Address);
 
+		jSplitPane.setDividerSize(10);
+		jSplitPane.setOneTouchExpandable(true);
 		this.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 		this.add(jTextField_Name, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
@@ -138,8 +201,9 @@ public class AddressBookPanel extends JPanel {
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 		this.add(jScrollPane_Address, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
-		this.add(jScrollPane_Table, new GridBagConstraints(0, 5, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		this.add(jSplitPane, new GridBagConstraints(0, 5, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
+
 		// =================================================================
 		// JButton Panel생성 후 버튼 추가
 		this.add(jPanel_Button, new GridBagConstraints(0, 4, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER,
@@ -152,9 +216,13 @@ public class AddressBookPanel extends JPanel {
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 		jPanel_Button.add(jButton_Update, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
+
 		jScrollPane_Table.getViewport().add(jTable_List);
 		jScrollPane_Address.getViewport().add(jTextArea_Address);
-
+		jScrollPane_Tree.getViewport().add(jtree_Adddress);
+		jtree_Adddress.setSize(400, 300);
+		jSplitPane.setLeftComponent(jScrollPane_Tree);
+		jSplitPane.setRightComponent(jScrollPane_Table);
 		// ===================================================================
 		// radio버튼 Gender 패널에 추가
 		// radio 버튼 ButtonGroup로 묶기
@@ -169,6 +237,7 @@ public class AddressBookPanel extends JPanel {
 	}
 
 	private void initTable() {
+
 		Vector<String> columnData = new Vector<>(); // 테이블의 컬럼값 저장
 		columnData.add("Name");
 		columnData.add("Gender");
@@ -177,16 +246,11 @@ public class AddressBookPanel extends JPanel {
 
 		tableModel.setColumn(columnData);
 		jTable_List.setModel(tableModel);
-		jTable_List.addMouseListener(new MouseAdapter() {
-			public void mouseReleased(MouseEvent e) {
-				if (e.getModifiersEx() != MouseEvent.BUTTON1_DOWN_MASK) {
-					int selectedRow = jTable_List.getSelectedRow(); // 클릭하면 테이블의 행 정보를 가져옴
-					if (selectedRow >= 0) { // 클릭하면 selectRow값으 0보다 크므로
-						popupMenu.show(AddressBookPanel.this.jTable_List, e.getX(), e.getY()); // 해당 행의 좌표값에 팝업창을 띄워줌
-					}
-				}
-			}
-		});
+	}
+
+	private void treeReset() {
+		rootNode.removeAllChildren();
+		initConsanantLetter();
 	}
 
 	private void initData() {
@@ -195,6 +259,7 @@ public class AddressBookPanel extends JPanel {
 		for (AddressVo address : addressList) {
 			Vector inputData = new Vector();
 			inputData.add(address.getName());
+
 			inputData.add(address.getAge());
 			inputData.add(address.getGender());
 			inputData.add(address.getAddress());
@@ -233,11 +298,11 @@ public class AddressBookPanel extends JPanel {
 			addressBookIf.insertAddress(createAddressVo());
 			JOptionPane.showMessageDialog(this, "ADD Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 			ResetForm();
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
 		initData();
+		treeReset();
 	}
 
 	void jButton_Delete_ActionListener() {
@@ -248,11 +313,11 @@ public class AddressBookPanel extends JPanel {
 			addressBookIf.deleteAddress(address);
 			JOptionPane.showMessageDialog(null, "DELETE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 			ResetForm();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
 		initData();
+		treeReset();
 	}
 
 	void jButton_update_ActionListner() {
@@ -266,11 +331,11 @@ public class AddressBookPanel extends JPanel {
 			addressBookIf.updateAddress(address);
 			JOptionPane.showMessageDialog(null, "UPDATE Complete", "Alert", JOptionPane.INFORMATION_MESSAGE);
 			ResetForm();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 		initData();
+		treeReset();
 	}
 
 	void jButton_Reload_ActionListener() {
@@ -285,8 +350,7 @@ public class AddressBookPanel extends JPanel {
 				LOGGER.debug(value + "");
 				addressBookIf.deleteAddress(addressVo);
 				initData();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);
 			}
 		}
