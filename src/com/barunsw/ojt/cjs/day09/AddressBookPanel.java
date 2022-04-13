@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Vector;
 
@@ -112,8 +113,24 @@ public class AddressBookPanel extends JPanel {
 	private void initAddressBookIf() throws Exception {
 		String className = AddressBookApp.properties.getProperty("address_if_class");
 
-		Object o = Class.forName(className).newInstance();
-		if (o instanceof AddressBookInterface) {
+		Object o = null;
+		if (className.contains("SocketAddressBookImpl")) {
+			// server.host를 가져온다.
+			String serverHost = "";
+			// server.port를 가져온다.
+			int serverPort = 0;
+			
+			Constructor c = Class.forName(className).getConstructor(String.class, Integer.class);
+			o = c.newInstance(serverHost, serverPort);
+			
+			// 위에 코드와 동일한 실행을 한다.
+			// o = new SocketAddressBookImpl(serverPost, serverPort);
+		}
+		else {
+			o = Class.forName(className).newInstance();
+		}
+		
+		if (o != null && o instanceof AddressBookInterface) {
 			addressBookIf = (AddressBookInterface) o;
 		}
 	}
