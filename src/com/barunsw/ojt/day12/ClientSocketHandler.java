@@ -14,6 +14,8 @@ public class ClientSocketHandler extends Thread {
 	
 	private Socket clientSocket;
 	
+	private AddressBookInterface addressBookIf;
+	
 	public ClientSocketHandler(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 	}
