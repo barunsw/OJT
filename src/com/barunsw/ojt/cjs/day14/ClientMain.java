@@ -55,6 +55,6 @@ public class ClientMain {
 
 		socketFrame.setBounds(new Rectangle(xPos, yPos, socketFrame.WIDTH, socketFrame.HEIGHT));
 		socketFrame.setVisible(true);
-		Thread.sleep(10000000);
+		Thread.sleep(10_000);
 	}
 }

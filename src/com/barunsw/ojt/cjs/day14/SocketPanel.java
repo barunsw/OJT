@@ -368,6 +368,7 @@ public class SocketPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
+		initAddressBookIf();
 		initTableData(null, 0);
 		treeReset();
 	}
@@ -383,6 +384,7 @@ public class SocketPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + e);
 		}
+		initAddressBookIf();
 		initTableData(null, 0);
 		treeReset();
 	}
@@ -401,11 +403,13 @@ public class SocketPanel extends JPanel {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		initAddressBookIf();
 		initTableData(null, 0);
 		treeReset();
 	}
 
 	void jButton_Reload_ActionListener() throws Exception {
+		initAddressBookIf();
 		initTableData(null, 0);
 	}
 
