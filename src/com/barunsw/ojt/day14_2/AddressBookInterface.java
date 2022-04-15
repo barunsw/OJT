@@ -1,8 +1,9 @@
-package com.barunsw.ojt.day14;
+package com.barunsw.ojt.day14_2;
 
+import java.rmi.Remote;
 import java.util.List;
 
-public interface AddressBookInterface {
+public interface AddressBookInterface extends Remote {
 	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception;
 	public int insertAddress(AddressVo addressVo) throws Exception;
 	public int updateAddress(AddressVo addressVo) throws Exception;

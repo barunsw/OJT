@@ -105,17 +105,14 @@ public class ClientSocketHandler extends Thread {
 					break;
 				case "INSERT":
 					AddressVo addressVo = parseCmd(cmdSplit[1]);
-					writer.write(handleInsert(addressVo));
-					writer.flush();
+					handleInsert(addressVo);
 					break;
 				case "DELETE":
 					addressVo = parseCmd(cmdSplit[1]);
-					writer.write(handleDelete(addressVo));
-					writer.flush();
+					handleDelete(addressVo);
 				case "UPDATE":
 					addressVo = parseCmd(cmdSplit[1]);
-					writer.write(handleUpadte(addressVo));
-					writer.flush();
+					handleUpadte(addressVo);
 				}
 			}
 		} 

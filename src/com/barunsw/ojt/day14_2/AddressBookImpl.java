@@ -1,4 +1,4 @@
-package com.barunsw.ojt.day14;
+package com.barunsw.ojt.day14_2;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
+public class AddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
 	private static final Logger LOGGER = LogManager.getLogger(AddressBookImpl.class);
 	
 	public AddressBookImpl() throws RemoteException {
@@ -16,7 +16,7 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 	}
 	
 	@Override
-	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception {
+	public List<AddressVo> selectAddressList(AddressVo addressVo) throws RemoteException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("selectAddressList:" + addressVo);
 		
@@ -32,21 +32,21 @@ public class AddressBookImpl extends UnicastRemoteObject implements RmiAddressBo
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws Exception {
+	public int insertAddress(AddressVo addressVo) throws RemoteException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("insertAddress:" + addressVo);
 		return 0;
 	}
 
 	@Override
-	public int updateAddress(AddressVo addressVo) throws Exception {
+	public int updateAddress(AddressVo addressVo) throws RemoteException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("updateAddress:" + addressVo);
 		return 0;
 	}
 
 	@Override
-	public int deleteAddress(AddressVo addressVo) throws Exception {
+	public int deleteAddress(AddressVo addressVo) throws RemoteException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("deleteAddress:" + addressVo);
 		return 0;

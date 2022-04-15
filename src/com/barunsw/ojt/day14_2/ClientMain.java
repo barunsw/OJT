@@ -1,4 +1,4 @@
-package com.barunsw.ojt.day14;
+package com.barunsw.ojt.day14_2;
 
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
@@ -16,9 +16,9 @@ public class ClientMain {
 			Registry registry = LocateRegistry.getRegistry(ServerMain.PORT);
 			
 			Remote remote = registry.lookup("ADDRESSBOOK");
-			if (remote instanceof RmiAddressBookInterface) {
-				RmiAddressBookInterface addressBookIf = 
-						(RmiAddressBookInterface)remote;
+			if (remote instanceof AddressBookInterface) {
+				AddressBookInterface addressBookIf = 
+						(AddressBookInterface)remote;
 
 				List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
 				for (AddressVo oneAddressVo : addressList) {
