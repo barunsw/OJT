@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 import com.barunsw.ojt.cjs.common.AddressBookInterface;
 import com.barunsw.ojt.cjs.common.AddressVo;
 
-public class RmiClientAddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
+public class RmiClientAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RmiServerAddressbookImpl.class);
 
 	public RmiClientAddressBookImpl() throws RemoteException {
-		super();
+		
 	}
 
 	@Override

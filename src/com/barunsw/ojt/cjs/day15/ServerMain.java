@@ -39,37 +39,14 @@ public class ServerMain {
 
 	public void start() throws Exception {
 		LOGGER.debug(String.format("+++ ServerMain started."));
-
-		LOGGER.debug(String.format("--- ServerMain started."));
-	}
-
-	private void initAddressBookIf() throws Exception {
-
-		String className = ServerMain.serverProperties.getProperty("address_if_class");
-		LOGGER.debug(className);
-		Object o = null;
-		String serverHost = ServerMain.serverProperties.getProperty("host");
-		LOGGER.debug(serverHost);
-
 		int serverPort = Integer.parseInt(ServerMain.serverProperties.getProperty("port"));
 		LOGGER.debug(serverPort + "");
-
-		String regist = ServerMain.serverProperties.getProperty("regist");
-		LOGGER.debug(regist);
-
-		if (className.contains("SocketAddressBookImpl")) {
-			Constructor c = Class.forName(className).getConstructor(String.class, Integer.class);
-			o = c.newInstance(serverHost, serverPort);
-			LOGGER.debug(o + "");
-		} else {
-			o = Class.forName(className).newInstance();
-			LOGGER.debug(className + "");
-		}
-		if (o != null && o instanceof AddressBookInterface) {
-			addressBookIf = (AddressBookInterface) o;
-		}
+		
+		String regist = (String)ServerMain.serverProperties.getProperty("regist");
+		
 		Registry registry = LocateRegistry.createRegistry(serverPort);
 		registry.rebind(regist, addressBookIf);
+		LOGGER.debug(String.format("--- ServerMain started."));
 	}
 
 	public static void main(String[] args) throws Exception {
