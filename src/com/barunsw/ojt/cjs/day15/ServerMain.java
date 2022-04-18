@@ -19,11 +19,7 @@ public class ServerMain {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);
 
 	public static Properties serverProperties = new Properties();
-	public static AddressBookInterface addressBookIf;
 
-	public ServerMain() throws Exception {
-		initAddressBookIf();
-	}
 
 	private static void loadProperties(String configPath) throws IOException {
 		Reader reader = new FileReader(configPath);
@@ -43,9 +39,11 @@ public class ServerMain {
 		LOGGER.debug(serverPort + "");
 		
 		String regist = (String)ServerMain.serverProperties.getProperty("regist");
-		
+		AddressBookInterface addressBookIf = new RmiServerAddressbookImpl();
+
 		Registry registry = LocateRegistry.createRegistry(serverPort);
 		registry.rebind(regist, addressBookIf);
+		
 		LOGGER.debug(String.format("--- ServerMain started."));
 	}
 

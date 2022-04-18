@@ -1,20 +1,16 @@
 package com.barunsw.ojt.cjs.common;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.logging.log4j.core.jackson.Log4jJsonObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MybatisAddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
-	
-	public MybatisAddressBookImpl() throws RemoteException {
-		super();
-	}
+public class MybatisAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MybatisAddressBookImpl.class);
 	private SqlSessionFactory sqlFactory = SqlSessionFactoryManager.getSqlSessionFactory();
@@ -26,6 +22,8 @@ public class MybatisAddressBookImpl extends UnicastRemoteObject implements Addre
 		try (SqlSession session = sqlFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			addressList = mapper.selectAddressList(addressVo);
+			LOGGER.info("[CJS] addressList : {}", Arrays.asList(addressList) );
+			
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
