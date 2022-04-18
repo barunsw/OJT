@@ -28,6 +28,12 @@ public class ServerImpl extends UnicastRemoteObject
 			clientRepo.put(name, clientInterface);
 		}
 	}
+	
+	@Override
+	public void deregister(String name) throws RemoteException {
+		LOGGER.debug("deregister");
+		// 지워준다.
+	}
 
 	@Override
 	public void send(String name, String msg) throws RemoteException {
