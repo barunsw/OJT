@@ -93,6 +93,7 @@ public class ChatPanel extends JPanel implements EventListener {
 
 	private void initRmi() throws RemoteException, NotBoundException  {
 		ClientMain.eventQueueWorker.addEventListener(this);
+
 		clientIf = new ClientImpl();
 		Registry registry = LocateRegistry.getRegistry(ServerMain.PORT);
 
@@ -104,17 +105,17 @@ public class ChatPanel extends JPanel implements EventListener {
 
 	// 접속 버튼 상태에 따라 regist, deregist 한다.
 	public void jToggleButton_Login_ActionListener() throws RemoteException {
-		if (!jTextField_Name.getText().isEmpty()) {
-			if (jToggleButton_NameSet.isSelected()) {
-				jToggleButton_NameSet.setText("종료");
-				jTextField_Name.setEditable(false);
-				serverIf.register(jTextField_Name.getText(), clientIf);
+		if (!jTextField_Name.getText().isEmpty()) { //이름이 작성되지 않으면 작동되지 않는다.
+			if (jToggleButton_NameSet.isSelected()) { //토글버튼이 선택되면
+				jToggleButton_NameSet.setText("종료"); //접속중이므로 종료 버튼을 바꾼다.
+				jTextField_Name.setEditable(false); //접속 중이므로 이름을 변경할 수 없다
+				serverIf.register(jTextField_Name.getText(), clientIf); //서버에 이름과 클라이언트 인터페이스를 보내줌
 			} 
 			else {
 				jToggleButton_NameSet.setText("접속");
 				jTextField_Name.setEditable(true);
 				serverIf.deregister(jTextField_Name.getText());
-				serverIf.send(jTextField_Name.getText(), "님이 나가셨습니다.");
+				serverIf.send(jTextField_Name.getText(), "님이 나가셨습니다."); //종료하면 해당 사용자가 나갔다는 메세지를 모든 사용자에게 전송
 			}
 		} 
 	}
@@ -122,15 +123,15 @@ public class ChatPanel extends JPanel implements EventListener {
 	// textarea에 append한다.
 	@Override
 	public void push(Object o) {
-		jTextArea_Msg.append(o.toString() +"\n");
+		jTextArea_Msg.append(o.toString() +"\n"); //PUSH후에 텍스트에어리어에 노출
 		LOGGER.debug("PUSH");
 	}
 
 	// 전송 버튼을 누르면 serverIf.send한다.
 	void jButton_Send_ActionListener() throws RemoteException {
 		if (!jTextField_Msg.getText().isEmpty()) {
-			serverIf.send(jTextField_Name.getText(), jTextField_Msg.getText());
-			jTextField_Msg.setText("");
+			serverIf.send(jTextField_Name.getText(), jTextField_Msg.getText()); //보낸 사용자와 메시지를 SEND
+			jTextField_Msg.setText("");//메시지를 입력한 후에는 초기화
 		}
 		else {
 			JOptionPane.showMessageDialog(this, "내용을 입력해주세요", "Alert", JOptionPane.INFORMATION_MESSAGE);
