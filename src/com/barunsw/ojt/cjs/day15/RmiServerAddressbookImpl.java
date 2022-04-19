@@ -2,11 +2,8 @@ package com.barunsw.ojt.cjs.day15;
 
 import java.lang.reflect.Constructor;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import com.barunsw.ojt.cjs.common.AddressBookInterface;
 import com.barunsw.ojt.cjs.common.AddressVo;
 
-public class RmiServerAddressbookImpl extends UnicastRemoteObject implements AddressBookInterface {
+public class RmiServerAddressbookImpl extends UnicastRemoteObject implements RemoteAddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RmiServerAddressbookImpl.class);
-	public static AddressBookInterface addressBookIf;
+	private AddressBookInterface addressBookIf;
 
 //	public synchronized static AddressBookInterface getInstance() {
 //		if ( addressBookIf == null ) {
@@ -66,11 +63,11 @@ public class RmiServerAddressbookImpl extends UnicastRemoteObject implements Add
 	}
 
 	@Override
-	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception {
+	public List<AddressVo> selectAddressList(AddressVo addressVo) throws RemoteException {
 		// TODO Auto-generated method stub
 		LOGGER.debug("selectAddressList:" + addressVo);
 		LOGGER.debug(addressBookIf + "");
-
+/*
 		List<AddressVo> addressList = addressBookIf.selectAddressList(new AddressVo());
 		List<AddressVo> resultList = new ArrayList<AddressVo>();
 		for (AddressVo adressVo : addressList) {
@@ -81,26 +78,57 @@ public class RmiServerAddressbookImpl extends UnicastRemoteObject implements Add
 			resultList.add(adressVo);
 		}
 		return resultList;
+*/		
+		List<AddressVo> addressList = null;
+		try {
+			addressList = addressBookIf.selectAddressList(new AddressVo());
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
+		return addressList;
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws Exception {
-		addressBookIf.insertAddress(addressVo);
+	public int insertAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("insertAddress:" + addressVo);
-		return 0;
+		int result = 0;
+		try {
+			result = addressBookIf.insertAddress(addressVo);
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
+		return result;
 	}
 
 	@Override
-	public int updateAddress(AddressVo addressVo) throws Exception {
-		addressBookIf.updateAddress(addressVo);
+	public int updateAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("updateAddress:" + addressVo);
-		return 0;
+		int result = 0;
+		try {
+			result = addressBookIf.updateAddress(addressVo);
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
+		return result;
 	}
 
 	@Override
-	public int deleteAddress(AddressVo addressVo) throws Exception {
-		addressBookIf.deleteAddress(addressVo);
+	public int deleteAddress(AddressVo addressVo) throws RemoteException {
 		LOGGER.debug("deleteAddress:" + addressVo);
-		return 0;
+		int result = 0;
+		try {
+			result = addressBookIf.deleteAddress(addressVo);
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
+		return result;
 	}
 }

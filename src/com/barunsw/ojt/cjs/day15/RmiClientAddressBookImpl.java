@@ -4,7 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +15,8 @@ import com.barunsw.ojt.cjs.common.AddressVo;
 public class RmiClientAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RmiClientAddressBookImpl.class);
+	
+	private RemoteAddressBookInterface addressBookIf;
 
 	public RmiClientAddressBookImpl() throws RemoteException {
 
@@ -28,8 +29,8 @@ public class RmiClientAddressBookImpl implements AddressBookInterface {
 		Remote remote;
 		try {
 			remote = registry.lookup(lookup);
-			if (remote instanceof AddressBookInterface) {
-				RmiServerAddressbookImpl.addressBookIf = (AddressBookInterface) remote;
+			if (remote instanceof RemoteAddressBookInterface) {
+				addressBookIf = (RemoteAddressBookInterface) remote;
 //				AddressBookInterface temp = (RmiServerAddressbookImpl) RmiServerAddressbookImpl.getInstance();
 //				temp = (AddressBookInterface) remote;
 //				new RmiServerAddressbookImpl().setAddressBookIf(temp);
@@ -41,12 +42,14 @@ public class RmiClientAddressBookImpl implements AddressBookInterface {
 	}
 
 	@Override
-	public List<AddressVo> selectAddressList(AddressVo addressVo) throws RemoteException {
+	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception {
 		LOGGER.debug("selectAddressList:" + addressVo);
+		return addressBookIf.selectAddressList(addressVo);
+		/*
 		List<AddressVo> addressList = null;
 		List<AddressVo> resultList = new ArrayList<AddressVo>();
 		try {
-			addressList = RmiServerAddressbookImpl.addressBookIf.selectAddressList(new AddressVo());
+			addressList = addressBookIf.selectAddressList(new AddressVo());
 			LOGGER.error("[CJS] addressList.size : {}", addressList.size());
 			for (AddressVo oneAddressVo : addressList) {
 				// LOGGER.info("[CJS] oneAddressVo : {}", oneAddressVo);
@@ -62,12 +65,13 @@ public class RmiClientAddressBookImpl implements AddressBookInterface {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return resultList;
+		*/
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws RemoteException {
+	public int insertAddress(AddressVo addressVo) throws Exception {
 		try {
-			RmiServerAddressbookImpl.addressBookIf.insertAddress(addressVo);
+			addressBookIf.insertAddress(addressVo);
 			LOGGER.debug("insertAddress:" + addressVo);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -78,7 +82,7 @@ public class RmiClientAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int updateAddress(AddressVo addressVo) throws Exception {
 		try {
-			RmiServerAddressbookImpl.addressBookIf.updateAddress(addressVo);
+			addressBookIf.updateAddress(addressVo);
 			LOGGER.debug("updateAddress:" + addressVo);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -89,7 +93,7 @@ public class RmiClientAddressBookImpl implements AddressBookInterface {
 	@Override
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		try {
-			RmiServerAddressbookImpl.addressBookIf.deleteAddress(addressVo);
+			addressBookIf.deleteAddress(addressVo);
 			LOGGER.debug("deleteAddress:" + addressVo);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);

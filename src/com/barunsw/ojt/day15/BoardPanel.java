@@ -35,6 +35,10 @@ public class BoardPanel extends JPanel {
 		this.setToolTipText(boardVo.getBoardName());
 	}
 	
+	public BoardVo getBoardVo() {
+		return boardVo;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		LOGGER.debug("paintComponent boardName:" + boardVo.getBoardName());

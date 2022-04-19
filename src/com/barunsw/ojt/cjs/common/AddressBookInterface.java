@@ -1,9 +1,8 @@
 package com.barunsw.ojt.cjs.common;
 
-import java.rmi.Remote;
 import java.util.List;
 
-public interface AddressBookInterface extends Remote{
+public interface AddressBookInterface {
 	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception;
 
 	public int insertAddress(AddressVo addressVo) throws Exception;

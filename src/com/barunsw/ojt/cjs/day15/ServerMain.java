@@ -3,8 +3,6 @@ package com.barunsw.ojt.cjs.day15;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Constructor;
-import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Iterator;
@@ -13,7 +11,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.cjs.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 
 public class ServerMain {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);
@@ -39,7 +37,7 @@ public class ServerMain {
 		LOGGER.debug(serverPort + "");
 		
 		String regist = (String)ServerMain.serverProperties.getProperty("regist");
-		AddressBookInterface addressBookIf = new RmiServerAddressbookImpl();
+		RemoteAddressBookInterface addressBookIf = new RmiServerAddressbookImpl();
 
 		Registry registry = LocateRegistry.createRegistry(serverPort);
 		registry.rebind(regist, addressBookIf);
