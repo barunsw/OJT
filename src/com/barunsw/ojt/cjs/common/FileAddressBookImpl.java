@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +14,7 @@ import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileAddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
+public class FileAddressBookImpl implements AddressBookInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
 	public static Properties addressBook_Properties = new Properties();

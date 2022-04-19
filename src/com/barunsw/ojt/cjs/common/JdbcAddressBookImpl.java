@@ -1,7 +1,6 @@
 package com.barunsw.ojt.cjs.common;
 
 import java.io.Reader;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.constants.Gender;
 
-public class JdbcAddressBookImpl extends UnicastRemoteObject implements AddressBookInterface {
+public class JdbcAddressBookImpl implements AddressBookInterface {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	public static Properties jdbcProperties = new Properties();
@@ -26,7 +25,6 @@ public class JdbcAddressBookImpl extends UnicastRemoteObject implements AddressB
 	private String dbPassword;
 
 	public JdbcAddressBookImpl() throws Exception {
-		super();
 		Reader reader = Resources.getResourceAsReader("jdbc.properties");
 		jdbcProperties.load(reader);
 		

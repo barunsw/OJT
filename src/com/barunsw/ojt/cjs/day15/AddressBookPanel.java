@@ -109,7 +109,7 @@ public class AddressBookPanel extends JPanel {
 			initPopupMenu();
 
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage() + e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -119,8 +119,7 @@ public class AddressBookPanel extends JPanel {
 		LOGGER.debug(serverHost + "");
 		int serverPort = Integer.parseInt(ClientMain.properties.getProperty("port"));
 		LOGGER.debug(serverPort + "");
-		String lookup = ClientMain.properties.getProperty("lookup");
-		LOGGER.debug(lookup);
+		
 		String className = ClientMain.properties.getProperty("address_if_class");
 
 		Object o = null;
@@ -134,13 +133,6 @@ public class AddressBookPanel extends JPanel {
 		}
 		if (o != null && o instanceof AddressBookInterface) {
 			addressBookIf = (AddressBookInterface) o;
-			LOGGER.debug(addressBookIf + "");
-		}
-		Registry registry = LocateRegistry.getRegistry(serverPort);
-		Remote remote = registry.lookup(lookup);
-		if (remote instanceof AddressBookInterface) {
-			addressBookIf = (AddressBookInterface) remote;
-			LOGGER.debug("된건가 ?");
 		}
 	}
 
