@@ -1,6 +1,9 @@
 package com.barunsw.ojt.cjs.common;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -11,7 +14,8 @@ public class BoardVo implements Serializable {
 	private String boardName;
 	private int boardId;
 	private int severity;
-	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN);
+
 	public BoardVo() {
 	}
 	
@@ -50,6 +54,10 @@ public class BoardVo implements Serializable {
 
 	public void setSeverity(int severity) {
 		this.severity = severity;
+	}
+	public String getEventTime() {
+		String currentTime = sdf.format(Calendar.getInstance().getTime());
+		return currentTime;
 	}
 
 	@Override

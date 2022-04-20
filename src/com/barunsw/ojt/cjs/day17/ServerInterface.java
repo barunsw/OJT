@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.barunsw.ojt.cjs.common.BoardVo;
 
-
 public interface ServerInterface extends Remote {
 	public int register(ClientInterface clientInterface) throws RemoteException;
+
 	public List<BoardVo> selectBoardList() throws RemoteException;
 }

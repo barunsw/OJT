@@ -15,13 +15,11 @@ import com.barunsw.ojt.cjs.common.BoardVo;
 public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerImpl.class);
-	private List<BoardVo> RackviewList = new ArrayList<>();
+	private List<BoardVo> rackViewList = new ArrayList<>();
 	private List<ClientInterface> clientInfoList = new ArrayList<>();
+	private BoardVo board = new BoardVo();
 
-	private int boardId;
-	private int severity;
-
-	public ServerImpl() throws RemoteException {
+	public ServerImpl() throws RemoteException, InterruptedException {
 		super();
 		initData();
 		initAlarmGenerator();
@@ -30,45 +28,45 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	private void initData() {
 		for (int i = 0; i < 38; i++) {
 			BoardVo boardVo = new BoardVo();
-
 			boardVo.setBoardId(i);
 			boardVo.setSeverity(3);
-
 			if (i < 2) {
 				boardVo.setBoardType(BoardType.MPU);
 				boardVo.setBoardName("MPU");
-			} 
+			}
 			else if (i % 18 == 0 || i == 36) {
 				boardVo.setBoardType(BoardType.SRGU);
 				boardVo.setBoardName("SRGU");
-				i += 1;
-			} 
+			}
+			else if (i % 19 == 0 || i == 37) {
+				continue;
+			}
 			else {
 				boardVo.setBoardName("SALC");
 				boardVo.setBoardType(BoardType.SALC);
 			}
-			RackviewList.add(boardVo);
+			rackViewList.add(boardVo);
 		}
 	}
 
-	private void initAlarmGenerator() {
+	private void initAlarmGenerator() throws InterruptedException {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
-					boardId = (int) (Math.random() * 38);
-					severity = (int) (Math.random() * 4);
-
-					BoardVo changeBoardInfo = new BoardVo(boardId, severity);
+					int boardId = (int) (Math.random() * 38);
+					int severity = (int) (Math.random() * 4);
 					Severity sev = Severity.items[severity];
-
-					LOGGER.debug("boardId:" + boardId + ", severity:" + sev);
-
+					board.setBoardId(boardId);
+					board.setSeverity(severity);
 					try {
+						for (ClientInterface client : clientInfoList) {
+							client.pushAlarm(board);
+						}
 						Thread.sleep(1000);
-					} 
-					catch (InterruptedException ex) {
-
+					}
+					catch (Exception e) {
+						LOGGER.debug(e.getMessage(), e);
 					}
 				}
 			}
@@ -84,6 +82,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	@Override
 	public List<BoardVo> selectBoardList() {
-		return RackviewList;
+		return rackViewList;
 	}
 }

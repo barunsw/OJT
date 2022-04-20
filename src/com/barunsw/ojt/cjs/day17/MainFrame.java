@@ -9,15 +9,15 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RackViewFrame extends JFrame {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RackViewFrame.class);
+public class MainFrame extends JFrame {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainFrame.class);
 	
 	public static final int WIDTH 	= 870;
-	public static final int HEIGHT 	= 635;
+	public static final int HEIGHT 	= 835;
 	
-	private RackViewPanel rackPanel = new RackViewPanel();
+	private MainPanel mainPanel = new MainPanel();
 	
-	public RackViewFrame() {
+	public MainFrame() {
 		try {
 			initComponent();
 		}
@@ -27,16 +27,16 @@ public class RackViewFrame extends JFrame {
 	}
 	
 	private void initComponent() throws Exception {
-		this.setTitle("RackView");
+		this.setTitle("MONITORING MAIN");
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.setContentPane(rackPanel);
+		this.setContentPane(mainPanel);
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
 	}
 	
 	void windowClosing(WindowEvent e) {
 		LOGGER.debug("windowClosing");
 		
-		int result = JOptionPane.showConfirmDialog(RackViewFrame.this, 
+		int result = JOptionPane.showConfirmDialog(MainFrame.this, 
 				"정말로 종료하시겠습니까?", "종료", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			System.exit(0);
@@ -45,9 +45,9 @@ public class RackViewFrame extends JFrame {
 }
 
 class TestFrame_this_WindowAdapter extends WindowAdapter {
-	private RackViewFrame adaptee;
+	private MainFrame adaptee;
 	
-	public TestFrame_this_WindowAdapter(RackViewFrame adaptee) {
+	public TestFrame_this_WindowAdapter(MainFrame adaptee) {
 		this.adaptee = adaptee;
 	}
 	
