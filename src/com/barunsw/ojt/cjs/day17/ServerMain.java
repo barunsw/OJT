@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 
 public class ServerMain {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);
-	
+
 	public static final String BIND_NAME = "Rack";
 	public static final int PORT = 50001;
-	
+
 	public void start() {
 		LOGGER.debug(String.format("+++ ServerMain started."));
 
@@ -20,7 +20,8 @@ public class ServerMain {
 			ServerInterface serverIf = new ServerImpl();
 
 			registry.bind(BIND_NAME, serverIf);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 
