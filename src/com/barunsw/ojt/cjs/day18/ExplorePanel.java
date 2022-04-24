@@ -50,8 +50,9 @@ public class ExplorePanel extends JPanel {
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new FileVo("C:", "", true, "/"));
 
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-	String separator = System.getProperty("file.separator");
+	String separator = System.getProperty("File.separator");
 	DefaultMutableTreeNode treeData;
+	TreeNode absolutePath;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public ExplorePanel() {
@@ -73,9 +74,6 @@ public class ExplorePanel extends JPanel {
 		jPanel_Search.add(jTextField_Search, new GridBagConstraints(0, 0, 2, 1, 1, 1, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
-//		jPanel_Search.add(JButton_Search, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST,
-//				GridBagConstraints.VERTICAL, new Insets(0, 5, 5, 5), 0, 0));
-
 		jScrollPane_Table.getViewport().add(jTable_List);
 		jScrollPane_Tree.getViewport().add(jTree_Explore);
 
@@ -93,13 +91,9 @@ public class ExplorePanel extends JPanel {
 		columnData.add("Type");
 		columnData.add("Size");
 		columnData.add("Created");
-		columnData.add("path");
 		tableModel.setColumn(columnData);
 		jTable_List.setModel(tableModel);
 
-		jTable_List.getColumn("path").setWidth(0);
-		jTable_List.getColumn("path").setMinWidth(0);
-		jTable_List.getColumn("path").setMaxWidth(0);
 	}
 
 	private void initTree() {
@@ -116,9 +110,9 @@ public class ExplorePanel extends JPanel {
 	}
 
 	private void initData(DefaultMutableTreeNode node) {
-		node.removeAllChildren(); // 중복으로 추가되지 않게 해당 하위노드를 모두 지워준다.
+		node.removeAllChildren();
 		LOGGER.debug(node + "");
-		FileVo vo = (FileVo) node.getUserObject(); // 해당 노드의 오브젝트값을 가져옴
+		FileVo vo = (FileVo) node.getUserObject();
 		LOGGER.debug(vo.toStringFull());
 		String created = "";
 		long kbytes = 0;
@@ -157,13 +151,11 @@ public class ExplorePanel extends JPanel {
 				inputData.add(fileVo.getType());
 				inputData.add(kbytes);
 				inputData.add(fileVo.getCreated());
-				inputData.add(oneFile.getAbsoluteFile());
 				tableList.add(inputData);
 			}
 		}
 		tableModel.setData(tableList);
 		tableModel.fireTableDataChanged();
-//		treeModel.reload();
 		treeModel.nodeStructureChanged(node);
 		jTree_Explore.expandPath(new TreePath(node.getPath()));
 		if (rootNode == node) {
@@ -192,16 +184,14 @@ public class ExplorePanel extends JPanel {
 
 	void jTree_Explore_mouseReleased(MouseEvent e) throws IOException {
 		Object o = jTree_Explore.getLastSelectedPathComponent();
-		LOGGER.debug(jTree_Explore.getLastSelectedPathComponent().getClass() + "");
-		
+
 		TreePath p = jTree_Explore.getSelectionPath();
 		jTree_Explore.setSelectionPath(new TreePath(p.getPath()));
 
 		LOGGER.debug(p.toString());
-		
+
 		if (o instanceof DefaultMutableTreeNode) {
 			DefaultMutableTreeNode selectedVo = (DefaultMutableTreeNode) o;
-			LOGGER.debug(selectedVo.getPath() +"");
 			initData(selectedVo);
 		}
 	}
@@ -210,83 +200,61 @@ public class ExplorePanel extends JPanel {
 		switch (e.getKeyChar()) {
 		case KeyEvent.VK_ENTER:
 			String path = jTextField_Search.getText();
-//			treeData = new DefaultMutableTreeNode(new FileVo(path, "", true, path));
-			treeData = new DefaultMutableTreeNode(path);
+			// textField에 입력한 경로를 그대로 treenode로 만들어서 가져올 수 있는지,,
+			// treepath를 구해야하는데,,
+			treeData = new DefaultMutableTreeNode(new FileVo("", "", true, path));
 			initData(treeData);
+//			if (!path.equals("/")) {
+//				String paths[] = path.split("/");
+//				path = paths[paths.length - 1];
+//			}
+//			TreePath p = jTree_Explore.getSelectionPath();
+//			jTree_Explore.setSelectionPath(new TreePath(p.getPath()));
+//			Object o = jTree_Explore.getLastSelectedPathComponent();
+// 
+//			treeData = (DefaultMutableTreeNode) o;
+//			treeData.setUserObject(path);
+//			LOGGER.debug(treeData + "");
+//			initData(treeData);
 		}
 	}
 
 	public void jTable_Explore_mouseReleased(MouseEvent e) throws IOException {
 
-		if (e.getClickCount() == 2) {
+		if (e.getClickCount() == 2) { // 더블클릭하면
 			int row = jTable_List.getSelectedRow();
-			//LOGGER.debug(row + "");
 			String path = jTable_List.getValueAt(row, 0).toString();
-			//LOGGER.debug(path);
 
-			if (!path.equals("..")) {
+			if (!path.equals("..")) { // 상위디렉토리가 아닌
+
 				TreePath p = jTree_Explore.getSelectionPath();
-				TreePath p2 = jTree_Explore.getAnchorSelectionPath();
-				TreePath p4 = jTree_Explore.getLeadSelectionPath();
-				DefaultMutableTreeNode p5 = (DefaultMutableTreeNode) jTree_Explore.getLastSelectedPathComponent();
-				
 				jTree_Explore.setSelectionPath(new TreePath(p.getPath()));
 
-				LOGGER.debug("[TreePath p] : {}", p.toString());
-				LOGGER.debug("[TreePath p.getPath] : {}", new TreePath(p.getPath()).toString());
-				LOGGER.debug("[TreePath p2.getAnchorSelectionPath] : {}", new TreePath(p2.getPath()).toString());
-				LOGGER.debug("[TreePath p4.getLeadSelectionPath] : {}", new TreePath(p4.getPath()).toString());
-				LOGGER.debug("[TreePath p5.getLastSelectedPathComponent] : {}", new TreePath(p5.getPath()).toString());
-				
 				Object o = jTree_Explore.getLastSelectedPathComponent();
-				LOGGER.debug(o + "");
 				if (o instanceof DefaultMutableTreeNode) {
-					DefaultMutableTreeNode topRoot = (DefaultMutableTreeNode) o;
-					LOGGER.debug(topRoot.getPath() +"");
-					for (int i = 0; i < topRoot.getChildCount(); i++) {
-						if (String.valueOf(topRoot.getChildAt(i)).equals(path)) {
-							LOGGER.debug("왜 안돼 ,,");
-							DefaultMutableTreeNode a = (DefaultMutableTreeNode) topRoot.getChildAt(i);
-							LOGGER.debug(topRoot + "");
-							a.getPath();
-							initData(a);
+					DefaultMutableTreeNode dirRoot = (DefaultMutableTreeNode) o; // 선택한 경로의 노드를 가져와서
+					for (int i = 0; i < dirRoot.getChildCount(); i++) { // 해당 노드의 자식 노드수만큼 반복함
+						if (String.valueOf(dirRoot.getChildAt(i)).equals(path)) { // 선택한 행의 이름과 같은 노드의 이름이 같으면
+							DefaultMutableTreeNode dirRootNode = (DefaultMutableTreeNode) dirRoot.getChildAt(i);
+							LOGGER.debug(dirRootNode + "");
+							initData(dirRootNode); // 해당 노드를 출력
 						}
 					}
 				}
 			}
 
-			else {
+			else {// 상위 폴더로
 				TreePath p = jTree_Explore.getSelectionPath();
 				jTree_Explore.setSelectionPath(p.getParentPath());
 				LOGGER.debug(p + "");
 				Object o = jTree_Explore.getLastSelectedPathComponent();
 				if (o instanceof DefaultMutableTreeNode) {
-					LOGGER.debug("안됨?");
 					DefaultMutableTreeNode topRoot = (DefaultMutableTreeNode) o;
 					initData(topRoot);
 				}
 			}
 		}
 	}
-
-	/*
-	 * @Override public void valueChanged(TreeSelectionEvent e) {
-	 * LOGGER.debug(e.getOldLeadSelectionPath() + ""); TreePath getPath = new
-	 * TreePath(e); LOGGER.debug(getPath + ""); }
-	 * 
-	 * @Override public void treeWillExpand(TreeExpansionEvent event) throws
-	 * ExpandVetoException { if (event.getSource() == jTree_Explore) { Object o =
-	 * jTree_Explore.getLastSelectedPathComponent();
-	 * LOGGER.debug(jTree_Explore.getLastSelectedPathComponent().getClass() + "");
-	 * LOGGER.debug(o.getClass() + ""); if (o instanceof DefaultMutableTreeNode) {
-	 * DefaultMutableTreeNode selectedVo = (DefaultMutableTreeNode) o; try {
-	 * initData(selectedVo); } catch (IOException e) { e.printStackTrace(); } } } }
-	 * 
-	 * @Override public void treeWillCollapse(TreeExpansionEvent event) throws
-	 * ExpandVetoException {
-	 * 
-	 * }
-	 */
 }
 
 class ExplorePanel_jTree_Explore_MouseAdapter extends MouseAdapter {
