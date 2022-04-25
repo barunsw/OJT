@@ -156,7 +156,6 @@ public class ExplorePanel extends JPanel {
 		}
 		tableModel.setData(tableList);
 		tableModel.fireTableDataChanged();
-		treeModel.nodeStructureChanged(node);
 		jTree_Explore.expandPath(new TreePath(node.getPath()));
 		if (rootNode == node) {
 			jTree_Explore.setSelectionPath(new TreePath(rootNode.getPath()));
@@ -202,6 +201,7 @@ public class ExplorePanel extends JPanel {
 			String path = jTextField_Search.getText();
 			// textField에 입력한 경로를 그대로 treenode로 만들어서 가져올 수 있는지,,
 			// treepath를 구해야하는데,,
+			
 			treeData = new DefaultMutableTreeNode(new FileVo("", "", true, path));
 			initData(treeData);
 //			if (!path.equals("/")) {
