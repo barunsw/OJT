@@ -1,8 +1,5 @@
 package com.barunsw.ojt.cjs.day18;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -11,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class ExploreFrame extends JFrame {
 
@@ -30,13 +26,6 @@ public class ExploreFrame extends JFrame {
 	}
 
 	private void initComponent() throws Exception {
-
-		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-		int xPos = (scrDim.width - ExploreFrame.WIDTH) / 2;
-		int yPos = (scrDim.height - ExploreFrame.HEIGHT) / 2;
-
-		this.setBounds(new Rectangle(xPos, yPos, ExploreFrame.WIDTH, ExploreFrame.HEIGHT));
-
 		this.setTitle("Explorer");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);

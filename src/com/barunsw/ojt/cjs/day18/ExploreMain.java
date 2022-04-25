@@ -1,5 +1,9 @@
 package com.barunsw.ojt.cjs.day18;
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+
 import javax.swing.UIManager;
 
 import org.slf4j.Logger;
@@ -15,6 +19,11 @@ public class ExploreMain {
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage() + ex);
 		}
-		new ExploreFrame();
+		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
+		int xPos = (scrDim.width - ExploreFrame.WIDTH) / 2;
+		int yPos = (scrDim.height - ExploreFrame.HEIGHT) / 2;
+		ExploreFrame exFrame = new ExploreFrame();
+
+		exFrame.setBounds(new Rectangle(xPos, yPos, ExploreFrame.WIDTH, ExploreFrame.HEIGHT));
 	}
 }
