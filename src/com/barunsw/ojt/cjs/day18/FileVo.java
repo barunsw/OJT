@@ -5,7 +5,7 @@ public class FileVo {
 	private String created;
 	private FileType type;
 	private String path;
-
+	
 	public FileVo() {
 	}
 	

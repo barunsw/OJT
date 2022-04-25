@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class ExploreFrame extends JFrame {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ExploreFrame.class);
