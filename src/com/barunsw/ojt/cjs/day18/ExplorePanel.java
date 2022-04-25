@@ -156,6 +156,7 @@ public class ExplorePanel extends JPanel {
 		}
 		tableModel.setData(tableList);
 		tableModel.fireTableDataChanged();
+
 		jTree_Explore.expandPath(new TreePath(node.getPath()));
 		if (rootNode == node) {
 			jTree_Explore.setSelectionPath(new TreePath(rootNode.getPath()));
