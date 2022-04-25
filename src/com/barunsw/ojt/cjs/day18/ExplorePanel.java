@@ -25,8 +25,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -44,7 +47,7 @@ public class ExplorePanel extends JPanel {
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	private JScrollPane jScrollPane_Tree = new JScrollPane();
 	private JPanel jPanel_Search = new JPanel();
-	private JTextField jTextField_Search = new JTextField(50);
+	private JTextField jTextField_Search = new JTextField();
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new FileVo("C:", "", true, "/"));
@@ -55,6 +58,8 @@ public class ExplorePanel extends JPanel {
 	TreeNode absolutePath;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	private GridBagLayout gridBagLayout = new GridBagLayout();
+	
 	public ExplorePanel() {
 		initComponent();
 		initTree();
@@ -64,15 +69,28 @@ public class ExplorePanel extends JPanel {
 	}
 
 	private void initComponent() {
-		this.setLayout(new GridBagLayout());
-		this.add(jSplitPane, new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
+		this.setLayout(gridBagLayout);
+		jPanel_Search.setLayout(gridBagLayout);
+		
+		this.add(jPanel_Search, 
+				new GridBagConstraints(0, 0, 1, 1, 
+						1.0, 0.0, 
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
+						new Insets(0, 0, 0, 0), 
+						0, 0));
 
-		this.add(jPanel_Search, new GridBagConstraints(0, 0, 3, 1, 1.0, 0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(jSplitPane, new GridBagConstraints(0, 1, 1, 1, 
+				1.0, 1.0, 
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
+				new Insets(0, 5, 5, 5), 
+				0, 0));
 
-		jPanel_Search.add(jTextField_Search, new GridBagConstraints(0, 0, 2, 1, 1, 1, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		jPanel_Search.add(jTextField_Search, 
+				new GridBagConstraints(0, 0, 1, 1, 
+						1.0, 1.0, 
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
+						new Insets(5, 5, 5, 5), 
+						0, 0));
 
 		jScrollPane_Table.getViewport().add(jTable_List);
 		jScrollPane_Tree.getViewport().add(jTree_Explore);
@@ -103,8 +121,8 @@ public class ExplorePanel extends JPanel {
 	}
 
 	private void initEventListner() {
-		jTree_Explore.addMouseListener(new ExplorePanel_jTree_Explore_MouseAdapter(this));
-		jTree_Explore.addTreeWillExpandListener(null);
+		//jTree_Explore.addMouseListener(new ExplorePanel_jTree_Explore_MouseAdapter(this));
+		jTree_Explore.addTreeWillExpandListener(new ExplorePanel_jTree_Explore_TreeWillExpandListener(this));
 		jTextField_Search.addKeyListener(new ExplorePanel_jTextField_Search_keyListener(this));
 		jTable_List.addMouseListener(new ExplorePanel_jTable_Explore_MouseAdapter(this));
 	}
@@ -121,11 +139,25 @@ public class ExplorePanel extends JPanel {
 		if (node != rootNode) {
 			Vector v = new Vector();
 			v.add("..");
+			
+			File parentFile = f.getParentFile();
+			
+			v.add("");
+			v.add("");
+			v.add("");
+
+			FileVo parentVo = new FileVo();
+			parentVo.setPath(parentFile.getAbsolutePath());
+			
+			v.add(parentVo);
+			
 			tableList.add(v);
 		}
 
-		if (f.listFiles() != null) {
-			for (File oneFile : f.listFiles()) {
+		File[] fileList = f.listFiles();
+		
+		if (fileList != null) {
+			for (File oneFile : fileList) {
 				Vector inputData = new Vector();
 				FileVo fileVo = new FileVo(oneFile.getName(), created, oneFile.isDirectory(),
 						oneFile.getAbsolutePath());
@@ -151,20 +183,33 @@ public class ExplorePanel extends JPanel {
 				inputData.add(fileVo.getType());
 				inputData.add(kbytes);
 				inputData.add(fileVo.getCreated());
+				inputData.add(fileVo);
+				
 				tableList.add(inputData);
 			}
 		}
 		tableModel.setData(tableList);
 		tableModel.fireTableDataChanged();
-
+/*
 		jTree_Explore.expandPath(new TreePath(node.getPath()));
 		if (rootNode == node) {
 			jTree_Explore.setSelectionPath(new TreePath(rootNode.getPath()));
 		}
 		else {
 			jTree_Explore.setSelectionPath(new TreePath(node.getPath()));
-
 		}
+*/		
+	}
+	
+	private void setFilePath(FileVo fileVo) {
+		// C:\\apache\\apache-jmeter-5.4.1 이렇게 표시
+		File file = new File(fileVo.getPath());
+		jTextField_Search.setText(file.getAbsolutePath());
+	}
+	
+	private void setTreePath(FileVo fileVo) {
+		String path = fileVo.getPath();
+		String[] paths = path.split("\\\\");
 	}
 
 	private boolean checkSubDir(String filePath) {
@@ -196,6 +241,23 @@ public class ExplorePanel extends JPanel {
 		}
 	}
 
+	void jTree_Explore_treeWillExpand(TreeExpansionEvent e) {
+		TreePath expandPath = e.getPath();
+		LOGGER.debug("treeWillExpand:" + expandPath);
+
+		Object o = expandPath.getLastPathComponent();
+		if (o instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode selectedVo = (DefaultMutableTreeNode) o;
+			initData(selectedVo);
+			
+			Object userObject = selectedVo.getUserObject();
+			if (userObject instanceof FileVo) {
+				FileVo fileVo = (FileVo)userObject;
+				setFilePath(fileVo);
+			}
+		}
+	}
+	
 	public void jTextField_Search_keyListener(KeyEvent e) throws IOException {
 		switch (e.getKeyChar()) {
 		case KeyEvent.VK_ENTER:
@@ -220,6 +282,7 @@ public class ExplorePanel extends JPanel {
 		}
 	}
 
+	/*
 	public void jTable_Explore_mouseReleased(MouseEvent e) throws IOException {
 
 		if (e.getClickCount() == 2) { // 더블클릭하면
@@ -256,6 +319,18 @@ public class ExplorePanel extends JPanel {
 			}
 		}
 	}
+	*/
+	
+	public void jTable_Explore_mouseReleased(MouseEvent e) throws IOException {
+		int row = jTable_List.getSelectedRow();
+		Object selectedObject = tableModel.getValueAt(row, 4);
+		LOGGER.debug("selectedObject:" + selectedObject);
+		if (selectedObject instanceof FileVo) {
+			FileVo fileVo = (FileVo)selectedObject;
+			setFilePath(fileVo);
+			setTreePath(fileVo);
+		}
+	}
 }
 
 class ExplorePanel_jTree_Explore_MouseAdapter extends MouseAdapter {
@@ -271,6 +346,34 @@ class ExplorePanel_jTree_Explore_MouseAdapter extends MouseAdapter {
 			adaptee.jTree_Explore_mouseReleased(e);
 		}
 		catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+}
+
+class ExplorePanel_jTree_Explore_TreeWillExpandListener implements TreeWillExpandListener {
+	private ExplorePanel adaptee;
+
+	public ExplorePanel_jTree_Explore_TreeWillExpandListener(ExplorePanel adaptee) {
+		this.adaptee = adaptee;
+	}
+
+	@Override
+	public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+		try {
+			adaptee.jTree_Explore_treeWillExpand(event);
+		}
+		catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	@Override
+	public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+		try {
+			adaptee.jTree_Explore_treeWillExpand(event);
+		}
+		catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}
