@@ -16,6 +16,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -50,7 +51,7 @@ public class ExplorePanel extends JPanel {
 	private JTextField jTextField_Search = new JTextField();
 
 	private CommonTableModel tableModel = new CommonTableModel();
-	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new FileVo("C:", "", true, "/"));
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new FileVo("C:", "", true, new File("/").getAbsolutePath()));
 
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 	String separator = System.getProperty("File.separator");
@@ -207,9 +208,41 @@ public class ExplorePanel extends JPanel {
 		jTextField_Search.setText(file.getAbsolutePath());
 	}
 	
+	private TreeNode findTreeNode(TreeNode parentNode, String[] paths, int depth) {
+		Enumeration<TreeNode> childEnum = parentNode.children();
+		while (childEnum.hasMoreElements()) {
+			TreeNode childNode = childEnum.nextElement();
+			
+			if (paths[depth].equals(childNode.toString())) {
+				if (paths.length-1 == depth) {
+					return childNode;
+				}
+				else {
+					return findTreeNode(childNode, paths, depth+1);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	private void setTreePath(FileVo fileVo) {
 		String path = fileVo.getPath();
-		String[] paths = path.split("\\\\");
+		String[] paths = path.split("\\" + File.separator);
+		// C:, apache, apache-jmeter-5.4.1
+		
+		TreeNode treeNode = rootNode;
+		
+		int pathLen = paths.length;
+		if (pathLen > 1) {
+			treeNode = findTreeNode(rootNode, paths, 1);
+		}
+		
+		LOGGER.debug("setTreePath:" + treeNode);
+		
+		TreeNode[] treeNodes = treeModel.getPathToRoot(treeNode);
+		
+		jTree_Explore.setSelectionPath(new TreePath(treeNodes));
 	}
 
 	private boolean checkSubDir(String filePath) {
