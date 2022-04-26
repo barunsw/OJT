@@ -52,7 +52,8 @@ public class ExplorePanel extends JPanel {
 	private JTextField jTextField_Search = new JTextField();
 
 	private CommonTableModel tableModel = new CommonTableModel();
-	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(
+
+  private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(
 			new FileVo("C:", "", true, new File("/").getAbsolutePath()));
 
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
@@ -234,7 +235,7 @@ public class ExplorePanel extends JPanel {
 		
 		return null;
 	}
-
+	
 	private void setTreePath(FileVo fileVo) {
 
 		String path = fileVo.getPath();
