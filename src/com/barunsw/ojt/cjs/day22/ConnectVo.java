@@ -7,8 +7,17 @@ public class ConnectVo {
 	private String dbUser;
 	private String dbPassword;
 	private String dbName;
+	public ConnectVo() {
+		
+	}
+	public ConnectVo(Db_type db_type, String dbUrl, String dbUser, String dbPassword, String dbName) {
+		this.db_type = db_type;
+		this.dbUrl = dbUrl;
+		this.dbUser = dbUser;
+		this.dbName = dbName;
+		this.dbPassword = dbPassword;
+	}
 
-	
 	public int getSeq_num() {
 		return seq_num;
 	}

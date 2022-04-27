@@ -5,6 +5,17 @@ import com.barunsw.ojt.constants.Gender;
 public enum Db_type {
 	MARIA, POSTGRES;
 
+	public String toStringInDatabase() {
+		switch (this) {
+		case MARIA:
+			return "MARIA";
+		case POSTGRES:
+			return "POSTGRES";
+		default:
+			return "";
+		}
+	}
+	
 	public String toString() {
 		switch (this) {
 		case MARIA:
