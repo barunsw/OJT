@@ -41,9 +41,10 @@ public class DbClientPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DbClientPanel.class);
 	private GridBagLayout grid = new GridBagLayout();
 	
-	private static final int nameIndex = 0;
-	private static final int ageIndex = 1;
-	private static final int addressIndex = 2;
+	private static final int SEQINDEX = 1;
+	private static final int NAMEINDEX= 2;
+	private static final int AGEINDEX = 3;
+	private static final int ADDRESSINDEX = 4;
 	
 	private JSplitPane jSplitPane_Tree = new JSplitPane();
 	private JSplitPane jSplitPane_Table = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -237,8 +238,8 @@ public class DbClientPanel extends JPanel {
 	private int selectDbTable(String sql) throws Exception {
 		ResultSet rs = null;
 		Vector tableList = new Vector();
-		Vector colsName = new Vector();
-		Vector data = new Vector();
+		Vector columnNameList = new Vector();
+		
 		int j = 0;
 		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(sql);) {
@@ -248,16 +249,17 @@ public class DbClientPanel extends JPanel {
 			int cols = md.getColumnCount();
 			
 			for (int i = 1; i <= cols; i++) {
-				colsName.add(md.getColumnName(i));
+				columnNameList.add(md.getColumnName(i));
 			}
-			tableModel.setColumn(colsName);
+			tableModel.setColumn(columnNameList);
 			jTable_DbSelect.setModel(tableModel);
 			
 			while (rs.next()) {
-				data.add(rs.getInt(1));
-				data.add(rs.getString(2));
-				data.add(rs.getInt(3));
-				data.add(rs.getString(4));
+				Vector data = new Vector();
+				data.add(rs.getInt(SEQINDEX));
+				data.add(rs.getString(NAMEINDEX));
+				data.add(rs.getInt(AGEINDEX));
+				data.add(rs.getString(ADDRESSINDEX));
 				
 				tableList.add(data);
 			}
@@ -275,9 +277,9 @@ public class DbClientPanel extends JPanel {
 				PreparedStatement psmt = conn.prepareStatement(sql);) {
 			UserVo user = new UserVo();
 
-			psmt.setString(nameIndex, user.getName());
-			psmt.setInt(ageIndex, user.getAge());
-			psmt.setString(addressIndex, user.getAddress());
+			psmt.setString(NAMEINDEX, user.getName());
+			psmt.setInt(AGEINDEX, user.getAge());
+			psmt.setString(ADDRESSINDEX, user.getAddress());
 
 			result = psmt.executeUpdate();
 		}
