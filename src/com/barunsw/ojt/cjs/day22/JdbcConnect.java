@@ -3,12 +3,9 @@ package com.barunsw.ojt.cjs.day22;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class JdbcConnect {
 	private static final int DB_TYPE_INDEX = 1;
@@ -27,31 +24,33 @@ public class JdbcConnect {
 
 	public JdbcConnect(ConnectVo connectVo) {
 		this.connectVo = connectVo;
-		dbUrl = String.format(
-				"jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
-				connectVo.getDbUrl(), connectVo.getDbName());
+		if (connectVo.getDb_type().toString().contains("maria")) {
+			dbUrl = String.format(
+					"jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+					connectVo.getDbUrl(), connectVo.getDbName());
+		}
+		else {
+			dbUrl = String.format(
+					"jdbc:postgresql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+					connectVo.getDbUrl(), connectVo.getDbName());
+		}
 		dbUser = connectVo.getDbUser();
 		dbPassword = connectVo.getDbPassword();
 		driverName = connectVo.getDb_type().toString();
 		LOGGER.debug(String.format("%s %s %s %s", dbUrl, dbUser, dbPassword, driverName));
 	}
 
-	public void SelectConnectData() throws SQLException {
+	public void selectConnectDate() {
 		String sql = "SELECT * FROM TB_DB_CONNECT";
 		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(sql);) {
-			ResultSet resultSet = psmt.executeQuery(); // select구문은 executeQuery, 그 외에는 executeUpdate
-			while (resultSet.next()) {
-				String db_Type = resultSet.getString(DB_TYPE_INDEX);
-				String ip = resultSet.getString(IP_INDEX);
-				String port = resultSet.getString(PORT_INDEX);
-				String dbUsername = resultSet.getString(USER_NAME_INDEX);
-				String dbPassword = resultSet.getString(PASSWORD_INDEX);
-				String dbName = resultSet.getString(DBNAME_INDEX);
-				ConnectVo connectData = new ConnectVo();
-			}
+			psmt.executeQuery();
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
+		
 
 	public int insertConnectData() {
 		String port = connectVo.getDbUrl().substring(connectVo.getDbUrl().lastIndexOf(":") + 1);

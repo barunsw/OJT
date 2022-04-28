@@ -1,11 +1,9 @@
 package com.barunsw.ojt.cjs.day22;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,14 +12,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.barunsw.ojt.cjs.day09.AddressBookPanel;
 
 public class ConnectSetDialog extends JDialog {
 	private final static Logger LOGGER = LoggerFactory.getLogger(ConnectSetDialog.class);
@@ -35,13 +32,13 @@ public class ConnectSetDialog extends JDialog {
 	private JLabel jLabel_ConnectPassword = new JLabel("PASSWORD");
 	private JLabel jLabel_ConnectDbname = new JLabel("DB NAME");
 
-	private JTextField jTextField_Ip = new JTextField("localhost");
-	private JTextField jTextField_Port = new JTextField("3306");
-	private JTextField jTextField_Username = new JTextField("root");
-	private JPasswordField jTextField_Password = new JPasswordField("js0911");
-	private JTextField jTextField_Dbname = new JTextField("ojt");
+	private static JTextField jTextField_Ip = new JTextField("localhost");
+	private static JTextField jTextField_Port = new JTextField("3306");
+	private static JTextField jTextField_Username = new JTextField("root");
+	private static JPasswordField jTextField_Password = new JPasswordField("js0911");
+	private static JTextField jTextField_Dbname = new JTextField("ojt");
 	private GridBagLayout grid = new GridBagLayout();
-	private JComboBox<String> jComboBox;
+	private static JComboBox<String> jComboBox_DbType;
 
 	private JPanel jPanel_Button = new JPanel();
 	private JButton jButton_Connect = new JButton("확인");
@@ -51,7 +48,7 @@ public class ConnectSetDialog extends JDialog {
 	
 	public static ConnectVo connectVo = new ConnectVo();
 
-	public ConnectSetDialog(Frame frame, String title, ModalityType modalType) {
+	public ConnectSetDialog(DbClientFrame frame, String title, ModalityType modalType) {
 		super(frame, title, modalType);
 		
 		try {
@@ -66,7 +63,7 @@ public class ConnectSetDialog extends JDialog {
 	private void initComponent() {
 		
 		this.setContentPane(jPanel_Main);
-		jComboBox = new JComboBox<String>(jComboBox_Menu);
+		jComboBox_DbType = new JComboBox<String>(jComboBox_Menu);
 		jPanel_Main.setLayout(grid);
 
 		jPanel_Main.add(jLabel_ConnectType, new GridBagConstraints(
@@ -76,7 +73,7 @@ public class ConnectSetDialog extends JDialog {
 						new Insets(5, 5, 5, 5), 
 						0, 0
 						));
-		jPanel_Main.add(jComboBox, new GridBagConstraints(
+		jPanel_Main.add(jComboBox_DbType, new GridBagConstraints(
 						1, 0, 1, 1, 
 						1.0, 0.0, 
 						GridBagConstraints.CENTER,GridBagConstraints.BOTH, 
@@ -185,26 +182,34 @@ public class ConnectSetDialog extends JDialog {
 		jTextField_Password.setText("");
 		jTextField_Port.setText("");
 		jTextField_Dbname.setText("");
-		jComboBox.setSelectedIndex(0);
+		jComboBox_DbType.setSelectedIndex(0);
 	}
-	private void updateForm(ConnectVo selectVo) {
-		String port = connectVo.getDbUrl().substring(connectVo.getDbUrl().lastIndexOf(":") + 1);
-		String ip = connectVo.getDbUrl().substring(connectVo.getDbUrl().indexOf(":"));
 
-		jTextField_Ip.setText(ip);
-		jTextField_Username.setText(selectVo.getDbUser());
-		jTextField_Password.setText(selectVo.getDbPassword());
-		jTextField_Port.setText(port);
-		jTextField_Dbname.setText(selectVo.getDbName());
-		jComboBox.setSelectedItem(selectVo.getDb_type().toString());
+	private static void updateForm(ConnectVo selectVo) {
+		if (selectVo != null) {
+			String port = connectVo.getDbUrl().substring(connectVo.getDbUrl().lastIndexOf(":") + 1);
+			String ip = connectVo.getDbUrl().substring(0, connectVo.getDbUrl().indexOf(":"));
+
+			jTextField_Ip.setText(ip);
+			jTextField_Username.setText(selectVo.getDbUser());
+			jTextField_Password.setText(selectVo.getDbPassword());
+			jTextField_Port.setText(port);
+			jTextField_Dbname.setText(selectVo.getDbName());
+			jComboBox_DbType.setEditable(false);
+			jComboBox_DbType.setSelectedItem(selectVo.getDb_type().toString());
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "입력된 정보가 없습니다");
+		}
 	}
-	
+
 	public static ConnectVo showDialog(DbClientFrame frame, ConnectSetType setType, ConnectVo selectVo) {
 		String title = "";
 		if (setType == ConnectSetType.ADD) {
 			title = "연결 생성";
 		}
 		else if (setType == ConnectSetType.UPDATE) {
+			updateForm(selectVo);
 			title = "연결 수정";
 		}
 
@@ -214,20 +219,24 @@ public class ConnectSetDialog extends JDialog {
 		else {
 			dialog.setTitle(title);
 		}
+		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int xPos = (scrDim.width - DbClientFrame.WIDTH) / 2;
+		int yPos = (scrDim.height - DbClientFrame.HEIGHT) / 2;
+
 		dialog.setLocationRelativeTo(frame);
-		dialog.setBounds(0, 0, 300, 600);
+		dialog.setBounds(xPos, yPos, 400, 400);
 		dialog.setVisible(true);
 		
 		return connectVo;
 	}
 
 	public void jButton_Connect_ActionListener() throws Exception {
-		connectVo.setSeq_num(0);
 		connectVo.setDbUrl(String.format("%s:%s", jTextField_Ip.getText(), jTextField_Port.getText()));
 		connectVo.setDbUser(jTextField_Username.getText());
 		connectVo.setDbPassword(String.valueOf(jTextField_Password.getPassword()));
 		connectVo.setDbName(jTextField_Dbname.getText());
-		connectVo.setDb_type(Db_type.toDb_type(jComboBox.getSelectedItem().toString()));
+		connectVo.setDb_type(Db_type.toDb_type(jComboBox_DbType.getSelectedItem().toString()));
 		this.dispose();
 		clearForm();
 	}

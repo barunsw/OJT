@@ -1,7 +1,5 @@
 package com.barunsw.ojt.cjs.day22;
 
-import com.barunsw.ojt.constants.Gender;
-
 public enum Db_type {
 	MARIA, POSTGRES;
 

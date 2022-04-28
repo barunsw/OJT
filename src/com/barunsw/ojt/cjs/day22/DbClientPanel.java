@@ -177,6 +177,7 @@ public class DbClientPanel extends JPanel {
 
 		ConnectVo connectData = new ConnectVo(connectVo.getDb_type(), connectVo.getDbUrl(), connectVo.getDbUser(),
 				connectVo.getDbPassword(), connectVo.getDbName());
+		LOGGER.debug( connectData.getDb_type() +"");
 		if (setType == ConnectSetType.ADD) {
 			if (connectVo.getDb_type().equals(Db_type.MARIA)
 					&& tp.getLastPathComponent().toString().equals("MariaDB")) {
@@ -221,72 +222,87 @@ public class DbClientPanel extends JPanel {
 	}
 
 
-	// EXCUTE
+	// EXCUTE실행시
 	public void dbClientExcute_ActionListener() throws Exception {
 		String sql = jTextArea_DbQureyInput.getText();
-		if (sql.contains("select")) {
-			if (!(selectDbTable(sql) == 1) && selectVo != null) {
-				JOptionPane.showMessageDialog(null, "잘못된 요청입니다");
+		if (selectVo != null && sql != null) {
+			if (sql.contains("select")) {
+				int result = selectDbTable(sql);
+				if (result > 0) {
+					jTextFiled_Excute.setText("select가 실행되었습니다.");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "잘못된 쿼리입니다.");
+					jTextFiled_Excute.setText("잘못된 쿼리입니다.");
+				}
+			}
+			else {
+				int result = excuteQuery(sql);
+				if (result > 0) {
+					jTextFiled_Excute.setText(result + "개의 행이 실행되었습니다.");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "잘못된 쿼리입니다.");
+					jTextFiled_Excute.setText("잘못된 쿼리입니다.");
+				}
 			}
 		}
 		else {
-			int result = excuteQuery(sql);
-			jTextFiled_Excute.setText(result + "개의 행이 실행되었습니다.");
+			JOptionPane.showMessageDialog(null, "DB가 선택되지 않았거나, 쿼리문이 입력되지 않았습니다.");
 		}
 	}
-
+	//테이블에 SELECT 데이터값 그려준다.
 	private int selectDbTable(String sql) throws Exception {
-		ResultSet rs = null;
+		ResultSet resultSet = null;
 		Vector tableList = new Vector();
 		Vector columnNameList = new Vector();
-		
-		int j = 0;
+		int rowCount =0;
+		LOGGER.debug("여기까지는 오나");
 		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(sql);) {
-			rs = psmt.executeQuery();
-			ResultSetMetaData md = rs.getMetaData();
+			resultSet = psmt.executeQuery();
 
-			int cols = md.getColumnCount();
-			
+			ResultSetMetaData metadata = resultSet.getMetaData();
+
+			int cols = metadata.getColumnCount();
 			for (int i = 1; i <= cols; i++) {
-				columnNameList.add(md.getColumnName(i));
+				columnNameList.add(metadata.getColumnName(i));
 			}
 			tableModel.setColumn(columnNameList);
 			jTable_DbSelect.setModel(tableModel);
 			
-			while (rs.next()) {
+			while (resultSet.next()) {
 				Vector data = new Vector();
-				data.add(rs.getInt(SEQINDEX));
-				data.add(rs.getString(NAMEINDEX));
-				data.add(rs.getInt(AGEINDEX));
-				data.add(rs.getString(ADDRESSINDEX));
+				data.add(resultSet.getInt(SEQINDEX));
+				data.add(resultSet.getString(NAMEINDEX));
+				data.add(resultSet.getInt(AGEINDEX));
+				data.add(resultSet.getString(ADDRESSINDEX));
 				
 				tableList.add(data);
 			}
-			j++;
+			resultSet.close();
+			rowCount++;
+		}
+		catch (Exception e) {
+			LOGGER.debug(e.getMessage(), e);
 		}
 		tableModel.setData(tableList);
 		tableModel.fireTableDataChanged();
-		return j;
+		return rowCount;
 	}
+	
 	
 	private int excuteQuery(String query) {
 		String sql = query;
-		int result = 0;
+		int rowCount = 0;
 		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 				PreparedStatement psmt = conn.prepareStatement(sql);) {
-			UserVo user = new UserVo();
-
-			psmt.setString(NAMEINDEX, user.getName());
-			psmt.setInt(AGEINDEX, user.getAge());
-			psmt.setString(ADDRESSINDEX, user.getAddress());
-
-			result = psmt.executeUpdate();
+			rowCount = psmt.executeUpdate();
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-		return result;
+		return rowCount;
 	}
 
 	// POPUP
@@ -299,11 +315,18 @@ public class DbClientPanel extends JPanel {
 			}
 		}
 	}
+	
 	//다이얼로그불러오면서 종료될 때 value가져와서 tree에 보내줌
 	private void showPopup(ConnectSetType setType, ConnectVo selectVo) throws Exception {
 		ConnectVo dialogResult = ConnectSetDialog.showDialog(DbClientMain.dbFrame, setType, selectVo); // 리턴값 ConnectVo
 		if (dialogResult.getDbName()!= null ) {
-			addTreeData(dialogResult);
+			try {
+				setConnectData(dialogResult);
+				addTreeData(dialogResult);
+			}
+			catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 		else {
 			return;
@@ -345,6 +368,22 @@ public class DbClientPanel extends JPanel {
 		treeModel.nodeStructureChanged(rootNode);
 	}
 
+	private void setConnectData(ConnectVo connectData) {
+		if (connectData.getDb_type().toString().contains("maria")) {
+			dbUrl = String.format(
+					"jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+					connectData.getDbUrl(), connectData.getDbName());
+		}
+		else {
+			dbUrl = String.format(
+					"jdbc:postgresql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+					connectData.getDbUrl(), connectData.getDbName());
+		}
+		dbUser = connectData.getDbUser();
+		dbPassword = connectData.getDbPassword();
+		driverName = connectData.getDb_type().toString();
+	}
+
 	 void jTree_GetDbData_MouseAdapter(MouseEvent e) throws Exception {
 		TreePath selectedTreePath = jTree_DbInfo.getPathForLocation(e.getX(), e.getY());
 		LOGGER.debug(selectedTreePath +"");
@@ -356,12 +395,7 @@ public class DbClientPanel extends JPanel {
 					DefaultMutableTreeNode select = (DefaultMutableTreeNode) o;
 					ConnectVo vo = (ConnectVo) select.getUserObject();
 					selectVo = vo;
-					dbUrl = String.format(
-							"jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
-							vo.getDbUrl(), vo.getDbName());
-					dbUser = vo.getDbUser();
-					dbPassword = vo.getDbPassword();
-					driverName = vo.getDb_type().toString();
+					setConnectData(vo);
 				}
 			}
 		}
