@@ -13,7 +13,7 @@ public class DbClientFrame extends JFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DbClientFrame.class);
 	private DbClientPanel dbPanel = new DbClientPanel();
 
-	public static final int WIDTH = 700;
+	public static final int WIDTH = 800;
 	public static final int HEIGHT = 640;
 
 	public DbClientFrame() {

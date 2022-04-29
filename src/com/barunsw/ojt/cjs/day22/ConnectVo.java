@@ -7,9 +7,11 @@ public class ConnectVo {
 	private String dbUser;
 	private String dbPassword;
 	private String dbName;
+
 	public ConnectVo() {
-		
+
 	}
+
 	public ConnectVo(Db_type db_type, String dbUrl, String dbUser, String dbPassword, String dbName) {
 		this.db_type = db_type;
 		this.dbUrl = dbUrl;
@@ -66,4 +68,8 @@ public class ConnectVo {
 		this.dbName = dbName;
 	}
 
+	public String toString() {
+		String dbConnectionInfo = String.format("%s - %s", dbName, dbUrl);
+		return dbConnectionInfo;
+	}
 }
