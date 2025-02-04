@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.barunsw.ojt.iwkim.day06.PersonInfoDao">
+ 	<select id="selectPersonList" resultType="PersonInfo">
+ 		SELECT * FROM person
+ 	</select>
+ 	
+ 	<select id="isExistName" parameterType="String" resultType="int">
+ 		SELECT 
+ 			count(*) 
+ 		FROM 
+ 			person 
+ 		WHERE 
+ 			name=#{name}
+ 	</select>
+ 	
+ 	<insert id="insertPerson" parameterType="PersonInfo">
+ 		INSERT INTO person (
+ 			seq
+ 			, name
+ 			, gender
+ 			, birth
+ 			, email
+ 			, regDate
+ 			, updateDate
+ 		)
+ 		VALUES(
+ 			0
+ 			, #{name}
+ 			, #{gender}
+ 			, #{birth}
+ 			, #{email}
+ 			, #{regDate}
+ 			, #{updateDate}
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updatePerson" parameterType="PersonInfo">
+ 		UPDATE 
+ 			person 
+ 		SET 
+ 			gender=#{gender}
+ 			, birth=#{birth}
+ 			, email=#{email}
+ 			, updateDate=#{updateDate} 
+ 		WHERE 
+ 			name=#{name} 
+ 	</update>
+ 	
+ 	<delete id="deletePerson" parameterType="String">
+ 		DELETE FROM 
+ 			person 
+ 		WHERE 
+ 			name = #{name}
+ 	</delete>
+ </mapper> 
