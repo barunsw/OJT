@@ -1,46 +1,60 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.barunsw.ojt.mjg.common.AddressBookInterface">
 
-  <!-- 모든 주소 정보를 Select -->
-  <select id="selectAddressList" resultType="AddressBookVo">
-    SELECT seq, name, age, gender, address
-    FROM ADDRESSBOOK
-  </select>
+	<!-- 모든 주소 정보를 Select -->
+	<select id="selectAddressList" resultType="AddressBookVo">
+		SELECT seq, name, age, gender, address
+		FROM ADDRESSBOOK
+	</select>
 
-  <!-- 주소 정보 Insert -->
-  <insert id="insertAddress" parameterType="AddressBookVo">
-    INSERT INTO ADDRESSBOOK (name, age, gender, address)
-    VALUES (#{name}, #{age}, #{gender}, #{address})
-  </insert>
+	<!-- 주소 정보 Insert -->
+	<insert id="insertAddress" parameterType="AddressBookVo">
+		INSERT INTO ADDRESSBOOK (name, age, gender, address)
+		VALUES (#{name}, #{age}, #{gender}, #{address})
+	</insert>
 
-  <!-- 주소 정보 Update -->
-  <update id="updateAddress" parameterType="AddressBookVo">
-    UPDATE ADDRESSBOOK
-    SET address = #{address}
-    WHERE seq = #{seq}
-  </update>
+	<!-- 주소 정보 Update -->
+	<update id="updateAddress" parameterType="AddressBookVo">
+		UPDATE ADDRESSBOOK
+		SET address = #{address}
+		WHERE seq = #{seq}
+	</update>
 
-  <!-- 주소 정보 Delete -->
-  <delete id="deleteAddress" parameterType="int">
-    DELETE FROM ADDRESSBOOK
-    WHERE seq = #{seq}
-  </delete>
-  
-  <!-- 성이 "문"인 사람만 Select -->
-  <select id="selectByLastNameMoon" resultType="AddressBookVo">
-    SELECT seq, name, age, gender, address
-    FROM ADDRESSBOOK
-    WHERE name LIKE '문%'
-  </select>
-  
-  <!--1년 지나면 나이 +1-->
-  <update id="updateAllAges">
-    UPDATE ADDRESSBOOK
-    SET age = age + 1
-  </update>
+	<!-- 주소 정보 Delete -->
+	<delete id="deleteAddress" parameterType="int">
+		DELETE FROM ADDRESSBOOK
+		WHERE seq = #{seq}
+	</delete>
+
+	<!-- 성이 "문"인 사람만 Select -->
+	<!--parameterType 지정하여 if test 동적 sql 사용-->
+	<select id="selectByLastNameMoon" resultType="AddressBookVo" parameterType="AddressBookVo"> 
+		SELECT seq, name, age, gender, address 
+		FROM ADDRESSBOOK 
+		<where>
+			<if test="name != null">
+				name LIKE CONCAT(#{name}, '%')
+			</if>
+			<if test="name == null">
+				name LIKE '문%'
+			</if>
+		</where>
+	</select>
+
+
+<!--	<select id="selectByLastNameMoon" resultType="AddressBookVo">
+		SELECT seq, name, age, gender, address
+		FROM ADDRESSBOOK
+		WHERE name LIKE '문%'
+	</select>-->
+
+
+	<!--1년 지나면 나이 +1-->
+	<update id="updateAllAges">
+		UPDATE ADDRESSBOOK
+		SET age = age + 1
+	</update>
 
 </mapper>
