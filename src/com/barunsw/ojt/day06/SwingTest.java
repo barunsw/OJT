@@ -15,18 +15,22 @@ public class SwingTest {
 	private static Logger LOGGER = LoggerFactory.getLogger(SwingTest.class);
 	
 	public static void main(String[] args) {
-//		JFrame testFrame = new JFrame();
+		//JFrame testFrame = new JFrame();
 		//testFrame.setLocation(new Point(100, 100));
 		//testFrame.setSize(new Dimension(600, 480));
 		//testFrame.setBounds(new Rectangle(100, 100, 600, 480));
+		
 		
 //		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
 //		
 //		int xPos = (scrDim.width - 600) / 2;
 //		int yPos = (scrDim.height - 480) / 2;
-		
+//		
 //		testFrame.setLocation(new Point(xPos, yPos));
 //		testFrame.setSize(new Dimension(600, 480));
+//		
+//		testFrame.getContentPane().setLayout(new FlowLayout());
+//		testFrame.getContentPane().add(new JButton("조회"));
 		
 //		testFrame.setLocation(xPos, yPos);
 //		testFrame.setSize(600, 480);
@@ -39,7 +43,7 @@ public class SwingTest {
 		}
 		catch (Exception ex) {
 		}
-		
+
 		TestFrame frame = new TestFrame();
 		//frame.setSize(100, 100);
 		// 1) 표시할 위치 지정

@@ -40,16 +40,20 @@ public class LayoutTestPanel extends JPanel {
 		jPanel_Green.setPreferredSize(new Dimension(100, 100));
 		
 		// 기본은 FlowLayout
-//		this.add(jPanel_Red);
-//		this.add(jPanel_Blue);
-
+/*
+		this.add(jPanel_Red);
+		this.add(jPanel_Blue);
+		this.add(jPanel_Green);
+*/
+		
 		// BorderLayout
 //		this.setLayout(new BorderLayout());
+//		this.add(jPanel_Green, BorderLayout.NORTH);
 //		this.add(jPanel_Red, BorderLayout.WEST);
 //		this.add(jPanel_Blue);
 		
 		// GridLayout
-//		this.setLayout(new GridLayout(1, 3));
+//		this.setLayout(new GridLayout(2, 2));
 //		this.add(jPanel_Red);
 //		this.add(jPanel_Blue);
 //		this.add(jPanel_Green);
@@ -64,29 +68,30 @@ public class LayoutTestPanel extends JPanel {
 //		jPanel_Blue.setBounds(100, 100, 100, 100);
 //		jPanel_Green.setBounds(200, 200, 100, 100);
 		
-//		this.setLayout(cardLayout);
-//		this.add(jPanel_Red, "red");
-//		this.add(jPanel_Blue, "blue");
-//		this.add(jPanel_Green, "green");
-//		
-//		cardLayout.show(this, "green");
-		
+/*		
+		this.setLayout(cardLayout);
+		this.add(jPanel_Red, "red");
+		this.add(jPanel_Blue, "blue");
+		this.add(jPanel_Green, "green");
+
+		cardLayout.show(this, "blue");
+*/
 		this.setLayout(new GridBagLayout());
 		
 		this.add(jPanel_Red, new GridBagConstraints(
 				0, 0, 1, 1,
-				0.0, 1.0,
+				1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(5, 5, 5, 5),
+				new Insets(0, 0, 0, 0),
 				0, 0));
-		
+
 		this.add(jPanel_Blue, new GridBagConstraints(
 				1, 1, 1, 1,
 				1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 0),
 				0, 0));
-		
+
 		this.add(jPanel_Green, new GridBagConstraints(
 				2, 2, 1, 1,
 				1.0, 1.0,
