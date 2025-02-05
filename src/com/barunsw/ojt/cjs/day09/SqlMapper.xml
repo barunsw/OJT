@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.barunsw.ojt.cjs.day09.AddressBookInterface">
+
+	<select id="selectAddressList"
+		parameterType="com.barunsw.ojt.vo.AddressVo"
+  		resultType="com.barunsw.ojt.vo.AddressVo"
+  		>
+		SELECT * 
+		FROM 
+			ADDRESSBOOK
+		WHERE
+			1 = 1
+			<if test="name != null">
+			AND NAME = #{name}
+			</if>
+	</select>
+	
+	<insert id ="insertAddress" 
+			parameterType="com.barunsw.ojt.vo.AddressVo"
+			>	  		
+		INSERT INTO 
+			ADDRESSBOOK(NAME, AGE, GENDER, ADDRESS)
+		VALUES
+			(#{name}, #{age}, #{gender}, #{address})
+	</insert>
+	
+	
+	<update id="updateAddress" 
+			parameterType="com.barunsw.ojt.vo.AddressVo"
+	  		>
+	  	UPDATE 
+	  		ADDRESSBOOK 
+	  	SET 
+  			AGE = #{age},
+  			GENDER= #{gender},
+  			ADDRESS = #{address}
+  		WHERE 
+  			NAME = #{name}
+	
+	</update>
+	
+	<select id="selectOneAddress" 
+			parameterType="com.barunsw.ojt.vo.AddressVo"
+			resultType="com.barunsw.ojt.vo.AddressVo"
+			
+	  		>
+	  	SELECT 
+	  	FROM
+	  		ADDRESSBOOK 
+  		WHERE 
+  			NAME = #{name}
+	
+	</select>
+	
+	<delete id="deleteAddress" 	
+			parameterType="com.barunsw.ojt.vo.AddressVo"
+			>
+			DELETE FROM
+				ADDRESSBOOK
+			WHERE
+				NAME = #{name}
+	</delete>
+</mapper>

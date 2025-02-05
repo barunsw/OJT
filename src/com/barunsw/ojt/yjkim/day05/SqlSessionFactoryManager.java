@@ -1,0 +1,42 @@
+package com.barunsw.ojt.yjkim.day05;
+
+import java.io.IOException;
+import java.io.Reader;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class SqlSessionFactoryManager {
+	private static final Logger LOGGER = LogManager.getLogger(SqlSessionFactoryManager.class);
+	private static final SqlSessionFactory sqlMapper;
+
+	static {
+		//jdbc 연결과 mapper 관리에 대한 환경설정 xml 자원 
+		String resource = "com/barunsw/ojt/yjkim/day05/SqlMapConfig.xml";
+
+		Reader reader = null;
+
+		try {
+			reader = Resources.getResourceAsReader(resource);
+		} 
+		catch ( IOException ex ) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+		
+		long startTime = System.currentTimeMillis();
+		
+		sqlMapper = new SqlSessionFactoryBuilder().build(reader, "development", System.getProperties());
+		
+		long endTime = System.currentTimeMillis();
+		
+		System.out.println(String.format("SqlSessionFactoryManager created(%s)", (endTime - startTime)));
+	}
+
+	public static SqlSessionFactory getSqlSessionFactory() {
+		return sqlMapper;  
+	}
+}
+

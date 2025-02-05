@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.barunsw.ojt.yjkim.day08.PersonDao">
+ 	<insert id="insert_Person">
+ 		INSERT INTO TB_ADDRESSBOOK(NAME, AGE, ADDRESS) VALUES (#{name}, #{age}, #{address}) 
+ 	</insert>
+ 	
+ 	<select id="select_Person" resultType="Map">
+ 		SELECT * FROM TB_ADDRESSBOOK
+ 	</select>
+ 	
+ 	<delete id="delete_Person">
+ 		DELETE FROM TB_ADDRESSBOOK WHERE SEQ = #{Param}
+ 	</delete>
+ 	
+ 	<update id="update_Person">
+ 		UPDATE TB_ADDRESSBOOK SET NAME = #{name}, AGE = #{age}, ADDRESS = #{address} where SEQ = #{seq}
+ 	</update>
+ 	
+ 	<select id="select_Particular_Person" resultType="Map" parameterType="String">
+	<![CDATA[
+		select * from TB_ADDRESSBOOK 
+	]]> 
+	<if test='"ㄱ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㄱ)' or (NAME >='가' and NAME < '나') 
+	]]>
+	</if>
+	<if test='"ㄴ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㄴ)' or (NAME >='나' and NAME < '다') 
+	]]>
+	</if>
+	<if test='"ㄷ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㄷ)' or (NAME >='다' and NAME < '라') 
+	]]>
+	</if>
+	<if test='"ㄹ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㄹ)' or (NAME >='라' and NAME < '마') 
+	]]>
+	</if>
+	<if test='"ㅁ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅁ)' or (NAME >='마' and NAME < '바') 
+	]]>
+	</if>
+	<if test='"ㅂ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅂ)' or (NAME >='바' and NAME < '사') 
+	]]>
+	</if>
+	<if test='"ㅅ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅅ)' or (NAME >='사' and NAME < '아') 
+	]]>
+	</if>
+	<if test='"ㅇ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅇ)' or (NAME >='아' and NAME < '자') 
+	]]>
+	</if>
+	<if test='"ㅈ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅈ)' or (NAME >='자' and NAME < '카') 
+	]]>
+	</if>
+	<if test='"ㅋ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅋ)' or (NAME >='카' and NAME < '타') 
+	]]>
+	</if>
+	<if test='"ㅌ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅌ)' or (NAME >='타' and NAME < '파') 
+	]]>
+	</if>
+	<if test='"ㅍ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅍ)' or (NAME >='파' and NAME < '하') 
+	]]>
+	</if>
+	<if test='"ㅎ".equals(param)'>
+	<![CDATA[
+		where NAME like '^(ㅎ)' or (NAME >='하') 
+	]]>
+	</if>
+	</select>
+	
+</mapper>
