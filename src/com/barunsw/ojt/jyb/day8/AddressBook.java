@@ -34,7 +34,6 @@ public class AddressBook extends JPanel {
 	private JTextField textField_Name = new JTextField(10);
 	private JLabel label_Age = new JLabel("나이");
 	private JTextField textField_Age = new JTextField(10);
-	private JLabel label_Gender = new JLabel("성별");
 	private JRadioButton btnBoy = new JRadioButton("남자");
 	private JRadioButton btnGirl = new JRadioButton("여자");
 
@@ -76,13 +75,10 @@ public class AddressBook extends JPanel {
 	    jPanel_Form.add(textField_Age, new GridBagConstraints(3, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 	            GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-	    jPanel_Form.add(label_Gender, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+	    jPanel_Form.add(btnBoy, new GridBagConstraints(4, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 	            GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-	    jPanel_Form.add(btnBoy, new GridBagConstraints(5, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
-	            GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
-
-	    jPanel_Form.add(btnGirl, new GridBagConstraints(6, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+	    jPanel_Form.add(btnGirl, new GridBagConstraints(5, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 	            GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
 	    label_Phone.setPreferredSize(new Dimension(120, 22));
@@ -119,7 +115,7 @@ public class AddressBook extends JPanel {
 	}
 
 	private void initTable() {
-		String[] columns = { "이름", "나이", "성별", "전화번호", "주소" };
+		String[] columns = { "이름", "나이", "전화번호", "주소" };
 
 		DefaultTableModel tableModel = new DefaultTableModel(columns, 100);
 		jTable = new JTable(tableModel);
