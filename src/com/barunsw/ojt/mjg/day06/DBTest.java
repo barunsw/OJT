@@ -33,10 +33,10 @@ public class DBTest {
             // 2. 새로운 주소 정보 생성
             LOGGER.debug("새로운 주소 정보 생성");
             AddressBookVo insertAddress = new AddressBookVo();
-            insertAddress.setName("김광규");
-            insertAddress.setGender(Gender.toGender("남"));
+            insertAddress.setName("신사임당");
+            insertAddress.setGender(Gender.toGender("여"));
             insertAddress.setAge(45);
-            insertAddress.setAddress("성남 수정구");
+            insertAddress.setAddress("강원도 강릉");
             int insertResult = mapper.insertAddress(insertAddress);
             LOGGER.debug("생성 결과: {}", insertResult);
 
