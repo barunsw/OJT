@@ -1,4 +1,4 @@
-package com.barunsw.ojt.jyb.day8;
+package com.barunsw.ojt.day8;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
