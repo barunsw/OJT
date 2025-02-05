@@ -38,8 +38,8 @@ public class TestFrame extends JFrame {
 //		this.setContentPane(testPanel);
 //		this.setContentPane(buttonLayoutPanel);
 //		this.setContentPane(layoutTestPanel);
-//		this.setContentPane(addressBookLayoutPanel);
-		this.setContentPane(chatLayoutPanel);
+		this.setContentPane(addressBookLayoutPanel);
+//		this.setContentPane(chatLayoutPanel);
 		
 		// 윈도우 이벤트
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
