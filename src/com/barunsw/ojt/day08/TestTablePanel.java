@@ -12,8 +12,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class TestTablePanel extends JPanel {
+	private final int TABLE_CELL_ID_NAME 	= 0;
+	private final int TABLE_CELL_ID_AGE 	= 1;
+	
 	private JPanel jPanel_Command = new JPanel();
 	
 	private JButton jButton_Reload = new JButton("조회");
@@ -77,6 +83,26 @@ public class TestTablePanel extends JPanel {
 		
 		jTable_Result.setModel(tableModel);
 		jTable_Result.setRowHeight(22);
+		
+		DefaultTableCellRenderer centerCellRenderer = new DefaultTableCellRenderer();
+		centerCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		int columnCount = jTable_Result.getColumnCount();
+		for (int i = 0; i < columnCount; i++) {
+            TableColumn tableColumn = jTable_Result.getColumnModel().getColumn(i);
+//            tableColumn.getHeaderRenderer().;
+
+            switch(i) {
+			case TABLE_CELL_ID_NAME:
+				tableColumn.setPreferredWidth(100);
+				tableColumn.setCellRenderer(centerCellRenderer);
+				break;
+			case TABLE_CELL_ID_AGE:
+				tableColumn.setPreferredWidth(100);
+				tableColumn.setCellRenderer(centerCellRenderer);
+				break;
+			}
+		}
 	}
 	
 	private void initData() {
