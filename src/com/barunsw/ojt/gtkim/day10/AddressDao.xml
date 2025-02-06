@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.barunsw.ojt.gtkim.day10.AddressDao">
+	<select id="selectAddressList" resultType="Address">
+		SELECT * FROM
+		TB_ADDRESS
+		ORDER BY NAME ASC;
+	</select>
+
+	<insert id="insertAddress" parameterType="Address">
+		INSERT INTO TB_ADDRESS
+		(seq, name, gender, age, phone, address)
+		VALUES(0, #{name}, #{gender},
+		#{age}, #{phone}, #{address})
+	</insert>
+
+	<update id="updateAddress" parameterType="Address">
+		UPDATE TB_ADDRESS
+		SET NAME=#{name}, GENDER=#{gender}, AGE=#{age}, PHONE=#{phone}, ADDRESS=#{address}
+		WHERE SEQ=#{seq}
+	</update>
+
+	<delete id="deleteAddress" parameterType="Address">
+		DELETE FROM TB_ADDRESS
+		WHERE SEQ=#{seq}
+	</delete>
+
+	<update id="createAddressTable">
+	CREATE TABLE IF NOT EXISTS TB_ADDRESS (
+		SEQ INT PRIMARY KEY AUTO_INCREMENT
+		, NAME VARCHAR(32) NOT NULL
+		, GENDER ENUM('MAN', 'WOMAN') NOT NULL
+		, AGE INT
+		, PHONE VARCHAR(32)
+		, ADDRESS VARCHAR(256)
+		) ENGINE=InnoDB DEFAULT CHARACTER SET UTF8 COLLATE UTF8_GENERAL_CI;
+	</update>
+</mapper>

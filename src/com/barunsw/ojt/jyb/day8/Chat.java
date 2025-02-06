@@ -16,47 +16,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Chat extends JPanel {
-    private static Logger LOGGER = LoggerFactory.getLogger(Chat.class);
-    private JTable jTable = new JTable();
+	private static Logger LOGGER = LoggerFactory.getLogger(Chat.class);
 
-    public Chat() {
-        try {
-            initComponent();
-        } catch (Exception ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-    }
+	private JTable jTable = new JTable();
 
-    private void initComponent() {
-        setLayout(new GridBagLayout());
+	private JPanel jPanel_Chat = new JPanel();
+	private JPanel jPanel_Send = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private GridBagLayout gridBagLayout = new GridBagLayout();
+	private JTextArea jTextArea = new JTextArea(10, 30);
+	private JButton jButton = new JButton("Send");
+	private JScrollPane jScrollPane = new JScrollPane();
+	private JTextField jTextField = new JTextField(20);
+	
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 400;
 
-        JTextArea textArea = new JTextArea(10, 30);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
+	public Chat() {
+		try {
+			initComponent();
+		} catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
+	 private void initComponent() {
+	        setLayout(new GridBagLayout());
+	        jPanel_Chat.setLayout(new GridBagLayout());
+	        jPanel_Send.setLayout(new GridBagLayout());
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+	        jTextArea.setLineWrap(true);
+	        jTextArea.setWrapStyleWord(true);
+	        
+	        scrollPane.setViewportView(jTextArea);
+	       
+	        jPanel_Chat.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, 
+	                GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
+	                new Insets(5, 5, 5, 5), 0, 0));
 
-        add(scrollPane, new GridBagConstraints(0, 0, 2, 1, 1.0, 1.0, 
-                GridBagConstraints.WEST, GridBagConstraints.BOTH, 
-                new Insets(5, 5, 5, 5), 0, 0));
-        
-        JTextField textField = new JTextField(10);
-        JButton button = new JButton("Send");
-        
-        add(textField, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, 
-                GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL, 
-                new Insets(5, 5, 5, 5), 0, 0));
-        add(button, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, 
-                GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL, 
-                new Insets(5, 5, 5, 5), 0, 0));
-        
-    }
+	        jPanel_Send.add(jTextField, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, 
+	                GridBagConstraints.WEST, GridBagConstraints.BOTH, 
+	                new Insets(0, 5, 5, 5), 0, 0));
+	        
+	        jPanel_Send.add(jButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, 
+	                GridBagConstraints.EAST, GridBagConstraints.VERTICAL, 
+	                new Insets(0, 5, 5, 5), 0, 0));
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Window Name");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.add(new Chat());
-        frame.setVisible(true);
-    }
+	        this.add(jPanel_Chat, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, 
+	                GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
+	                new Insets(0, 0, 0, 0), 0, 0));
+	        this.add(jPanel_Send, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, 
+	                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 
+	                new Insets(0, 0, 0, 0), 0, 0));
+	    }
 }

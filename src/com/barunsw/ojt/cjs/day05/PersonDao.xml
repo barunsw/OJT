@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.barunsw.ojt.cjs.day05.PersonDao">
+
+	<select id="selectPersonList"
+		parameterType="com.barunsw.ojt.cjs.day05.Person"
+  		resultType="com.barunsw.ojt.cjs.day05.Person"
+  		>
+		SELECT * 
+		FROM 
+			TB_PERSON
+		WHERE
+			1 = 1
+			<if test="name != null">
+			AND NAME = #{name}
+			</if>
+	</select>
+	
+	<insert id ="insertPerson" 
+			parameterType="com.barunsw.ojt.cjs.day05.Person"
+			>	  		
+	  		
+		INSERT
+		INTO 
+			TB_PERSON
+			(NAME, AGE, GENDER, PHONE, ADDRESS)
+			VALUES
+			(#{name}, #{age}, #{gender}, #{phone}, #{address})
+			
+		<selectKey resultType="Integer" keyProperty="seq" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	
+	<update id="updatePerson" 			
+	  		>
+	  		UPDATE TB_PERSON SET 
+	  			NAME = #{name},
+	  			AGE = #{age},
+	  			GENDER= #{gender},
+	  			PHONE = #{phone},
+	  			ADDRESS = #{address}
+	  			WHERE SEQ = #{seq}
+	
+	</update>
+	
+	<delete id="deletePerson" 	
+			parameterType="com.barunsw.ojt.cjs.day05.Person"
+			>
+			DELETE 
+				FROM
+				TB_PERSON
+				WHERE
+				SEQ =#{seq}
+	
+	</delete>
+</mapper>
