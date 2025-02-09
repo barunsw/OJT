@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="day09.AddressBookInterface">
+  <select id="selectAddressList" parameterType="day10.AddressVO" 
+  	resultType="day09.AddressVO">
+    SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS, FROM USER_INFO
+  </select>
+  
+  <insert id="insertAddress" parameterType="day10.AddressVO">
+  	INSERT INTO USER_INFO
+  	(name, age, gender, phone, address)
+  	VALUES (#{name}, #{age}, #{gender}, #{phone}, #{address})
+  </insert>
+
+  <update id="updateAddress" parameterType="day10.AddressVO">
+  	UPDATE USER_INFO
+  	SET GENDER=#{gender}, AGE=#{age}, PHONE=#{phone}, ADDRESS=#{address}
+  	WHERE NAME=#{name}
+  </update>
+
+  <delete id="deleteAddress" parameterType="day10.AddressVO">
+ 	DELETE FROM USER_INFO
+	WHERE NAME=#{name} 	
+  </delete>
+  
+</mapper>
