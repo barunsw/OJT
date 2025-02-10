@@ -1,4 +1,4 @@
-package day9;
+package com.barunsw.ojt.jyb.day9;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -11,7 +11,7 @@ public class SwingTest {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception ex) {
-			
+
 		}
 
 		TestFrame frame = new TestFrame();

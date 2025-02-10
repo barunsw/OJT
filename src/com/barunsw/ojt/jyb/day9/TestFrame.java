@@ -1,4 +1,4 @@
-package day9;
+package com.barunsw.ojt.jyb.day9;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,11 +35,11 @@ public class TestFrame extends JFrame {
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
 	}
 
-	void windowClosing(WindowEvent e) { //창을 닫을 때 호출
+	void windowClosing(WindowEvent e) { // 창을 닫을 때 호출
 		LOGGER.debug("windowClosing");
 
 		int confirmResult = JOptionPane.showConfirmDialog(TestFrame.this, "종료하시겠습니까?", "종료",
-				JOptionPane.OK_CANCEL_OPTION); //대화 상자
+				JOptionPane.OK_CANCEL_OPTION); // 대화 상자
 
 		if (confirmResult == JOptionPane.OK_OPTION) {
 			System.exit(0);

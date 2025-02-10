@@ -1,4 +1,4 @@
-package day9;
+package com.barunsw.ojt.jyb.day9;
 
 public enum Gender {
 	MAN, WOMAN;

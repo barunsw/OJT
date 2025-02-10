@@ -1,4 +1,4 @@
-package day4;
+package com.barunsw.ojt.jyb.day4;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

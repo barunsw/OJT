@@ -1,4 +1,4 @@
-package day8;
+package com.barunsw.ojt.jyb.day8;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;

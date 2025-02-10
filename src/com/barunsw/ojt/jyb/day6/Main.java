@@ -1,4 +1,4 @@
-package day6;
+package com.barunsw.ojt.jyb.day6;
 
 import java.util.List;
 

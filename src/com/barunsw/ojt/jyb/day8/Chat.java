@@ -1,4 +1,4 @@
-package day8;
+package com.barunsw.ojt.jyb.day8;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,7 +28,7 @@ public class Chat extends JPanel {
 	private JButton jButton = new JButton("Send");
 	private JScrollPane jScrollPane = new JScrollPane();
 	private JTextField jTextField = new JTextField(20);
-	
+
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 400;
 
@@ -39,33 +39,29 @@ public class Chat extends JPanel {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
-	 private void initComponent() {
-	        setLayout(new GridBagLayout());
-	        jPanel_Chat.setLayout(new GridBagLayout());
-	        jPanel_Send.setLayout(new GridBagLayout());
 
-	        jTextArea.setLineWrap(true);
-	        jTextArea.setWrapStyleWord(true);
-	        
-	        scrollPane.setViewportView(jTextArea);
-	       
-	        jPanel_Chat.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, 
-	                GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
-	                new Insets(5, 5, 5, 5), 0, 0));
+	private void initComponent() {
+		setLayout(new GridBagLayout());
+		jPanel_Chat.setLayout(new GridBagLayout());
+		jPanel_Send.setLayout(new GridBagLayout());
 
-	        jPanel_Send.add(jTextField, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, 
-	                GridBagConstraints.WEST, GridBagConstraints.BOTH, 
-	                new Insets(0, 5, 5, 5), 0, 0));
-	        
-	        jPanel_Send.add(jButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, 
-	                GridBagConstraints.EAST, GridBagConstraints.VERTICAL, 
-	                new Insets(0, 5, 5, 5), 0, 0));
+		jTextArea.setLineWrap(true);
+		jTextArea.setWrapStyleWord(true);
 
-	        this.add(jPanel_Chat, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, 
-	                GridBagConstraints.CENTER, GridBagConstraints.BOTH, 
-	                new Insets(0, 0, 0, 0), 0, 0));
-	        this.add(jPanel_Send, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, 
-	                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, 
-	                new Insets(0, 0, 0, 0), 0, 0));
-	    }
+		scrollPane.setViewportView(jTextArea);
+
+		jPanel_Chat.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+
+		jPanel_Send.add(jTextField, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
+
+		jPanel_Send.add(jButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.VERTICAL, new Insets(0, 5, 5, 5), 0, 0));
+
+		this.add(jPanel_Chat, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(jPanel_Send, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	}
 }

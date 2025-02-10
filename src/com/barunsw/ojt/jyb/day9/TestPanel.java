@@ -1,4 +1,4 @@
-package day9;
+package com.barunsw.ojt.jyb.day9;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -394,20 +394,7 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 	}
 }
 
-class TestPanel_jButton_Add_ActionListener implements ActionListener {
-	private TestPanel adaptee;
 
-	public TestPanel_jButton_Add_ActionListener(TestPanel adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		FileAddressBookImpl fileAddressBook = adaptee.getFileAddressBook();
-		fileAddressBook.saveAddressListToFile();
-
-	}
-}
 
 class TestPanel_jMenuItem_Delete_ActionListener implements ActionListener {
 	private TestPanel adaptee;
