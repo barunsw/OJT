@@ -17,6 +17,10 @@ public class AddressVo {
 		return this.name;
 	}
 
+	public int setSeq(int seq) {
+		return this.seq = seq;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

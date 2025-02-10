@@ -51,9 +51,10 @@ public class DbAddressImpl implements AddressBookInterface {
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				Statement stmt = conn.createStatement()) {
 
-			ResultSet resultSet = stmt.executeQuery("SELECT NAME, AGE, GENDER, PHONE, ADDRESS FROM USER_INFO");
+			ResultSet resultSet = stmt.executeQuery("SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS FROM USER_INFO");
 
 			while (resultSet.next()) {
+				int seq = resultSet.getInt("SEQ");
 				String name = resultSet.getString("NAME");
 				int age = resultSet.getInt("AGE");
 				String genderStr = resultSet.getString("GENDER");
@@ -63,6 +64,7 @@ public class DbAddressImpl implements AddressBookInterface {
 				Gender gender = Gender.toGender(genderStr); // string을 enum으로 변경
 
 				AddressVo userInfo = new AddressVo();
+				userInfo.setSeq(seq);
 				userInfo.setName(name);
 				userInfo.setAge(age);
 				userInfo.setGender(gender);
@@ -81,7 +83,8 @@ public class DbAddressImpl implements AddressBookInterface {
 	public int insertAddress(AddressVo addressVo) {
 		String sql = "INSERT INTO USER_INFO(NAME, AGE, GENDER, PHONE, ADDRESS)" + "VALUES(?, ?, ?, ?, ?)";
 		int insertCnt = 0;
-		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+		try (
+				Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, addressVo.getName());
 			pstmt.setInt(2, addressVo.getAge());

@@ -16,10 +16,10 @@ public enum Gender {
 	}
 
 	public static Gender toGender(String value) throws Exception {
-		if (value == null) {
+		if(value == null) {
 			throw new Exception("null값은 허용되지 않습니다.");
 		}
-
+			
 		switch (value) {
 		case "남자":
 		case "남":

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,7 +24,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.table.DefaultTableModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +39,6 @@ public class TestPanel extends JPanel {
 	private CardLayout cardLayout = new CardLayout();
 	private JTable jTable_Result = new JTable();
 	private JTable jTable = new JTable();
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 400;
 
 	private JPanel jPanel_Form = new JPanel();
 	private JLabel label_Name = new JLabel("이름");
@@ -62,6 +58,7 @@ public class TestPanel extends JPanel {
 	private JPanel jPanel_Table = new JPanel();
 	private JButton jButton_Add = new JButton("추가");
 	private JButton jButton_Update = new JButton("변경");
+	private JButton jButton_Save = new JButton("저장");
 
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
@@ -90,19 +87,15 @@ public class TestPanel extends JPanel {
 	}
 
 	private void initreset() {
-		// jTable의 모델이 CommonTableModel인지 확인한 후, 캐스팅
-		if (jTable.getModel() instanceof CommonTableModel) {
-			CommonTableModel model = (CommonTableModel) jTable.getModel();
-			model.setNumRows(0); // 모델의 행 수를 0으로 설정하여 초기화
-		} else {
-			// 만약 jTable의 모델이 CommonTableModel이 아니라면 오류 처리
-			System.out.println("jTable의 모델이 CommonTableModel이 아닙니다.");
-		}
+
+		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
+		model.setNumRows(0);
 	}
 
 	public void initComponent() throws Exception {
 		jPanel_Form.setLayout(new GridBagLayout());
 
+		// Form 내용 추가
 		jPanel_Form.add(label_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
@@ -139,30 +132,58 @@ public class TestPanel extends JPanel {
 
 		jPanel_Command.setLayout(new GridBagLayout());
 
-		jPanel_Command.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.EAST,
-				GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 6), 0, 0));
+		jPanel_Command.add(new JLabel(" "), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
+				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Command.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 1.0, GridBagConstraints.EAST,
-				GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 6), 0, 0));
+		jPanel_Command.add(jButton_Add, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+
+		jPanel_Command.add(jButton_Update, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+
+		jPanel_Command.add(jButton_Save, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+
+		jPanel_Table.setLayout(new GridBagLayout());
+
+		this.setLayout(new GridBagLayout());
+
+		this.add(jPanel_Form, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+
+		this.add(jPanel_Command, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+
+		this.add(jPanel_Table, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+		this.add(new JScrollPane(jTable_Result), new GridBagConstraints(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+		jButton_Add.addActionListener(new TestPanel_jButton_Add_ActionListener(this));
+		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
+
+		FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
+
+		jButton_Save.addActionListener(new TestPanel_jButton_Save_ActionListener(fileAddressBookImpl));
+
+		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseListener(this));
+
 	}
 
 	private void initTable() {
-		// 열 이름 정의
-		String[] columns = { "이름", "나이", "성별", "전화번호", "주소" };
+		Vector<String> columnData = new Vector<>();
 
-		// CommonTableModel 초기화 시, 열 정보 전달
-		CommonTableModel tableModel = new CommonTableModel(new Vector<>(Arrays.asList(columns)));
+		columnData.add("이름");
+		columnData.add("나이");
+		columnData.add("성별");
+		columnData.add("전화번호");
+		columnData.add("주소");
 
-		// JTable에 CommonTableModel 설정
-		jTable = new JTable(tableModel);
+		tableModel.setColumn(columnData);
 
-		// JScrollPane에 JTable 설정
-		scrollPane.setViewportView(jTable);
+		jTable_Result.setModel(tableModel);
 
-		// Panel에 테이블 추가
-		jPanel_Table.setLayout(new GridBagLayout());
-		jPanel_Table.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
 	private void insertData() {
@@ -229,6 +250,7 @@ public class TestPanel extends JPanel {
 			}
 
 			addressBookInterface.updateAddress(onePerson);
+			initreset();
 			initData();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -243,12 +265,12 @@ public class TestPanel extends JPanel {
 
 	private void initData() {
 		List<AddressVo> userList = addressBookInterface.selectAddressList(new AddressVo());
-
-		Vector<Object> dataVector = new Vector<>();
+		LOGGER.info("user: " + userList);
+		Vector dataVector = new Vector();
 
 		for (AddressVo oneUser : userList) {
 			LOGGER.info("user: " + oneUser);
-			Vector<Object> data = new Vector<>();
+			Vector data = new Vector();
 			data.add(oneUser.getName());
 			data.add(oneUser.getAge());
 			data.add(oneUser.getGender());
@@ -273,6 +295,7 @@ public class TestPanel extends JPanel {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 			initreset();
+			initData();
 		}
 	}
 
@@ -350,6 +373,19 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Update_ActionListener(e);
+	}
+}
+
+class TestPanel_jButton_Save_ActionListener implements ActionListener {
+	private FileAddressBookImpl fileAddressBookImpl;
+
+	public TestPanel_jButton_Save_ActionListener(FileAddressBookImpl fileAddressBookImpl) {
+		this.fileAddressBookImpl = fileAddressBookImpl;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		fileAddressBookImpl.saveAddressListToFile();
 	}
 }
 

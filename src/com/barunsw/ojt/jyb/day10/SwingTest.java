@@ -6,8 +6,6 @@ import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
-import day9.TestFrame;
-
 public class SwingTest {
 	public static void main(String[] args) {
 		try {
