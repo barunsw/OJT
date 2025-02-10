@@ -48,7 +48,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
              ResultSet resultSet = psmt.executeQuery()) {
 
             while (resultSet.next()) {
-                AddressVo address = new AddressVo(SQL, 0, null, SQL);
+                AddressVo address = new AddressVo();
                 address.setSeq(resultSet.getInt("SEQ"));
                 address.setName(resultSet.getString("NAME"));
                 address.setAge(resultSet.getInt("AGE"));
@@ -72,7 +72,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
             psmt.setString(1, addressVo.getName());
             psmt.setInt(2, addressVo.getAge());
-            psmt.setString(3, addressVo.getGender().toString());
+            psmt.setString(3, addressVo.getGender().getEng());
             psmt.setString(4, addressVo.getAddress());
             psmt.setString(5, addressVo.getPhone());            
             int result = psmt.executeUpdate();
@@ -93,7 +93,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
     		
         	psmt.setString(1, addressVo.getName());
             psmt.setInt(2, addressVo.getAge());
-            psmt.setString(3, addressVo.getGender().toString());
+            psmt.setString(3, addressVo.getGender().getEng());
             psmt.setString(4, addressVo.getAddress());
             psmt.setString(5, addressVo.getPhone());
             psmt.setInt(6, addressVo.getSeq());  // seq 기준으로 업데이트
