@@ -21,7 +21,8 @@ public class TestFrame extends JFrame {
 	public TestFrame() {
 		try {
 			initComponent();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}

@@ -25,7 +25,8 @@ public class TestThread2 extends Thread {
 
 			try {
 				Thread.sleep(500);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 
@@ -35,7 +36,8 @@ public class TestThread2 extends Thread {
 
 			try {
 				Thread.sleep(1000L - (endTime - startTime));
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 		}

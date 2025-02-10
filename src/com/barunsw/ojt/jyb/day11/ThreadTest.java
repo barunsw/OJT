@@ -40,7 +40,8 @@ public class ThreadTest {
 		try {
 			// Look and Feel UIManager를 통해 ui 쉽게 변경 가능
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 		}
 
 		TestFrame frame = new TestFrame();

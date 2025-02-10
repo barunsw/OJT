@@ -45,7 +45,8 @@ public class ProgressDialog extends JDialog implements PropertyChangeListener {
 			int yPos = (scrDim.height - HEIGHT) / 2;
 
 			setBounds(xPos, yPos, WIDTH, HEIGHT);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
