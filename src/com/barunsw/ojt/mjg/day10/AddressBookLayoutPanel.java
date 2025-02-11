@@ -8,8 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -26,18 +29,21 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.mjg.constants.Gender;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class AddressBookLayoutPanel extends JPanel {
 	
 //	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
 //	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
 //	private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
-	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
-	
+	//private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
+	private AddressBookInterface addressBookInterface;
 	
 	private static final Logger LOGGER = LogManager.getLogger(AddressBookLayoutPanel.class);
 	
@@ -103,6 +109,7 @@ public class AddressBookLayoutPanel extends JPanel {
 
     public AddressBookLayoutPanel() {
         try {
+        	initAddressBookIf();
             initComponent();
             initTable();
             initData();
@@ -112,6 +119,35 @@ public class AddressBookLayoutPanel extends JPanel {
         }
     }
 
+    private void initAddressBookIf() {
+    	Properties properties = new Properties();
+    	try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+            properties.load(reader);
+            
+            String addressIfClass = properties.getProperty("address_if_class");
+            
+            
+            Object o = Class.forName(addressIfClass).newInstance();
+            
+            addressBookInterface = (AddressBookInterface)o;
+        }
+        catch (IOException ioe) {
+            throw new RuntimeException("JDBC 설정 로드 실패", ioe);
+        } 
+    	catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     private void initComponent() {
         this.setLayout(gridBagLayout);
         jPanel_Form.setLayout(gridBagLayout);

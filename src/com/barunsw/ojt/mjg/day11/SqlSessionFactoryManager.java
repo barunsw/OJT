@@ -1,11 +1,8 @@
 package com.barunsw.ojt.mjg.day11;
 
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.File;
-import java.io.FileReader;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -19,16 +16,21 @@ public class SqlSessionFactoryManager {
 	// SqlSessionFactory 인스턴스가 불필요하게 여러 번 생성되는 것을 방지
 	static {
 		// XML 설정 파일의 경로를 지정
-		String resource = "SqlMapConfig.xml";
+		String resource = "com/barunsw/ojt/mjg/day11/SqlMapConfig.xml";
 		
 		// XML(텍스트 데이터) 사용 시에 InputStream보다 Reader 사용이 적합
 		Reader reader = null;
 
 		try {
-			reader = Resources.getResourceAsReader(resource);
+			//getClass().getResource(COMMON_IMAGE_PATH + "logo.png")
+			LOGGER.debug(SqlSessionFactoryManager.class.getClassLoader().getResource(resource));
+			
+			reader = new InputStreamReader(SqlSessionFactoryManager.class.getClassLoader().getResourceAsStream(resource));
+			
+			//reader = Resources.getResourceAsReader(resource);
 //			reader = new FileReader(new File(resource));
 		} 
-		catch ( IOException ioe ) {
+		catch ( Exception ioe ) {
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		

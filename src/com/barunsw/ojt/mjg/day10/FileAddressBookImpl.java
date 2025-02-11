@@ -36,7 +36,8 @@ public class FileAddressBookImpl implements AddressBookInterface {
             		continue;
             	}
                 String[] fields = line.split(",");
-                AddressVo address = new AddressVo(line, currentSeq, null, line);
+                //AddressVo address = new AddressVo(line, currentSeq, null, line);
+                AddressVo address = new AddressVo();
                 address.setSeq(Integer.parseInt(fields[0].trim()));
                 address.setName(fields[1].trim());
                 address.setAge(Integer.parseInt(fields[2].trim()));

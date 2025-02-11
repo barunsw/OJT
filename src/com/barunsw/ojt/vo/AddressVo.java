@@ -3,6 +3,7 @@ package com.barunsw.ojt.vo;
 import java.io.Serializable;
 
 import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.constants.SearchType;
 
 public class AddressVo implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -12,9 +13,10 @@ public class AddressVo implements Serializable {
 	private int age;
 	private String address;
 	private String phone;
+	private SearchType searchType;
+	private String searchWord;
 	
 	public AddressVo() {
-		
 	}
 	
 	public int getSeq() {
@@ -63,6 +65,22 @@ public class AddressVo implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	
+	public SearchType getSearchType() {
+		return searchType;
+	}
+
+	public void setSearchType(SearchType searchType) {
+		this.searchType = searchType;
+	}
+
+	public String getSearchWord() {
+		return searchWord;
+	}
+
+	public void setSearchWord(String searchWord) {
+		this.searchWord = searchWord;
 	}
 
 	@Override

@@ -10,6 +10,4 @@ public interface AddressBookInterface {
 	public int updateAddress(AddressVo addressVo) throws Exception;
 
 	public int deleteAddress(AddressVo addressVo) throws Exception;
-	
-	public List<AddressVo> selectAddressListByInitial(AddressVo addressVo);
 }
