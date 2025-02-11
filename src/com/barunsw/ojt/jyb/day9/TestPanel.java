@@ -1,5 +1,6 @@
 package com.barunsw.ojt.jyb.day9;
 
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,59 +22,64 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.ButtonGroup;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 
-	// 칼럼 인덱스를 상수 정의 해주기
-	// private final int TABLE_CELL_ID_NAME = 1;
+	// private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
+	 private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
+
+	private final int COLUMN_INDEX_NAME = 0;
+	private final int COLUMN_INDEX_AGE = 1;
+	private final int COLUMN_INDEX_GENDER = 2;
+	private final int COLUMN_INDEX_PHONE = 3;
+	private final int COLUMN_INDEX_ADDRESS = 4;
+	private final int COLUMN_INDEX_PERSON = 5;
 
 	private int selectedRow = 0;
 	private final Dimension LABEL_SIZE = new Dimension(80, 30);
 	private final Dimension SIZE = new Dimension(120, 30);
-	private GridBagLayout gridBagLayout = new GridBagLayout();
 
-	private JPanel jPanel_RadioButton = new JPanel();
-	private JPanel jPanel_Button = new JPanel();
-
-	private JLabel jLabel_Name = new JLabel("이름");
-	private JLabel jLabel_Age = new JLabel("나이");
-	private JLabel jLabel_Gender = new JLabel("성별");
-	private JLabel jLabel_Phone = new JLabel("전화번호");
-	private JLabel jLabel_Address = new JLabel("주소");
-
-	private JTextField jTextField_Name = new JTextField();
-
-	private JSpinner jSpinner_Age = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-
-	private JRadioButton jRadioButton_Man = new JRadioButton("남");
-	private JRadioButton jRadioButton_Woman = new JRadioButton("여");
-	private ButtonGroup ButtonGroup = new ButtonGroup();
-
-	private JTextField jTextField_Phone = new JTextField();
-
-	private JTextArea jTextField_Address = new JTextArea();
-
-	private JScrollPane jScrollPane_Table = new JScrollPane();
-	private JTable jTable_Result = new JTable();
 	private CommonTableModel tableModel = new CommonTableModel();
+	private CardLayout cardLayout = new CardLayout();
 
+	private JTable jTable_Result = new JTable();
+	private JTable jTable = new JTable();
+
+	private JPanel jPanel_Form = new JPanel();
+	private JLabel jLabel_Name = new JLabel("이름");
+	private JTextField jTextField_Name = new JTextField();
+	private JLabel jLabel_Age = new JLabel("나이");
+	private JSpinner jSpinner_Age = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+	private JLabel jLabel_Gender = new JLabel("성별");
+	private JRadioButton jRadioButton_Boy = new JRadioButton("남자");
+	private JRadioButton jRadioButton_Girl = new JRadioButton("여자");
+
+	private JPanel jPanel_Command = new JPanel();
+	private JLabel jLabel_Phone = new JLabel("전화번호");
+	private JTextField jTextField_Phone = new JTextField();
+	private JLabel jLabel_Address = new JLabel("주소");
+	private JTextField jTextField_Address = new JTextField();
+
+	private JPanel jPanel_Table = new JPanel();
 	private JButton jButton_Add = new JButton("추가");
 	private JButton jButton_Update = new JButton("변경");
-	private JButton jButton_Save = new JButton("저장");
 
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
-
-	private AddressBookInterface addressBookInterface = new DbAddressImpl();
+	private JScrollPane jScrollPane_Table = new JScrollPane();
+	private GridBagLayout gridBagLayout = new GridBagLayout();
 
 	public TestPanel() {
 		try {
@@ -87,85 +93,73 @@ public class TestPanel extends JPanel {
 		}
 	}
 
+	private void initreset() {
+
+		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
+		model.setNumRows(0);
+
+		// 테이블 첫번째 로우 선택
+		// jTable_Result.setRowSelectionInterval(0, 0);
+	}
+
 	public void initComponent() throws Exception {
+		// Layout 설정
 		this.setLayout(gridBagLayout);
-		jPanel_RadioButton.setLayout(gridBagLayout);
-		jPanel_Button.setLayout(gridBagLayout);
-
-		jLabel_Name.setPreferredSize(LABEL_SIZE);
-		jTextField_Name.setPreferredSize(SIZE);
-
-		jLabel_Age.setPreferredSize(LABEL_SIZE);
-		jSpinner_Age.setPreferredSize(SIZE);
-
-		jLabel_Gender.setPreferredSize(LABEL_SIZE);
-		jRadioButton_Man.setPreferredSize(new Dimension(60, 22));
-		jRadioButton_Woman.setPreferredSize(new Dimension(60, 22));
-
-		jLabel_Phone.setPreferredSize(LABEL_SIZE);
-		jTextField_Phone.setPreferredSize(SIZE);
-
-		jLabel_Address.setPreferredSize(LABEL_SIZE);
-		jTextField_Address.setPreferredSize(SIZE);
-
-		jButton_Add.setPreferredSize(SIZE);
-		jButton_Update.setPreferredSize(SIZE);
-		jButton_Add.setPreferredSize(SIZE);
-
-		this.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.setLayout(gridBagLayout);
+		jPanel_Command.setLayout(gridBagLayout);
+		jPanel_Table.setLayout(gridBagLayout);
+		jScrollPane_Table.setViewportView(jTable_Result);
+		// Form 내용 추가
+		jPanel_Form.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
-		this.add(jTextField_Name, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jTextField_Name, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		this.add(jLabel_Age, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Age, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		this.add(jSpinner_Age, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jSpinner_Age, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		ButtonGroup.add(jRadioButton_Man);
-		ButtonGroup.add(jRadioButton_Woman);
-
-		this.add(jLabel_Gender, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Gender, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		this.add(jPanel_RadioButton, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jRadioButton_Boy, new GridBagConstraints(5, 0, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		this.add(jLabel_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jRadioButton_Girl, new GridBagConstraints(6, 0, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
+
+		jLabel_Phone.setPreferredSize(new Dimension(120, 22));
+		jPanel_Form.add(jLabel_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		this.add(jTextField_Phone, new GridBagConstraints(1, 1, 5, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jTextField_Phone, new GridBagConstraints(1, 1, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		this.add(jLabel_Address, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Address, new GridBagConstraints(0, 2, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		this.add(jTextField_Address, new GridBagConstraints(1, 2, 5, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jTextField_Address, new GridBagConstraints(1, 2, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		this.add(jPanel_Button, new GridBagConstraints(0, 3, 6, 1, 0.0, 0.0, GridBagConstraints.EAST,
-				GridBagConstraints.VERTICAL, new Insets(0, 5, 5, 5), 0, 0));
+		jPanel_Command.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.VERTICAL, new Insets(0, 0, 5, 5), 0, 0));
 
-		this.add(jScrollPane_Table, new GridBagConstraints(0, 4, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Command.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
+
+		jPanel_Table.add(jScrollPane_Table, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jScrollPane_Table.getViewport().add(jTable_Result);
-
-		jPanel_RadioButton.add(jRadioButton_Man, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		this.add(jPanel_Form, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		jPanel_RadioButton.add(jRadioButton_Woman, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
-		jPanel_Button.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 0, 0, 5), 0, 0));
-
-		jPanel_Button.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		this.add(jPanel_Command, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		jPanel_Button.add(jButton_Add, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		this.add(jPanel_Table, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		jButton_Add.addActionListener(new TestPanel_jButton_Add_ActionListener(this));
@@ -173,12 +167,7 @@ public class TestPanel extends JPanel {
 		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
 
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseListener(this));
-	}
 
-	private void initreset() {
-
-		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
-		model.setNumRows(0);
 	}
 
 	private void initTable() {
@@ -196,58 +185,33 @@ public class TestPanel extends JPanel {
 
 	}
 
-	private void initData() {
-
-		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
-
-		Vector dataLine = new Vector<>();
-
-		for (AddressVo onePerson : personList) {
-			LOGGER.info("person : " + onePerson);
-			Vector data = new Vector();
-			data.add(onePerson.getName());
-			data.add(onePerson.getAge());
-			data.add(onePerson.getGender());
-			data.add(onePerson.getPhone());
-			data.add(onePerson.getAddress());
-			data.add(onePerson);
-
-			dataLine.add(data);
-		}
-
-		tableModel.setData(dataLine);
-
-		tableModel.fireTableDataChanged();
-	}
-
 	private void insertData() {
 		try {
-			AddressVo onePerson = new AddressVo();
-			int age = (Integer) jSpinner_Age.getValue();
+			AddressVo oneUser = new AddressVo();
+			int age = (int) jSpinner_Age.getValue();
 
-			onePerson.setName(jTextField_Name.getText());
+			oneUser.setName(jTextField_Name.getText());
+			oneUser.setAge(age);
 
-			onePerson.setAge(age);
-
-			if (jRadioButton_Man.isSelected()) {
-				onePerson.setGender(Gender.toGender(jRadioButton_Man.getText()));
-			} else if (jRadioButton_Woman.isSelected()) {
-				onePerson.setGender(Gender.toGender(jRadioButton_Woman.getText()));
+			if (jRadioButton_Boy.isSelected()) {
+				oneUser.setGender(Gender.toGender(jRadioButton_Boy.getText()));
+			} else if (jRadioButton_Girl.isSelected()) {
+				oneUser.setGender(Gender.toGender(jRadioButton_Girl.getText()));
 			} else {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 입력하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
+			oneUser.setPhone(jTextField_Phone.getText());
+			oneUser.setAddress(jTextField_Address.getText());
 
-			onePerson.setPhone(jTextField_Phone.getText());
-			onePerson.setAddress(jTextField_Address.getText());
-
-			addressBookInterface.insertAddress(onePerson);
+			addressBookInterface.insertAddress(oneUser);
 			selectedRow = jTable_Result.getSelectedRow();
 
 			initreset();
 			initData();
 		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
+		catch (Exception e) {
+			LOGGER.error("데이터 처리 오류", e);
+			JOptionPane.showMessageDialog(TestPanel.this, "삽입 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -265,10 +229,10 @@ public class TestPanel extends JPanel {
 
 			onePerson.setAge(age);
 
-			if (jRadioButton_Man.isSelected()) {
-				onePerson.setGender(Gender.toGender(jRadioButton_Man.getText()));
-			} else if (jRadioButton_Woman.isSelected()) {
-				onePerson.setGender(Gender.toGender(jRadioButton_Woman.getText()));
+			if (jRadioButton_Boy.isSelected()) {
+				onePerson.setGender(Gender.toGender(jRadioButton_Boy.getText()));
+			} else if (jRadioButton_Girl.isSelected()) {
+				onePerson.setGender(Gender.toGender(jRadioButton_Girl.getText()));
 			} else {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 선택하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
@@ -288,6 +252,7 @@ public class TestPanel extends JPanel {
 			}
 
 			addressBookInterface.updateAddress(onePerson);
+			initreset();
 			initData();
 		}
 		catch (Exception ex) {
@@ -301,8 +266,29 @@ public class TestPanel extends JPanel {
 		jMenuItem_Delete.addActionListener(new TestPanel_jMenuItem_Delete_ActionListener(this));
 	}
 
+	private void initData() {
+		List<AddressVo> userList = addressBookInterface.selectAddressList(new AddressVo());
+		LOGGER.info("user: " + userList);
+		Vector dataVector = new Vector();
+
+		for (AddressVo oneUser : userList) {
+			LOGGER.info("user: " + oneUser);
+			Vector data = new Vector();
+			data.add(oneUser.getName());
+			data.add(oneUser.getAge());
+			data.add(oneUser.getGender());
+			data.add(oneUser.getPhone());
+			data.add(oneUser.getAddress());
+			data.add(oneUser);
+
+			dataVector.add(data);
+		}
+		tableModel.setData(dataVector);
+		jTable_Result.setModel(tableModel);
+	}
+
 	private void deleteData() {
-		Object value = tableModel.getValueAt(selectedRow, 5);
+		Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
 
 		if (value instanceof AddressVo) {
 			try {
@@ -318,8 +304,9 @@ public class TestPanel extends JPanel {
 	}
 
 	void jButton_Add_ActionListener(ActionEvent e) {
-		initreset();
-		insertData();
+		initreset(); // 입력 필드 초기화
+		insertData(); // 데이터 삽입
+
 	}
 
 	void jButton_Update_ActionListener(ActionEvent e) {
@@ -338,9 +325,9 @@ public class TestPanel extends JPanel {
 			jTextField_Name.setText(onePerson.getName());
 			jSpinner_Age.setValue(onePerson.getAge());
 			if (onePerson.getGender() == Gender.toGender("남")) {
-				jRadioButton_Man.setSelected(true);
+				jRadioButton_Boy.setSelected(true);
 			} else {
-				jRadioButton_Woman.setSelected(true);
+				jRadioButton_Girl.setSelected(true);
 			}
 			jTextField_Phone.setText(onePerson.getPhone());
 			jTextField_Address.setText(onePerson.getAddress());
@@ -366,6 +353,7 @@ public class TestPanel extends JPanel {
 			deleteData();
 		}
 	}
+
 }
 
 class TestPanel_jButton_Add_ActionListener implements ActionListener {
@@ -393,8 +381,6 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 		adaptee.jButton_Update_ActionListener(e);
 	}
 }
-
-
 
 class TestPanel_jMenuItem_Delete_ActionListener implements ActionListener {
 	private TestPanel adaptee;

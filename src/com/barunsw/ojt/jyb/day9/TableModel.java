@@ -4,19 +4,19 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-public class TestTableModel extends AbstractTableModel {
-	private Vector columns;
-	private Vector data;
+public class TableModel extends AbstractTableModel {
+	private Vector<String> columns; // 열
+	private Vector<Object> data; // 행
 
-	public TestTableModel(Vector columns) {
+	public TableModel(Vector<String> columns) {
 		this.columns = columns;
 	}
 
-	public void setColumns(Vector columns) {
+	public void setColumns(Vector<String> columns) {
 		this.columns = columns;
 	}
 
-	public void setData(Vector data) {
+	public void setData(Vector<Object> data) {
 		this.data = data;
 	}
 
@@ -32,11 +32,12 @@ public class TestTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return (columns != null) ? columns.get(columnIndex).toString() : null;
+		return (columns != null) ? columns.get(columnIndex) : null;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return (data != null) ? ((Vector) data.get(rowIndex)).get(columnIndex) : null;
+		return (data != null) ? ((Vector<Object>) data.get(rowIndex)).get(columnIndex) : null;
 	}
+
 }

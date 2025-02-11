@@ -21,9 +21,9 @@ public class SwingTest {
 		int xPosition = (screenSize.width - TestFrame.WIDTH) / 2;
 		int yPosition = (screenSize.height - TestFrame.HEIGHT) / 2;
 
-		// x위치, y위치, 프레임 가로길이, 프레임 세로길이
 		frame.setBounds(new Rectangle(xPosition, yPosition, TestFrame.WIDTH, TestFrame.HEIGHT));
 
 		frame.setVisible(true);
 	}
+
 }

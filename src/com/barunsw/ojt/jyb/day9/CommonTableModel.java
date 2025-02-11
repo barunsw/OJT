@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class CommonTableModel extends AbstractTableModel {
 	protected Vector columnInfo; // 열 정보

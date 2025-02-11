@@ -30,7 +30,11 @@ public class TestFrame extends JFrame {
 
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		this.setContentPane(testPanel);
+		if (testPanel != null) {
+			this.setContentPane(testPanel);
+		} else {
+			LOGGER.error("testPanel이 초기화되지 않음");
+		}
 
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
 	}
