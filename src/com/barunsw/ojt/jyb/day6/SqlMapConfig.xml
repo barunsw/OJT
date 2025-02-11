@@ -8,7 +8,7 @@
 	<properties resource="jdbc.properties" />
 
 	<typeAliases>
-		<typeAlias alias="AddressVO" type="day6.AddressVO" />
+		<typeAlias alias="AddressVO" type="com.barunsw.ojt.vo.AddressBookVo" />
 	</typeAliases>
 
 	<environments default="development">

@@ -1,108 +1,115 @@
 package com.barunsw.ojt.jyb.day4;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
-import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.vo.AddressVo;
+
 public class FileAddressBookImpl implements AddressBookInterface {
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
-	public static Properties addressBook_Properties = new Properties();
-	private List<AddressVO> addressList = new ArrayList<>();
-	private String addressFilePath;
+	private static final String CSV_FILE_PATH = "src/com/barunsw/ojt/jyb/day04/address_book.csv";
 
-	public FileAddressBookImpl() throws Exception {
-		super();
-		Reader reader = Resources.getResourceAsReader("AddressBookApp.properties");
-		addressBook_Properties.load(reader);
+	private List<AddressVo> addressList = new ArrayList<>();
+	private int currentSeq = 1;
 
-		Iterator<Object> keySet = addressBook_Properties.keySet().iterator();
-		while (keySet.hasNext()) {
-			Object key = keySet.next();
-			Object value = addressBook_Properties.get(key);
-			LOGGER.debug(String.format("%s = %s", key, value));
-		}
-		LOGGER.debug("==============================");
-		String pathName = FileAddressBookImpl.addressBook_Properties.getProperty("addressFilePath");
-		addressFilePath = pathName;
-		loadFile();
+	public FileAddressBookImpl() {
+		loadFromCsv();
 	}
 
-	private void loadFile() throws Exception {
-		try (BufferedReader reader = new BufferedReader(new FileReader(addressFilePath))) {
+	private void loadFromCsv() {
+		addressList.clear();
+		try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] fields = line.split(",");
-				if (fields.length == 5) {
-					AddressVO address = new AddressVO();
-					address.setSeq(Integer.parseInt(fields[0]));
-					address.setName(fields[1]);
-					address.setAge(Integer.parseInt(fields[2]));
-					address.setPhone(fields[3]);
-					address.setAddress(fields[4]);
+				AddressVo address = new AddressVo();
+				address.setSeq(Integer.parseInt(fields[0].trim()));
+				address.setName(fields[1].trim());
+				address.setAge(Integer.parseInt(fields[2].trim()));
+				address.setGender(Gender.toGender(fields[3].trim()));
+				address.setAddress(fields[4].trim());
+				addressList.add(address);
 
-					addressList.add(address);
-					LOGGER.debug(address.toString());
+				if (address.getSeq() >= currentSeq) {
+					currentSeq = address.getSeq() + 1;
 				}
 			}
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (NumberFormatException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.debug("CSV 데이터 로드 완료: {} 개의 데이터", addressList.size());
+		}
+		catch (FileNotFoundException e) {
+			LOGGER.warn("CSV 파일이 존재하지 않습니다. 새로 생성합니다.");
+		}
+		catch (Exception e) {
+			LOGGER.error("CSV 로드 중 오류 발생: {}", e.getMessage(), e);
 		}
 	}
 
-	private void saveFile() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(addressFilePath))) {
-			for (AddressVO address : addressList) {
-				String line = String.format("%s,%s,%s,%s,%s", address.getSeq(), address.getName(), address.getAge(),
-						address.getPhone(), address.getAddress());
-				writer.write(line);
-				writer.newLine();
+	private void saveToCsv() {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE_PATH))) {
+			for (AddressVo address : addressList) {
+				writer.write(String.format("%d,%s,%d,%s,%s%n", address.getSeq(), address.getName(), address.getAge(),
+						address.getGender() != null ? address.getGender().toString() : "", address.getAddress()));
 			}
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.debug("CSV 데이터 저장 완료");
+		}
+		catch (IOException e) {
+			LOGGER.error("CSV 저장 중 오류 발생: {}", e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public List<AddressVO> selectAddressList(AddressVO addressVO) {
-		return addressList;
+	public List<AddressVo> selectAddressList(AddressVo addressVo) {
+		return new ArrayList<>(addressList);
 	}
 
 	@Override
-	public void insertAddress(AddressVO addressVO) throws Exception {
-		int newSeq = addressList.isEmpty() ? 1 : addressList.get(addressList.size() - 1).getSeq() + 1;
-		addressVO.setSeq(newSeq);
-		addressList.add(addressVO);
-		saveFile();
+	public int insertAddress(AddressVo addressVo) {
+		if (addressVo == null)
+			return 0;
+		addressVo.setSeq(currentSeq++);
+		addressList.add(addressVo);
+		saveToCsv();
+		LOGGER.debug("데이터 삽입: {}", addressVo);
+		return 1;
 	}
 
 	@Override
-	public void updateAddress(AddressVO addressVO) throws Exception {
+	public int updateAddress(AddressVo addressVo) {
+		if (addressVo == null || addressVo.getSeq() == 0)
+			return 0;
+
 		for (int i = 0; i < addressList.size(); i++) {
-			if (addressList.get(i).getSeq() == addressVO.getSeq()) {
-				addressList.set(i, addressVO);
-				break;
+			if (addressList.get(i).getSeq() == addressVo.getSeq()) {
+				addressList.set(i, addressVo);
+				saveToCsv();
+				LOGGER.debug("데이터 업데이트: {}", addressVo);
+				return 1;
 			}
 		}
-		saveFile();
+		LOGGER.warn("업데이트할 데이터를 찾을 수 없습니다: {}", addressVo);
+		return 0;
 	}
 
 	@Override
-	public void deleteAddress(AddressVO addressVO) throws Exception {
-		addressList.removeIf(address -> address.getSeq() == addressVO.getSeq());
-		saveFile();
+	public int deleteAddress(AddressVo addressVo) {
+		if (addressVo == null || addressVo.getSeq() == 0)
+			return 0;
+
+		for (int i = 0; i < addressList.size(); i++) {
+			if (addressList.get(i).getSeq() == addressVo.getSeq()) {
+				addressList.remove(i);
+				saveToCsv();
+				LOGGER.debug("데이터 삭제: {}", addressVo);
+				return 1;
+			}
+		}
+		LOGGER.warn("삭제할 데이터를 찾을 수 없습니다: {}", addressVo);
+		return 0;
 	}
 }

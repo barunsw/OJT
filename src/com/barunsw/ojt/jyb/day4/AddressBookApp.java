@@ -3,6 +3,8 @@ package com.barunsw.ojt.jyb.day4;
 import java.util.List;
 import java.util.Scanner;
 
+import com.barunsw.ojt.vo.AddressVo;
+
 public class AddressBookApp {
 	public static void main(String[] args) {
 		try {
@@ -25,24 +27,22 @@ public class AddressBookApp {
 
 				switch (choice) {
 				case 1:
-					AddressVO newAddress = new AddressVO();
+					AddressVo newAddress = new AddressVo();
 					System.out.print("이름: ");
 					newAddress.setName(scanner.nextLine());
 					System.out.print("나이: ");
 					newAddress.setAge(scanner.nextInt());
 					scanner.nextLine();
-					System.out.print("전화번호: ");
-					newAddress.setPhone(scanner.nextLine());
 					System.out.print("주소: ");
 					newAddress.setAddress(scanner.nextLine());
-					addressBook.insertAddress(newAddress);
+					addressBook.insertAddress(null);
 					System.out.println("주소가 추가되었습니다.");
 					break;
 
 				case 2:
-					List<AddressVO> addressList = addressBook.selectAddressList(null);
+					List<AddressVo> addressList = addressBook.selectAddressList(null);
 					System.out.println("주소록 목록:");
-					for (AddressVO address : addressList) {
+					for (AddressVo address : addressList) {
 						System.out.println(address);
 					}
 					break;
@@ -51,7 +51,7 @@ public class AddressBookApp {
 					System.out.print("수정할 주소의 SEQ 입력: ");
 					int seqToUpdate = scanner.nextInt();
 					scanner.nextLine();
-					AddressVO updateAddress = new AddressVO();
+					AddressVo updateAddress = new AddressVo();
 					updateAddress.setSeq(seqToUpdate);
 					System.out.print("새 이름: ");
 					updateAddress.setName(scanner.nextLine());
@@ -69,7 +69,7 @@ public class AddressBookApp {
 				case 4:
 					System.out.print("삭제할 주소의 SEQ 입력: ");
 					int seqToDelete = scanner.nextInt();
-					AddressVO deleteAddress = new AddressVO();
+					AddressVo deleteAddress = new AddressVo();
 					deleteAddress.setSeq(seqToDelete);
 					addressBook.deleteAddress(deleteAddress);
 					System.out.println("주소가 삭제되었습니다.");

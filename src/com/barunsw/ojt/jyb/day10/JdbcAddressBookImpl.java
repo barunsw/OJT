@@ -14,32 +14,34 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DbAddressImpl implements AddressBookInterface {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DbAddressImpl.class);
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.vo.AddressVo;
+
+public class JdbcAddressBookImpl implements AddressBookInterface {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	private static String DB_URL;
 	private static String USERNAME;
 	private static String PASSWORD;
 
-	static { // 클래스가 처음 로드될 때 한 번만 실행 -> DB 연결 정보를 한 번만 읽어오고 초기화. 애플리케이션 실행 동안 동일한 DB 연결 정보를
-				// 재사용할 수 있게 하기 위함
-		Properties properties = new Properties(); // DB연결에 필요한 설정 저장
-		try (InputStream input = DbAddressImpl.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
-			// 클래스의 객체에서 클래스로더를 꺼내 jdbc.properties파일을 찾고 InputStream을 반환
+	static {
+		Properties properties = new Properties();
+		try (InputStream input = JdbcAddressBookImpl.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
 			properties.load(input);
-
-			// DB연결 정보 초기화
 			DB_URL = properties.getProperty("URL");
 			USERNAME = properties.getProperty("USER");
 			PASSWORD = properties.getProperty("PASSWORD");
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error("properties 파일 로딩 중 에러 발생: " + ex.getMessage(), ex);
 		}
 	}
 
-	public DbAddressImpl() {
+	public JdbcAddressBookImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -47,7 +49,6 @@ public class DbAddressImpl implements AddressBookInterface {
 	@Override
 	public List<AddressVo> selectAddressList(AddressVo addressVo) {
 		ArrayList<AddressVo> list = new ArrayList<>();
-
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				Statement stmt = conn.createStatement()) {
 
@@ -61,7 +62,7 @@ public class DbAddressImpl implements AddressBookInterface {
 				String phone = resultSet.getString("PHONE");
 				String address = resultSet.getString("ADDRESS");
 
-				Gender gender = Gender.toGender(genderStr); // string을 enum으로 변경
+				Gender gender = Gender.toGender(genderStr);
 
 				AddressVo userInfo = new AddressVo();
 				userInfo.setSeq(seq);
@@ -73,7 +74,8 @@ public class DbAddressImpl implements AddressBookInterface {
 
 				list.add(userInfo);
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 		return list;
@@ -81,10 +83,9 @@ public class DbAddressImpl implements AddressBookInterface {
 
 	@Override
 	public int insertAddress(AddressVo addressVo) {
-		String sql = "INSERT INTO USER_INFO(NAME, AGE, GENDER, PHONE, ADDRESS)" + "VALUES(?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO USER_INFO(NAME, AGE, GENDER, PHONE, ADDRESS) VALUES(?, ?, ?, ?, ?)";
 		int insertCnt = 0;
-		try (
-				Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, addressVo.getName());
 			pstmt.setInt(2, addressVo.getAge());
@@ -98,12 +99,14 @@ public class DbAddressImpl implements AddressBookInterface {
 			}
 			LOGGER.debug("insert된 행 수: " + insertCnt);
 
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			LOGGER.error("insert 도중 SQL 예외 발생: ", e);
 		}
 		return insertCnt;
 	}
 
+	@Override
 	public int updateAddress(AddressVo addressVo) {
 		String sql = "UPDATE USER_INFO SET AGE=?, GENDER = ?, PHONE=?, ADDRESS=? WHERE NAME=?";
 		int updateCnt = 0;
@@ -120,12 +123,14 @@ public class DbAddressImpl implements AddressBookInterface {
 				LOGGER.warn("update된 행이 없음: " + addressVo.getName());
 			}
 			LOGGER.debug("update된 행 수: " + updateCnt);
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			LOGGER.error("수정 도중 SQL 예외 발생: ", e);
 		}
 		return updateCnt;
 	}
 
+	@Override
 	public int deleteAddress(AddressVo addressVo) {
 		String sql = "DELETE FROM USER_INFO WHERE NAME=?";
 		int deleteCnt = 0;
@@ -139,10 +144,10 @@ public class DbAddressImpl implements AddressBookInterface {
 				LOGGER.warn("delete된 행이 없음: " + addressVo.getName());
 			}
 			LOGGER.debug("delete된 행 수: " + deleteCnt);
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			LOGGER.error("delete 도중 SQL 예외 발생: ", e);
 		}
 		return deleteCnt;
 	}
-
 }

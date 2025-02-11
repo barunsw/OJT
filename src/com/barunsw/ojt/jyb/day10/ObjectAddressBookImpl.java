@@ -1,32 +1,24 @@
-package com.barunsw.ojt.jyb.day4;
+package com.barunsw.ojt.jyb.day10;
 
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
+
 public class ObjectAddressBookImpl implements AddressBookInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectAddressBookImpl.class);
-    private static final String FILE_PATH = "address_book.dat";
+    private static final String FILE_PATH = "src/com/barunsw/ojt/jyb/day10/address_book.dat";
 
     private List<AddressVo> addressList = new ArrayList<>();
 
@@ -34,6 +26,7 @@ public class ObjectAddressBookImpl implements AddressBookInterface {
         loadFromFile();
     }
 
+    
     private void loadFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
             addressList = (List<AddressVo>) ois.readObject();

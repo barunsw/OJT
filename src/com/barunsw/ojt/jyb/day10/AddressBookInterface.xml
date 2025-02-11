@@ -2,27 +2,33 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="day09.AddressBookInterface">
-  <select id="selectAddressList" parameterType="day10.AddressVO" 
-  	resultType="day09.AddressVO">
-    SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS, FROM USER_INFO
-  </select>
-  
-  <insert id="insertAddress" parameterType="day10.AddressVO">
-  	INSERT INTO USER_INFO
-  	(name, age, gender, phone, address)
-  	VALUES (#{name}, #{age}, #{gender}, #{phone}, #{address})
-  </insert>
+<mapper namespace="com.barunsw.ojt.common.AddressBookInterface">
+	<select id="selectAddressList"
+		parameterType="com.barunsw.ojt.vo.AddressBookVo"
+		resultType="com.barunsw.ojt.vo.AddressBookVo">
+		SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS, FROM
+		USER_INFO
+	</select>
 
-  <update id="updateAddress" parameterType="day10.AddressVO">
-  	UPDATE USER_INFO
-  	SET GENDER=#{gender}, AGE=#{age}, PHONE=#{phone}, ADDRESS=#{address}
-  	WHERE NAME=#{name}
-  </update>
+	<insert id="insertAddress"
+		parameterType="com.barunsw.ojt.vo.AddressBookVo">
+		INSERT INTO USER_INFO
+		(name, age, gender, phone, address)
+		VALUES (#{name}, #{age}, #{gender}, #{phone}, #{address})
+	</insert>
 
-  <delete id="deleteAddress" parameterType="day10.AddressVO">
- 	DELETE FROM USER_INFO
-	WHERE NAME=#{name} 	
-  </delete>
-  
+	<update id="updateAddress"
+		parameterType="com.barunsw.ojt.vo.AddressBookVo">
+		UPDATE USER_INFO
+		SET GENDER=#{gender}, AGE=#{age},
+		PHONE=#{phone}, ADDRESS=#{address}
+		WHERE NAME=#{name}
+	</update>
+
+	<delete id="deleteAddress"
+		parameterType="com.barunsw.ojt.vo.AddressBookVo">
+		DELETE FROM USER_INFO
+		WHERE NAME=#{name}
+	</delete>
+
 </mapper>
