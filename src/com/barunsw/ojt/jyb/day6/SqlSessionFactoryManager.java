@@ -9,10 +9,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import day4.JdbcAddressBookImpl;
-
 public class SqlSessionFactoryManager {
-	private static Logger logger = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(SqlSessionFactoryManager.class);
 	private static final SqlSessionFactory sqlMapper;
 
 	static {
@@ -22,7 +20,8 @@ public class SqlSessionFactoryManager {
 
 		try {
 			reader = Resources.getResourceAsReader(resource);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			logger.error(ex.getMessage(), ex);
 		}
 

@@ -13,103 +13,106 @@ import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
+import com.barunsw.ojt.constants.Gender;
+
 public class JdbcAddressBookImpl implements AddressBookInterface {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
+    private static final Properties jdbcProperties = new Properties();
+    private String dbUrl;
+    private String dbUser;
+    private String dbPassword;
 
-	private static Logger logger = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
+    public JdbcAddressBookImpl() throws Exception {
+        try (Reader reader = Resources.getResourceAsReader("Jdbc.properties")) {
+            jdbcProperties.load(reader);
+            dbUrl = jdbcProperties.getProperty("URL");
+            dbUser = jdbcProperties.getProperty("USER");
+            dbPassword = jdbcProperties.getProperty("PASSWORD");
+        }
+        LOGGER.debug("JDBC 설정 로드 완료");
+    }
 
-	public static Properties jdbcProperties = new Properties();
-	private String driverName;
-	private String dbUrl;
-	private String dbUser;
-	private String dbPassword;
+    @Override
+    public List<AddressVo> selectAddressList(AddressVo addressVo) {
+        List<AddressVo> addressList = new ArrayList<>();
+        String SQL = "SELECT SEQ, NAME, AGE, GENDER, ADDRESS, PHONE FROM ADDRESSBOOK";
 
-	public JdbcAddressBookImpl() throws Exception {
-		Reader reader = Resources.getResourceAsReader("jdbc.properties");
-		jdbcProperties.load(reader);
-		driverName = (String) jdbcProperties.get("DRIVER_NAME");
-		dbUrl = (String) jdbcProperties.get("URL");
-		dbUser = (String) jdbcProperties.get("USER");
-		dbPassword = (String) jdbcProperties.get("PASSWORD");
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+             PreparedStatement psmt = conn.prepareStatement(SQL);
+             ResultSet resultSet = psmt.executeQuery()) {
 
-		logger.debug("===================");
-	}
+            while (resultSet.next()) {
+                AddressVo address = new AddressVo();
+                address.setSeq(resultSet.getInt("SEQ"));
+                address.setName(resultSet.getString("NAME"));
+                address.setAge(resultSet.getInt("AGE"));
+                address.setGender(Gender.toGender(resultSet.getString("GENDER")));
+                address.setAddress(resultSet.getString("ADDRESS"));
+                address.setPhone(resultSet.getString("PHONE"));
+                addressList.add(address);
+            }
+            LOGGER.debug("데이터 조회 성공: {} 개의 데이터", addressList.size());
+        } catch (Exception e) {
+            LOGGER.error("Error during select operation: {}", e.getMessage(), e);
+        }
+        return addressList;
+    }
 
-	@Override
-	public void insertAddress(AddressVO addressVO) throws Exception {
-		String SQL = "INSERT INTO ADDRESS_BOOK (NAME, AGE, PHONE, ADDRESS) VALUES (?,?,?,?)";
+    @Override
+    public int insertAddress(AddressVo addressVo) {
+        String SQL = "INSERT INTO ADDRESSBOOK (NAME, AGE, GENDER, ADDRESS, PHONE) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+             PreparedStatement psmt = conn.prepareStatement(SQL)) {
 
-		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-				PreparedStatement psmt = conn.prepareStatement(SQL);) {
+            psmt.setString(1, addressVo.getName());
+            psmt.setInt(2, addressVo.getAge());
+            psmt.setString(3, addressVo.getGender().toString());
+            psmt.setString(4, addressVo.getAddress());
+            psmt.setString(5, addressVo.getPhone());
+            int result = psmt.executeUpdate();
+            LOGGER.debug("데이터 삽입 성공: {}", addressVo);
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("Error during insert operation: {}", e.getMessage(), e);
+            return 0;
+        }
+    }
 
-			psmt.setString(1, addressVO.getName());
-			psmt.setInt(2, addressVO.getAge());
-			psmt.setString(3, addressVO.getPhone());
-			psmt.setString(4, addressVO.getAddress());
+    @Override
+    public int updateAddress(AddressVo addressVo) {
+        String SQL = "UPDATE ADDRESSBOOK SET AGE = ?, GENDER = ?, ADDRESS = ?, PHONE = ? WHERE SEQ = ?";
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+             PreparedStatement psmt = conn.prepareStatement(SQL)) {
 
-			psmt.executeUpdate();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
+            psmt.setInt(1, addressVo.getAge());
+            psmt.setString(2, addressVo.getGender().toString());
+            psmt.setString(3, addressVo.getAddress());
+            psmt.setString(4, addressVo.getPhone());
+            psmt.setInt(5, addressVo.getSeq());
+            int result = psmt.executeUpdate();
+            LOGGER.debug("데이터 업데이트 성공: {}", addressVo);
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("Error during update operation: {}", e.getMessage(), e);
+            return 0;
+        }
+    }
 
-	}
+    @Override
+    public int deleteAddress(AddressVo addressVo) {
+        String SQL = "DELETE FROM ADDRESSBOOK WHERE SEQ = ?";
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+             PreparedStatement psmt = conn.prepareStatement(SQL)) {
 
-	@Override
-	public List<AddressVO> selectAddressList(AddressVO addressVO) {
-		List<AddressVO> addressList = new ArrayList<>();
-		String SQL = "SELECT * FROM USER";
-		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-				PreparedStatement psmt = conn.prepareStatement(SQL);) {
-			ResultSet resultSet = psmt.executeQuery();
-			while (resultSet.next()) {
-				String seq = resultSet.getString(1);
-				String name = resultSet.getString(2);
-				int age = Integer.parseInt(resultSet.getString(3));
-				String phone = resultSet.getString(4);
-				String address = resultSet.getString(5);
-				AddressVO addressObject = new AddressVO();
-
-				addressObject.setName(name);
-				addressObject.setAge(age);
-				addressObject.setPhone(phone);
-				addressObject.setAddress(address);
-
-				addressList.add(addressObject);
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		return addressList;
-	}
-
-	@Override
-	public void updateAddress(AddressVO addressVO) throws Exception {
-		String SQL = "UPDATE ADDRESS_BOOK SET NAME=?, AGE=?, ADDRESS=? WHERE NAME=? AND PHONE=?";
-		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-				PreparedStatement psmt = conn.prepareStatement(SQL)) {
-			psmt.setString(1, addressVO.getName());
-			psmt.setInt(2, addressVO.getAge());
-			psmt.setString(3, addressVO.getAddress());
-			psmt.setString(4, addressVO.getName());
-			psmt.setString(5, addressVO.getPhone());
-
-			psmt.executeUpdate();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void deleteAddress(AddressVO addressVO) throws Exception {
-		String SQL = "DELETE FROM ADDRESS_BOOK WHERE NAME=? AND PHONE=?";
-		try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-				PreparedStatement psmt = conn.prepareStatement(SQL)) {
-			psmt.setString(1, addressVO.getName());
-			psmt.setString(2, addressVO.getPhone());
-
-			psmt.executeUpdate();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
+            psmt.setInt(1, addressVo.getSeq());
+            int result = psmt.executeUpdate();
+            LOGGER.debug("데이터 삭제 성공: {}", addressVo);
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("Error during delete operation: {}", e.getMessage(), e);
+            return 0;
+        }
+    }
 }

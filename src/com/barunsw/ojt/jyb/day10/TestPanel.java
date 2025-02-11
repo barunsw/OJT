@@ -28,8 +28,9 @@ import javax.swing.SpinnerNumberModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.jyb.day6.AddressBookInterface;
-import com.barunsw.ojt.jyb.day6.ObjectAddressBookImpl;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
@@ -47,7 +48,7 @@ public class TestPanel extends JPanel {
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private CardLayout cardLayout = new CardLayout();
-	
+
 	private JTable jTable_Result = new JTable();
 	private JTable jTable = new JTable();
 
@@ -61,44 +62,44 @@ public class TestPanel extends JPanel {
 	private JRadioButton jRadioButton_Girl = new JRadioButton("여자");
 
 	private JPanel jPanel_Command = new JPanel();
-	private JLabel label_Phone = new JLabel("전화번호");
-	private JTextField textField_Phone = new JTextField();
-	private JLabel label_Address = new JLabel("주소");
-	private JTextField textField_Address = new JTextField();
+	private JLabel jLabel_Phone = new JLabel("전화번호");
+	private JTextField jTextField_Phone = new JTextField();
+	private JLabel jLabel_Address = new JLabel("주소");
+	private JTextField jTextField_Address = new JTextField();
 
 	private JPanel jPanel_Table = new JPanel();
 	private JButton jButton_Add = new JButton("추가");
 	private JButton jButton_Update = new JButton("변경");
-	private JButton jButton_Save = new JButton("저장");
 
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 
-	//private AddressBookInterface addressBookInterface = new DbAddressImpl();
-//	private FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
-	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
-	
+//	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+//	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
+	private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
+//	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl(); -> 실행됨
+
 	public TestPanel() {
 		try {
 			initComponent();
 			initTable();
 			initreset();
 			initData();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
 
 	private void initreset() {
-		/*
+
 		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
 		model.setNumRows(0);
-		*/
-		
+
 		// 테이블 첫번째 로우 선택
-		jTable_Result.setRowSelectionInterval(0, 0);
+		// jTable_Result.setRowSelectionInterval(0, 0);
 	}
 
 	public void initComponent() throws Exception {
@@ -107,7 +108,7 @@ public class TestPanel extends JPanel {
 		jPanel_Form.setLayout(gridBagLayout);
 		jPanel_Command.setLayout(gridBagLayout);
 		jPanel_Table.setLayout(gridBagLayout);
-		
+		jScrollPane_Table.setViewportView(jTable_Result);
 		// Form 내용 추가
 		jPanel_Form.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
@@ -130,17 +131,17 @@ public class TestPanel extends JPanel {
 		jPanel_Form.add(jRadioButton_Girl, new GridBagConstraints(6, 0, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		label_Phone.setPreferredSize(new Dimension(120, 22));
-		jPanel_Form.add(label_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jLabel_Phone.setPreferredSize(new Dimension(120, 22));
+		jPanel_Form.add(jLabel_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jPanel_Form.add(textField_Phone, new GridBagConstraints(1, 1, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jTextField_Phone, new GridBagConstraints(1, 1, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Form.add(label_Address, new GridBagConstraints(0, 2, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Address, new GridBagConstraints(0, 2, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jPanel_Form.add(textField_Address, new GridBagConstraints(1, 2, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jTextField_Address, new GridBagConstraints(1, 2, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
 		jPanel_Command.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
@@ -149,9 +150,6 @@ public class TestPanel extends JPanel {
 		jPanel_Command.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Command.add(jButton_Save, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		
 		jPanel_Table.add(jScrollPane_Table, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
@@ -165,9 +163,8 @@ public class TestPanel extends JPanel {
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		jButton_Add.addActionListener(new TestPanel_jButton_Add_ActionListener(this));
-		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
 
-		jButton_Save.addActionListener(new TestPanel_jButton_Save_ActionListener(this));
+		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
 
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseListener(this));
 
@@ -203,16 +200,18 @@ public class TestPanel extends JPanel {
 			} else {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 입력하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
-			oneUser.setPhone(textField_Phone.getText());
-			oneUser.setAddress(textField_Address.getText());
+			oneUser.setPhone(jTextField_Phone.getText());
+			oneUser.setAddress(jTextField_Address.getText());
 
 			addressBookInterface.insertAddress(oneUser);
 			selectedRow = jTable_Result.getSelectedRow();
 
 			initreset();
 			initData();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+		}
+		catch (Exception e) {
+			LOGGER.error("데이터 처리 오류", e);
+			JOptionPane.showMessageDialog(TestPanel.this, "삽입 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -238,15 +237,16 @@ public class TestPanel extends JPanel {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 선택하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
 
-			onePerson.setPhone(textField_Phone.getText());
-			onePerson.setAddress(textField_Address.getText());
+			onePerson.setPhone(jTextField_Phone.getText());
+			onePerson.setAddress(jTextField_Address.getText());
 
 			Object value = tableModel.getValueAt(selectedRow, 5);
 			if (value instanceof AddressVo) {
 				try {
 					AddressVo addressVo = (AddressVo) value;
 					addressBookInterface.updateAddress(addressVo);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					LOGGER.error(ex.getMessage(), ex);
 				}
 			}
@@ -254,7 +254,8 @@ public class TestPanel extends JPanel {
 			addressBookInterface.updateAddress(onePerson);
 			initreset();
 			initData();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -293,7 +294,8 @@ public class TestPanel extends JPanel {
 			try {
 				AddressVo addressVo = (AddressVo) value;
 				addressBookInterface.deleteAddress(addressVo);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 			initreset();
@@ -327,8 +329,8 @@ public class TestPanel extends JPanel {
 			} else {
 				jRadioButton_Girl.setSelected(true);
 			}
-			textField_Phone.setText(onePerson.getPhone());
-			textField_Address.setText(onePerson.getAddress());
+			jTextField_Phone.setText(onePerson.getPhone());
+			jTextField_Address.setText(onePerson.getAddress());
 
 			if (e.getModifiersEx() != MouseEvent.BUTTON1_DOWN_MASK) {
 
@@ -339,7 +341,8 @@ public class TestPanel extends JPanel {
 				initPopupMenu();
 				jPopupMenu.show(TestPanel.this.jTable_Result, e.getX(), e.getY());
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -350,10 +353,7 @@ public class TestPanel extends JPanel {
 			deleteData();
 		}
 	}
-	
-	void saveAddressListToFile(ActionEvent e) {
-		//fileAddressBookImpl
-	}
+
 }
 
 class TestPanel_jButton_Add_ActionListener implements ActionListener {
@@ -379,19 +379,6 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Update_ActionListener(e);
-	}
-}
-
-class TestPanel_jButton_Save_ActionListener implements ActionListener {
-	private TestPanel adaptee;
-
-	public TestPanel_jButton_Save_ActionListener(TestPanel adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		adaptee.saveAddressListToFile(e);
 	}
 }
 
