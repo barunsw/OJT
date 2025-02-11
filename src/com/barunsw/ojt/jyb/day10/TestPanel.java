@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Reader;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -25,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
+import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +38,34 @@ import com.barunsw.ojt.vo.AddressVo;
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 	
-	private AddressBookInterface addressBookInterface;
+	private static AddressBookInterface addressBookInterface;
 	
+	static {
+        try {
+            // config.properties 파일을 읽어들임
+            Properties properties = new Properties();
+            try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+                properties.load(reader);
+            }
+
+            // address_if_class 프로퍼티 값을 읽어옴
+            String addressIfClassName = properties.getProperty("address_if_class");
+            
+            if (addressIfClassName == null) {
+                throw new RuntimeException("address_if_class 프로퍼티가 설정되지 않았습니다.");
+            }
+            
+            // 클래스를 동적으로 로드
+            Class<?> clazz = Class.forName(addressIfClassName);
+            
+            // AddressBookInterface로 변환하여 인스턴스 생성
+            addressBookInterface = (AddressBookInterface) clazz.getDeclaredConstructor().newInstance();
+
+        } catch (Exception e) {
+            throw new RuntimeException("config.properties 로드 실패", e);
+        }
+	}
+
 	//private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
 	//private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
 	//private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
@@ -242,7 +271,7 @@ public class TestPanel extends JPanel {
 			onePerson.setPhone(jTextField_Phone.getText());
 			onePerson.setAddress(jTextField_Address.getText());
 
-			Object value = tableModel.getValueAt(selectedRow, 5);
+			Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
 			if (value instanceof AddressVo) {
 				try {
 					AddressVo addressVo = (AddressVo) value;
