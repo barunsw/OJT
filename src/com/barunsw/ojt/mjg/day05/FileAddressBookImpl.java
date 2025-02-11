@@ -12,8 +12,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.mjg.day05.AddressBookInterface;
-import com.barunsw.ojt.mjg.day05.AddressVo;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 import com.barunsw.ojt.constants.Gender;
 
 public class FileAddressBookImpl implements AddressBookInterface {
@@ -32,7 +32,7 @@ public class FileAddressBookImpl implements AddressBookInterface {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",");
-                AddressVo address = new AddressVo(line, currentSeq, null, line);
+                AddressVo address = new AddressVo();
                 address.setSeq(Integer.parseInt(fields[0].trim()));
                 address.setName(fields[1].trim());
                 address.setAge(Integer.parseInt(fields[2].trim()));

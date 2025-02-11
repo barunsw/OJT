@@ -8,8 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -31,14 +34,19 @@ import javax.swing.table.JTableHeader;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.mjg.constants.Gender;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
+import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.constants.SearchType;
 
 public class AddressBookLayoutPanel extends JPanel {
 	
-	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+//	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	private AddressBookInterface addressBookInterface;
 
 	private static final Logger LOGGER = LogManager.getLogger(AddressBookLayoutPanel.class);
 	
@@ -111,6 +119,7 @@ public class AddressBookLayoutPanel extends JPanel {
 
     public AddressBookLayoutPanel() {
         try {
+        	initAddressBookIf();
             initComponent();
             initTable();
             initTree();
@@ -119,6 +128,35 @@ public class AddressBookLayoutPanel extends JPanel {
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
+    }
+    
+    private void initAddressBookIf() {
+    	Properties properties = new Properties();
+    	try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+            properties.load(reader);
+            
+            String addressIfClass = properties.getProperty("address_if_class");
+            
+            
+            Object o = Class.forName(addressIfClass).newInstance();
+            
+            addressBookInterface = (AddressBookInterface)o;
+        }
+        catch (IOException ioe) {
+            throw new RuntimeException("JDBC 설정 로드 실패", ioe);
+        } 
+    	catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     private void initComponent() {
@@ -232,29 +270,22 @@ public class AddressBookLayoutPanel extends JPanel {
         // 버튼들
         jPanel_Command.add(jButton_Add, new GridBagConstraints(
             0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
+            GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets(0, 5, 5, 5), 0, 0
         ));
 
         jPanel_Command.add(jButton_Update, new GridBagConstraints(
             1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 5, 5), 0, 0
         ));
 
         jPanel_Command.add(jButton_Delete, new GridBagConstraints(
             2, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.VERTICAL,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 5, 5), 0, 0
         ));
- /*       
-        // 테이블 스크롤
-		this.add(jScrollPane_Table, new GridBagConstraints(
-            0, 6, 7, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(0, 5, 5, 5), 0, 0
-        ));
-*/	
+        
 		// 결과 패널 따로 설정
 		this.add(jPanel_Result, new GridBagConstraints(
 		    0, 4, 7, 1, 1.0, 1.0,
@@ -519,10 +550,10 @@ public class AddressBookLayoutPanel extends JPanel {
 	            return;
 	        }
 
-	        AddressVo selectedPerson = currentFilteredList.get(selectedRow); // 바뀐 부분
+	        AddressVo selectedPerson = currentFilteredList.get(selectedRow);
 	        addressBookInterface.deleteAddress(selectedPerson); // DB에서 삭제
 
-	        refreshFilteredTable(); // 바뀐 부분: 필터링된 상태 유지
+	        refreshFilteredTable(); // 필터링된 상태 유지
 	    } catch (Exception ex) {
 	        LOGGER.error(ex.getMessage(), ex);
 	    }
@@ -530,16 +561,27 @@ public class AddressBookLayoutPanel extends JPanel {
 
 	// 필터 상태에 따라 테이블을 올바르게 갱신
 	private void refreshFilteredTable() {
+	    AddressVo paramVo = new AddressVo();
+
+	    // currentInitial이 비어있으면(루트 노드 "주소록" 상태) 전체 데이터 조회
 	    if (currentInitial.isEmpty()) {
-	        initData();  // 초성 필터가 없으면 전체 데이터를 다시 로드
-	    } else {
-	        AddressVo paramVo = new AddressVo();
-	        paramVo.setInitial(currentInitial);
-	        List<AddressVo> filteredList = addressBookInterface.selectAddressListByInitial(paramVo);
-	        updateTable(filteredList);
+	        // 전체 조회
+	        // searchType / searchWord를 null로 세팅 → <if>문에 걸리지 않음
+	        paramVo.setSearchType(null);
+	        paramVo.setSearchWord(null);
 	    }
+	    else {
+	        // 초성 필터
+	        // 예) ㄱ, ㄴ 등 → searchType="LETTER", searchWord="ㄱ" 등
+	        paramVo.setSearchType(SearchType.LETTER);
+	        paramVo.setSearchWord(currentInitial);
+	    }
+
+	    // 최종적으로 selectAddressList(paramVo) 호출
+	    List<AddressVo> filteredList = addressBookInterface.selectAddressList(paramVo);
+	    updateTable(filteredList);
 	}
-	
+
 	// 추가 버튼 눌렀을 때 수행
 	void jButton_Add_ActionListener(ActionEvent e) {
 		insertData();
@@ -655,21 +697,18 @@ public class AddressBookLayoutPanel extends JPanel {
 	        String selectedNode = e.getPath().getLastPathComponent().toString();
 	        String rootNode = "주소록";
 
-	        // 루트 노드 클릭 시 전체 데이터 로드
 	        if (selectedNode.equals(rootNode)) {
-	            currentInitial = "";  // 초기화하여 전체 데이터 로드
-	            initData();
-	            return;
+	            currentInitial = ""; 
+	            LOGGER.info("루트노드다 ~~~~~~~~~~~~~~~~");
+	        }
+	        else {
+	            currentInitial = selectedNode;
+	            LOGGER.info("선택된 노드:" + currentInitial + "이다 ~~~~~~~~~~~~~~~~");
 	        }
 
-	        currentInitial = selectedNode;
-	        AddressVo paramVo = new AddressVo();
-	        paramVo.setInitial(selectedNode);  // 초성 설정
-
-	        // 초성에 따른 필터링된 데이터 가져오기
-	        List<AddressVo> filteredList = addressBookInterface.selectAddressListByInitial(paramVo);
-	        updateTable(filteredList);
-	    } catch (Exception ex) {
+	        refreshFilteredTable(); // 여기서 하나의 select로 처리
+	    }
+	    catch (Exception ex) {
 	        LOGGER.error(ex.getMessage(), ex);
 	    }
 	}

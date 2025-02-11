@@ -6,7 +6,7 @@
   <properties resource = "db.properties"/>
   
   <typeAliases>
-    <typeAlias alias="AddressVo" type="com.barunsw.ojt.mjg.day11.AddressVo" />
+    <typeAlias alias="AddressVo" type="com.barunsw.ojt.vo.AddressVo" />
   </typeAliases>
   
   <environments default="development">
@@ -22,7 +22,7 @@
   </environments>
   
   <mappers>
-    <mapper resource="AddressBookMapper.xml" />
+    <mapper resource="com/barunsw/ojt/mjg/day11/AddressBookMapper.xml" />
   </mappers>
   
 </configuration>

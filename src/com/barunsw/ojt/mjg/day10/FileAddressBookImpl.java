@@ -12,9 +12,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.mjg.day10.AddressBookInterface;
-import com.barunsw.ojt.mjg.day10.AddressVo;
-import com.barunsw.ojt.mjg.constants.Gender;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
+import com.barunsw.ojt.constants.Gender;
 
 public class FileAddressBookImpl implements AddressBookInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);

@@ -6,9 +6,11 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import com.barunsw.ojt.mjg.constants.Gender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class MybatisAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LogManager.getLogger(MybatisAddressBookImpl.class);
