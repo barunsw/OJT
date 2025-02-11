@@ -85,7 +85,8 @@ public class AddressBookApp {
 			} while (choice != 0);
 
 			scanner.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

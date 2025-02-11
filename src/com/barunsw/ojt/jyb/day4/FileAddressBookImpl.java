@@ -13,7 +13,7 @@ import com.barunsw.ojt.vo.AddressVo;
 
 public class FileAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
-	private static final String CSV_FILE_PATH = "src/com/barunsw/ojt/jyb/day04/address_book.csv";
+	private static final String CSV_FILE_PATH = "com.barunsw.ojt.jyb.day4.address_book.csv";
 
 	private List<AddressVo> addressList = new ArrayList<>();
 	private int currentSeq = 1;
@@ -43,7 +43,7 @@ public class FileAddressBookImpl implements AddressBookInterface {
 			LOGGER.debug("CSV 데이터 로드 완료: {} 개의 데이터", addressList.size());
 		}
 		catch (FileNotFoundException e) {
-			LOGGER.warn("CSV 파일이 존재하지 않습니다. 새로 생성합니다.");
+			LOGGER.warn("CSV 파일이 존재하지 않습니다.");
 		}
 		catch (Exception e) {
 			LOGGER.error("CSV 로드 중 오류 발생: {}", e.getMessage(), e);

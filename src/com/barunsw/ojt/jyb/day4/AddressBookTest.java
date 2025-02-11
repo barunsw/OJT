@@ -33,10 +33,10 @@ public class AddressBookTest {
 
 		// Insert
 		AddressVo newAddress = new AddressVo();
-		newAddress.setName("가나다");
+		newAddress.setName("abc");
 		newAddress.setAge(26);
 		newAddress.setGender(Gender.MAN);
-		newAddress.setAddress("서울");
+		newAddress.setAddress("abc");
 		addressBook.insertAddress(newAddress);
 
 		// Select
@@ -49,11 +49,11 @@ public class AddressBookTest {
 		// Update
 		if (!addressList.isEmpty()) {
 			AddressVo updatedAddress = new AddressVo();
-			updatedAddress.setSeq(addressList.get(0).getSeq()); // 기존 SEQ 유지
-			updatedAddress.setName("이순신");
+			updatedAddress.setSeq(addressList.get(0).getSeq());
+			updatedAddress.setName("cd");
 			updatedAddress.setAge(50);
 			updatedAddress.setGender(Gender.MAN);
-			updatedAddress.setAddress("전라도");
+			updatedAddress.setAddress("cd");
 			addressBook.updateAddress(updatedAddress);
 		}
 
