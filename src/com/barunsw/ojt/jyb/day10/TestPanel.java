@@ -35,16 +35,16 @@ import com.barunsw.ojt.vo.AddressVo;
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 
-	private final int COLUMN_INDEX_NAME = 0;
-	private final int COLUMN_INDEX_AGE = 1;
-	private final int COLUMN_INDEX_GENDER = 2;
-	private final int COLUMN_INDEX_PHONE = 3;
-	private final int COLUMN_INDEX_ADDRESS = 4;
-	private final int COLUMN_INDEX_PERSON = 5;
+	private final int COLUMN_INDEX_NAME 	= 0;
+	private final int COLUMN_INDEX_AGE 		= 1;
+	private final int COLUMN_INDEX_GENDER 	= 2;
+	private final int COLUMN_INDEX_PHONE 	= 3;
+	private final int COLUMN_INDEX_ADDRESS 	= 4;
+	private final int COLUMN_INDEX_PERSON 	= 5;
 
 	private int selectedRow = 0;
-	private final Dimension LABEL_SIZE = new Dimension(80, 30);
-	private final Dimension SIZE = new Dimension(120, 30);
+	private final Dimension LABEL_SIZE 	= new Dimension(80, 30);
+	private final Dimension SIZE 		= new Dimension(120, 30);
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private CardLayout cardLayout = new CardLayout();
@@ -76,9 +76,9 @@ public class TestPanel extends JPanel {
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 
-//	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
-//	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
-	private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
+	//private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
+//	private AddressBookInterface addressBookInterface = new FileAddressBookImpl(); -> 실행됨
 //	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl(); -> 실행됨
 
 	public TestPanel() {

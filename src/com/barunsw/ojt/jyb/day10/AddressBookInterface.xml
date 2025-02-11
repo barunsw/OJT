@@ -4,31 +4,56 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.barunsw.ojt.common.AddressBookInterface">
 	<select id="selectAddressList"
-		parameterType="com.barunsw.ojt.vo.AddressBookVo"
-		resultType="com.barunsw.ojt.vo.AddressBookVo">
-		SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS, FROM
-		USER_INFO
+		parameterType="com.barunsw.ojt.vo.AddressVo"
+		resultType="com.barunsw.ojt.vo.AddressVo">
+		SELECT 
+			SEQ
+			, NAME
+			, AGE
+			, GENDER
+			, PHONE
+			, ADDRESS 
+		FROM
+			USER_INFO
 	</select>
 
 	<insert id="insertAddress"
-		parameterType="com.barunsw.ojt.vo.AddressBookVo">
-		INSERT INTO USER_INFO
-		(name, age, gender, phone, address)
-		VALUES (#{name}, #{age}, #{gender}, #{phone}, #{address})
+		parameterType="com.barunsw.ojt.vo.AddressVo">
+		INSERT INTO USER_INFO (
+			NAME
+			, AGE
+			, GENDER
+			, PHONE
+			, ADDRESS
+		)
+		VALUES (
+			#{name}
+			, #{age}
+			, #{gender}
+			, #{phone}
+			, #{address}
+		)
 	</insert>
 
 	<update id="updateAddress"
-		parameterType="com.barunsw.ojt.vo.AddressBookVo">
-		UPDATE USER_INFO
-		SET GENDER=#{gender}, AGE=#{age},
-		PHONE=#{phone}, ADDRESS=#{address}
-		WHERE NAME=#{name}
+		parameterType="com.barunsw.ojt.vo.AddressVo">
+		UPDATE 
+			USER_INFO
+		SET 
+			GENDER = #{gender}
+			, AGE = #{age}
+			, PHONE = #{phone}
+			, ADDRESS = #{address}
+		WHERE 
+			NAME = #{name}
 	</update>
 
 	<delete id="deleteAddress"
-		parameterType="com.barunsw.ojt.vo.AddressBookVo">
-		DELETE FROM USER_INFO
-		WHERE NAME=#{name}
+		parameterType="com.barunsw.ojt.vo.AddressVo">
+		DELETE FROM 
+			USER_INFO
+		WHERE 
+			NAME = #{name}
 	</delete>
 
 </mapper>

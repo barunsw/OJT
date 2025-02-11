@@ -1,6 +1,8 @@
 package com.barunsw.ojt.jyb.day10;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +28,18 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 	private static String PASSWORD;
 
 	static {
+
 		Properties properties = new Properties();
-		try (InputStream input = JdbcAddressBookImpl.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
-			properties.load(input);
-			DB_URL = properties.getProperty("URL");
-			USERNAME = properties.getProperty("USER");
-			PASSWORD = properties.getProperty("PASSWORD");
+		try (Reader reader = Resources.getResourceAsReader("jyb/jdbc.properties")) {
+			properties.load(reader);
+			DB_URL = properties.getProperty("jdbc.url");
+			USERNAME = properties.getProperty("jdbc.username");
+			PASSWORD = properties.getProperty("jdbc.password");
 		}
-		catch (Exception ex) {
-			LOGGER.error("properties 파일 로딩 중 에러 발생: " + ex.getMessage(), ex);
+		catch (Exception ioe) {
+			throw new RuntimeException("JDBC 설정 로드 실패", ioe);
 		}
+		LOGGER.debug("JDBC 설정 로드 완료");
 	}
 
 	public JdbcAddressBookImpl() {
@@ -89,7 +94,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, addressVo.getName());
 			pstmt.setInt(2, addressVo.getAge());
-			pstmt.setString(3, addressVo.getGender().toString());
+			pstmt.setString(3, addressVo.getGender().name());
 			pstmt.setString(4, addressVo.getPhone());
 			pstmt.setString(5, addressVo.getAddress());
 

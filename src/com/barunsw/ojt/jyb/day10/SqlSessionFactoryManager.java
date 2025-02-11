@@ -1,9 +1,9 @@
 package com.barunsw.ojt.jyb.day10;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
@@ -15,12 +15,13 @@ public class SqlSessionFactoryManager {
 	private static final SqlSessionFactory sqlSessionFactory;
 
 	static {
-		String resource = "SqlMapConfig.xml"; // mybatis 설정 파일의 경로
+		String resource = "com/barunsw/ojt/jyb/day10/SqlMapConfig.xml"; // mybatis 설정 파일의 경로
 		Reader reader = null;
 
 		try {
-			reader = Resources.getResourceAsReader(resource); //설정 파일을 읽어옴
-		} catch (IOException ex) {
+			reader = new InputStreamReader(SqlSessionFactoryManager.class.getClassLoader().getResourceAsStream(resource));
+			//reader = Resources.getResourceAsReader(resource); //설정 파일을 읽어옴
+		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 
