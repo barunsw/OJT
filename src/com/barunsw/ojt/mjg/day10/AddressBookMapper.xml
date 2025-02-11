@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.barunsw.ojt.mjg.day09.AddressBookInterface">
+<mapper namespace="com.barunsw.ojt.common.AddressBookInterface">
 
-	<!-- 전체 목록 조회 -->
+	<!-- 전체 목록 조회 -->	
 	<select id="selectAddressList"
-		parameterType="AddressVo"
-		resultType="AddressVo">
-		SELECT seq, name, gender, age, phone, address
-		FROM TB_ADDRESSBOOK
+        parameterType="AddressVo"
+        resultType="AddressVo">
+	    SELECT seq, name, gender, age, phone, address
+	    FROM TB_ADDRESSBOOK
+	    WHERE 1 = 1
+    
+	    <if test="searchType != null and searchType.name() == 'LETTER' and searchWord != null">
+	        AND LEFT(NAME, 1) REGEXP
+            CASE #{searchWord}
+                WHEN 'ㄱ' THEN '^[가-깋]'  
+                WHEN 'ㄴ' THEN '^[나-닣]' 
+                WHEN 'ㄷ' THEN '^[다-딯]' 
+                WHEN 'ㄹ' THEN '^[라-맇]'
+                WHEN 'ㅁ' THEN '^[마-밓]'
+                WHEN 'ㅂ' THEN '^[바-빟]'
+                WHEN 'ㅅ' THEN '^[사-싷]'
+                WHEN 'ㅇ' THEN '^[아-잏]'
+                WHEN 'ㅈ' THEN '^[자-짛]'
+                WHEN 'ㅊ' THEN '^[차-칳]'
+                WHEN 'ㅋ' THEN '^[카-킿]'
+                WHEN 'ㅌ' THEN '^[타-팋]'
+                WHEN 'ㅍ' THEN '^[파-핗]'
+                WHEN 'ㅎ' THEN '^[하-힣]'
+            END
+	    </if>
 	</select>
 
 	<!-- 새 레코드 INSERT -->
@@ -34,5 +55,4 @@
 		DELETE FROM TB_ADDRESSBOOK
 		WHERE seq = #{seq}
 	</delete>
-
 </mapper>

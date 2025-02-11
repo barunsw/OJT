@@ -20,20 +20,13 @@ public class SqlSessionFactoryManager {
 	// SqlSessionFactory 인스턴스가 불필요하게 여러 번 생성되는 것을 방지
 	static {
 		// XML 설정 파일의 경로를 지정
-//		String resource = "com/barunsw/ojt/mjg/day11/SqlMapConfig.xml";
-		String resource = "SqlMapConfig.xml";
+		String resource = "com/barunsw/ojt/mjg/day11/SqlMapConfig.xml";
 		
 		// XML(텍스트 데이터) 사용 시에 InputStream보다 Reader 사용이 적합
 		Reader reader = null;
 
-		try {
-			//getClass().getResource(COMMON_IMAGE_PATH + "logo.png")
-//			LOGGER.debug(SqlSessionFactoryManager.class.getClassLoader().getResource(resource));
-			
-//			reader = new InputStreamReader(SqlSessionFactoryManager.class.getClassLoader().getResourceAsStream(resource));
-			
+		try {			
 			reader = Resources.getResourceAsReader(resource);
-//			file = new FileReader(new File(resource));
 		} 
 		catch ( Exception ioe ) {
 			LOGGER.error(ioe.getMessage(), ioe);
