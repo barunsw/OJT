@@ -59,7 +59,7 @@ public class ClockPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		//Graphics2D g2d = (Graphics2D)g;
 		LOGGER.debug("paintComponent");
-		
+
 		g.setColor(Color.white);
 		g.fillRect(0,  0, this.getWidth(), this.getHeight());
 
@@ -68,13 +68,15 @@ public class ClockPanel extends JPanel {
 		g.drawString("테스트", 100, 100);
 
 		g.setColor(Color.blue);
-		g.drawOval(200, 200, 100, 100);
+		g.drawOval(200, 200, 100, 200);
 
 		g.setColor(Color.green);
 		g.drawLine(300, 300, 400, 400);
+		/*		
 		
 		// 중앙의 점과 시침의 위치를 이어서 선을 긋는다.
 		// 중앙의 점과 분침의 위치를 이어서 선을 긋는다.
 		// 중앙의 점과 초침의 위치를 이어서 선을 긋는다.
+		 */
 	}
 }

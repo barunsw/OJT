@@ -2,21 +2,17 @@ package com.barunsw.ojt.vo;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.barunsw.ojt.constants.Gender;
 
 public class AddressVo implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int seq;
 	private String name;
 	private Gender gender;
 	private int age;
 	private String address;
-
+	private String phone;
+	
 	public AddressVo() {
 		
 	}
@@ -61,10 +57,17 @@ public class AddressVo implements Serializable {
 		this.address = address;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	@Override
 	public String toString() {
 		return "seq=" + seq + ", name=" + name + ", gender=" + gender + ", age=" + age + ", address="
 				+ address;
 	}
-
 }

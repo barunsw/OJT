@@ -24,13 +24,12 @@ public class TestTimerTask extends TimerTask {
 		String currentTime = sdf.format(Calendar.getInstance().getTime());
 		
 		LOGGER.debug(String.format("[%d]%s", id, currentTime));
-		/*
+
 		try {
 			Thread.sleep(2000);
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-		*/
 	}
 }

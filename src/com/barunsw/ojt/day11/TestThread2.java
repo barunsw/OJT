@@ -23,7 +23,7 @@ public class TestThread2 extends Thread {
 			
 			LOGGER.debug(String.format("[%d] %s"
 					, id, sdf.format(Calendar.getInstance().getTime())));
-			
+
 			try {
 				Thread.sleep(500);
 			}
@@ -37,6 +37,7 @@ public class TestThread2 extends Thread {
 			
 			try {
 				Thread.sleep(1000L - (endTime - startTime));
+				//Thread.sleep(1000L);
 			}
 			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);

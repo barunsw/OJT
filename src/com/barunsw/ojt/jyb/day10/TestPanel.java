@@ -28,8 +28,18 @@ import javax.swing.SpinnerNumberModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.barunsw.ojt.jyb.day6.AddressBookInterface;
+import com.barunsw.ojt.jyb.day6.ObjectAddressBookImpl;
+
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
+
+	private final int COLUMN_INDEX_NAME = 0;
+	private final int COLUMN_INDEX_AGE = 1;
+	private final int COLUMN_INDEX_GENDER = 2;
+	private final int COLUMN_INDEX_PHONE = 3;
+	private final int COLUMN_INDEX_ADDRESS = 4;
+	private final int COLUMN_INDEX_PERSON = 5;
 
 	private int selectedRow = 0;
 	private final Dimension LABEL_SIZE = new Dimension(80, 30);
@@ -37,17 +47,18 @@ public class TestPanel extends JPanel {
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private CardLayout cardLayout = new CardLayout();
+	
 	private JTable jTable_Result = new JTable();
 	private JTable jTable = new JTable();
 
 	private JPanel jPanel_Form = new JPanel();
-	private JLabel label_Name = new JLabel("이름");
+	private JLabel jLabel_Name = new JLabel("이름");
 	private JTextField jTextField_Name = new JTextField();
-	private JLabel label_Age = new JLabel("나이");
+	private JLabel jLabel_Age = new JLabel("나이");
 	private JSpinner jSpinner_Age = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-	private JLabel label_Gender = new JLabel("성별");
-	private JRadioButton btnBoy = new JRadioButton("남자");
-	private JRadioButton btnGirl = new JRadioButton("여자");
+	private JLabel jLabel_Gender = new JLabel("성별");
+	private JRadioButton jRadioButton_Boy = new JRadioButton("남자");
+	private JRadioButton jRadioButton_Girl = new JRadioButton("여자");
 
 	private JPanel jPanel_Command = new JPanel();
 	private JLabel label_Phone = new JLabel("전화번호");
@@ -62,19 +73,13 @@ public class TestPanel extends JPanel {
 
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
-	private JScrollPane scrollPane = new JScrollPane();
+	private JScrollPane jScrollPane_Table = new JScrollPane();
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 
-	private AddressBookInterface addressBookInterface = new DbAddressImpl();
-	private FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
-
-	private final int COLUMN_INDEX_NAME = 0;
-	private final int COLUMN_INDEX_AGE = 1;
-	private final int COLUMN_INDEX_GENDER = 2;
-	private final int COLUMN_INDEX_PHONE = 3;
-	private final int COLUMN_INDEX_ADDRESS = 4;
-	private final int COLUMN_INDEX_PERSON = 5;
-
+	//private AddressBookInterface addressBookInterface = new DbAddressImpl();
+//	private FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
+	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
+	
 	public TestPanel() {
 		try {
 			initComponent();
@@ -87,85 +92,82 @@ public class TestPanel extends JPanel {
 	}
 
 	private void initreset() {
-
+		/*
 		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
 		model.setNumRows(0);
+		*/
+		
+		// 테이블 첫번째 로우 선택
+		jTable_Result.setRowSelectionInterval(0, 0);
 	}
 
 	public void initComponent() throws Exception {
-		jPanel_Form.setLayout(new GridBagLayout());
-
+		// Layout 설정
+		this.setLayout(gridBagLayout);
+		jPanel_Form.setLayout(gridBagLayout);
+		jPanel_Command.setLayout(gridBagLayout);
+		jPanel_Table.setLayout(gridBagLayout);
+		
 		// Form 내용 추가
-		jPanel_Form.add(label_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
 		jPanel_Form.add(jTextField_Name, new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		jPanel_Form.add(label_Age, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Age, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
 		jPanel_Form.add(jSpinner_Age, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		jPanel_Form.add(label_Gender, new GridBagConstraints(4, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jLabel_Gender, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		jPanel_Form.add(btnBoy, new GridBagConstraints(5, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jRadioButton_Boy, new GridBagConstraints(5, 0, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
-		jPanel_Form.add(btnGirl, new GridBagConstraints(6, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(jRadioButton_Girl, new GridBagConstraints(6, 0, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 0, 5, 5), 0, 0));
 
 		label_Phone.setPreferredSize(new Dimension(120, 22));
-		jPanel_Form.add(label_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(label_Phone, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jPanel_Form.add(textField_Phone, new GridBagConstraints(1, 1, 7, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(textField_Phone, new GridBagConstraints(1, 1, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
 		jPanel_Form.add(label_Address, new GridBagConstraints(0, 2, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jPanel_Form.add(textField_Address, new GridBagConstraints(1, 2, 7, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		jPanel_Form.add(textField_Address, new GridBagConstraints(1, 2, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Command.setLayout(new GridBagLayout());
+		jPanel_Command.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
+				GridBagConstraints.VERTICAL, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Command.add(new JLabel(" "), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
-				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+		jPanel_Command.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-		jPanel_Command.add(jButton_Add, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
-				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+		jPanel_Command.add(jButton_Save, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
+		
+		jPanel_Table.add(jScrollPane_Table, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 0));
 
-		jPanel_Command.add(jButton_Update, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
-				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+		this.add(jPanel_Form, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		jPanel_Command.add(jButton_Save, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
-				GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+		this.add(jPanel_Command, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		jPanel_Table.setLayout(new GridBagLayout());
-
-		this.setLayout(new GridBagLayout());
-
-		this.add(jPanel_Form, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-
-		this.add(jPanel_Command, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-
-		this.add(jPanel_Table, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-		this.add(new JScrollPane(jTable_Result), new GridBagConstraints(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+		this.add(jPanel_Table, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		jButton_Add.addActionListener(new TestPanel_jButton_Add_ActionListener(this));
 		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
 
-		FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
-
-		jButton_Save.addActionListener(new TestPanel_jButton_Save_ActionListener(fileAddressBookImpl));
+		jButton_Save.addActionListener(new TestPanel_jButton_Save_ActionListener(this));
 
 		jTable_Result.addMouseListener(new TestPanel_jTable_Result_MouseListener(this));
 
@@ -194,10 +196,10 @@ public class TestPanel extends JPanel {
 			oneUser.setName(jTextField_Name.getText());
 			oneUser.setAge(age);
 
-			if (btnBoy.isSelected()) {
-				oneUser.setGender(Gender.toGender(btnBoy.getText()));
-			} else if (btnGirl.isSelected()) {
-				oneUser.setGender(Gender.toGender(btnGirl.getText()));
+			if (jRadioButton_Boy.isSelected()) {
+				oneUser.setGender(Gender.toGender(jRadioButton_Boy.getText()));
+			} else if (jRadioButton_Girl.isSelected()) {
+				oneUser.setGender(Gender.toGender(jRadioButton_Girl.getText()));
 			} else {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 입력하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
@@ -228,10 +230,10 @@ public class TestPanel extends JPanel {
 
 			onePerson.setAge(age);
 
-			if (btnBoy.isSelected()) {
-				onePerson.setGender(Gender.toGender(btnBoy.getText()));
-			} else if (btnGirl.isSelected()) {
-				onePerson.setGender(Gender.toGender(btnGirl.getText()));
+			if (jRadioButton_Boy.isSelected()) {
+				onePerson.setGender(Gender.toGender(jRadioButton_Boy.getText()));
+			} else if (jRadioButton_Girl.isSelected()) {
+				onePerson.setGender(Gender.toGender(jRadioButton_Girl.getText()));
 			} else {
 				JOptionPane.showMessageDialog(TestPanel.this, "값을 선택하세요.", "경고", JOptionPane.ERROR_MESSAGE);
 			}
@@ -321,9 +323,9 @@ public class TestPanel extends JPanel {
 			jTextField_Name.setText(onePerson.getName());
 			jSpinner_Age.setValue(onePerson.getAge());
 			if (onePerson.getGender() == Gender.toGender("남")) {
-				btnBoy.setSelected(true);
+				jRadioButton_Boy.setSelected(true);
 			} else {
-				btnGirl.setSelected(true);
+				jRadioButton_Girl.setSelected(true);
 			}
 			textField_Phone.setText(onePerson.getPhone());
 			textField_Address.setText(onePerson.getAddress());
@@ -347,6 +349,10 @@ public class TestPanel extends JPanel {
 		if (selectedRow >= 0) {
 			deleteData();
 		}
+	}
+	
+	void saveAddressListToFile(ActionEvent e) {
+		//fileAddressBookImpl
 	}
 }
 
@@ -377,15 +383,15 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 }
 
 class TestPanel_jButton_Save_ActionListener implements ActionListener {
-	private FileAddressBookImpl fileAddressBookImpl;
+	private TestPanel adaptee;
 
-	public TestPanel_jButton_Save_ActionListener(FileAddressBookImpl fileAddressBookImpl) {
-		this.fileAddressBookImpl = fileAddressBookImpl;
+	public TestPanel_jButton_Save_ActionListener(TestPanel adaptee) {
+		this.adaptee = adaptee;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		fileAddressBookImpl.saveAddressListToFile();
+		adaptee.saveAddressListToFile(e);
 	}
 }
 

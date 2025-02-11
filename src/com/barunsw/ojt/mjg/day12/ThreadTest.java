@@ -25,7 +25,7 @@ public class ThreadTest {
 		}
 */
 
-
+/*
 		Timer timer = new Timer();
 		for (int i = 0; i < 3; i++) {
 			TestTimerTask t = new TestTimerTask(i);
@@ -35,7 +35,7 @@ public class ThreadTest {
 			
 			LOGGER.debug(String.format("[%d] activeCount:%d", 0, Thread.activeCount()));
 		}
-
+*/
 /*
 		for (int i = 0; i < 3; i++) {
 			TestThread2 t = new TestThread2(i);

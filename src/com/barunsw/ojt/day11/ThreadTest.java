@@ -14,7 +14,8 @@ public class ThreadTest {
 
 	public static void main(String[] args) {
 		LOGGER.debug("+++ activeCount:" + Thread.activeCount());
-/*
+
+		/*
 		for (int i = 0; i < 10; i++) {
 			TestThread t = new TestThread(i);
 			t.start();
@@ -22,7 +23,6 @@ public class ThreadTest {
 			LOGGER.debug(String.format("[%d] activeCount:%d", i, Thread.activeCount()));
 		}
 */
-
 /*
 		Timer timer = new Timer();
 		for (int i = 0; i < 3; i++) {
@@ -34,7 +34,8 @@ public class ThreadTest {
 			LOGGER.debug(String.format("[%d] activeCount:%d", 0, Thread.activeCount()));
 		}
 */
-/*
+
+/*		
 		for (int i = 0; i < 3; i++) {
 			TestThread2 t = new TestThread2(i);
 			t.start();
@@ -42,7 +43,7 @@ public class ThreadTest {
 			LOGGER.debug(String.format("[%d] activeCount:%d", i, Thread.activeCount()));
 		}
 */
-
+		
 		try {
 			// Look and Feel UIManager를 통해 ui 쉽게 변경 가능
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -64,6 +65,5 @@ public class ThreadTest {
 		frame.setVisible(true);
 
 		LOGGER.debug("--- activeCount:" + Thread.activeCount());		
-			
 	}
 }
