@@ -30,9 +30,9 @@ public class ObjectAddressBookImpl implements AddressBookInterface {
     private void loadFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
             addressList = (List<AddressVo>) ois.readObject();
-            LOGGER.debug("직렬화된 데이터 로드 완료: {} 개의 데이터", addressList.size());
+            LOGGER.debug("데이터 로드 완료: {} 개의 데이터", addressList.size());
         } catch (FileNotFoundException e) {
-            LOGGER.warn("직렬화된 데이터 파일이 존재하지 않습니다. 새로 생성합니다.");
+            LOGGER.warn("직렬화된 데이터 파일이 존재하지 않습니다.");
         } catch (Exception e) {
             LOGGER.error("데이터 로드 중 오류 발생: {}", e.getMessage(), e);
         }
@@ -41,7 +41,7 @@ public class ObjectAddressBookImpl implements AddressBookInterface {
     private void saveToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(addressList);
-            LOGGER.debug("직렬화된 데이터 저장 완료");
+            LOGGER.debug("데이터 저장 완료");
         } catch (IOException e) {
             LOGGER.error("데이터 저장 중 오류 발생: {}", e.getMessage(), e);
         }

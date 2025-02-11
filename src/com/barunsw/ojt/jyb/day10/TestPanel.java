@@ -34,6 +34,13 @@ import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
+	
+	private AddressBookInterface addressBookInterface;
+	
+	//private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	//private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
+	//private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
+	//private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
 
 	private final int COLUMN_INDEX_NAME 	= 0;
 	private final int COLUMN_INDEX_AGE 		= 1;
@@ -75,11 +82,6 @@ public class TestPanel extends JPanel {
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 	private JScrollPane jScrollPane_Table = new JScrollPane();
 	private GridBagLayout gridBagLayout = new GridBagLayout();
-
-	//private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
-	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
-//	private AddressBookInterface addressBookInterface = new FileAddressBookImpl(); -> 실행됨
-//	private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl(); -> 실행됨
 
 	public TestPanel() {
 		try {
