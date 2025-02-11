@@ -189,7 +189,7 @@ public class AddressBookLayoutPanel extends JPanel {
         ));
         
         // 삭제 버튼 기본 숨김
-        jButton_Delete.setVisible(false);  
+    	// jButton_Delete.setVisible(false);  
         
         // 삭제 버튼 이벤트
         jButton_Delete.addActionListener(new AddressBookLayoutPanel_jButton_Delete_ActionListener(this));
@@ -242,7 +242,7 @@ public class AddressBookLayoutPanel extends JPanel {
     }
     
     // 선택된 행 삭제
-    void jButton_Delete_actionPerformed() {
+    void jButton_Delete_actionPerformed(ActionEvent e) {
         int selectedRow = jTable.getSelectedRow();
         if (selectedRow != -1) {
             DefaultTableModel model = (DefaultTableModel) jTable.getModel();
@@ -253,14 +253,14 @@ public class AddressBookLayoutPanel extends JPanel {
 }
 
 class AddressBookLayoutPanel_jButton_Delete_ActionListener implements ActionListener {
-    private AddressBookLayoutPanel adaptee;
+	private AddressBookLayoutPanel adaptee;
 
-    public AddressBookLayoutPanel_jButton_Delete_ActionListener(AddressBookLayoutPanel adaptee) {
-        this.adaptee = adaptee;
-    }
+	public AddressBookLayoutPanel_jButton_Delete_ActionListener(AddressBookLayoutPanel adaptee) {
+		this.adaptee = adaptee;
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        adaptee.jButton_Delete_actionPerformed();
-    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButton_Delete_actionPerformed(e);
+	}
 }

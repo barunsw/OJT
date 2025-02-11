@@ -22,7 +22,7 @@
   </environments>
   
   <mappers>
-    <mapper resource="com/barunsw/ojt/mjg/day11/AddressBookMapper.xml" />
+    <mapper resource="AddressBookMapper.xml" />
   </mappers>
   
 </configuration>

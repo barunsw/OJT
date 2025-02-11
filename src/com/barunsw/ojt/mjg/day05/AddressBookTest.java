@@ -5,14 +5,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 import com.barunsw.ojt.constants.Gender;
-import com.barunsw.ojt.mjg.day05.AddressVo;
 
 public class AddressBookTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddressBookTest.class);
 
     public static void main(String[] args) throws Exception {
-    	
+/*	
         // File 기반 테스트
         AddressBookInterface fileAddressBook = new FileAddressBookImpl();
         testAddressBook(fileAddressBook);
@@ -20,7 +21,7 @@ public class AddressBookTest {
         // Object 기반 테스트
         AddressBookInterface objectAddressBook = new ObjectAddressBookImpl();
         testAddressBook(objectAddressBook);
-
+*/
         // JDBC 기반 테스트
         AddressBookInterface jdbcAddressBook = new JdbcAddressBookImpl();
         testAddressBook(jdbcAddressBook);
@@ -31,8 +32,8 @@ public class AddressBookTest {
         LOGGER.debug("Testing {}", addressBook.getClass().getSimpleName());
 
         // Insert
-        addressBook.insertAddress(new AddressVo("문종근", 26, Gender.MAN, "서울"));
-        addressBook.insertAddress(new AddressVo("신사임당", 40, Gender.WOMAN, "경기도"));
+        addressBook.insertAddress(new AddressVo());
+        addressBook.insertAddress(new AddressVo());
 
         // Select
         List<AddressVo> addressList = addressBook.selectAddressList(null);
@@ -42,7 +43,7 @@ public class AddressBookTest {
         }
 
         // Update
-        AddressVo updatedAddress = new AddressVo("이순신", 50, Gender.MAN, "전라도");
+        AddressVo updatedAddress = new AddressVo();
         addressBook.updateAddress(updatedAddress);
 
         // Update 확인
@@ -53,7 +54,7 @@ public class AddressBookTest {
         }
 
         // Delete
-        addressBook.deleteAddress(new AddressVo("이순신", 0, null, null));
+        addressBook.deleteAddress(new AddressVo());
 
         // Delete 확인
         addressList = addressBook.selectAddressList(null);
@@ -61,6 +62,5 @@ public class AddressBookTest {
         for (AddressVo address : addressList) {
             LOGGER.debug("{}", address);
         }
-    
     }
 }

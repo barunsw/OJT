@@ -12,8 +12,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.mjg.day05.AddressBookInterface;
-import com.barunsw.ojt.mjg.day05.AddressVo;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
 
 public class ObjectAddressBookImpl implements AddressBookInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectAddressBookImpl.class);

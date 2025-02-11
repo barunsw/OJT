@@ -1,5 +1,6 @@
-package com.barunsw.ojt.mjg.day05;
+package com.barunsw.ojt.mjg.day09;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,12 +25,15 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
     private String dbUser;
     private String dbPassword;
 
-    public JdbcAddressBookImpl() throws Exception {
+    public JdbcAddressBookImpl() {
         try (Reader reader = Resources.getResourceAsReader("Jdbc.properties")) {
             jdbcProperties.load(reader);
             dbUrl = jdbcProperties.getProperty("url");
             dbUser = jdbcProperties.getProperty("username");
             dbPassword = jdbcProperties.getProperty("password");
+        }
+        catch (IOException ioe) {
+            throw new RuntimeException("JDBC 설정 로드 실패", ioe);
         }
         LOGGER.debug("JDBC 설정 로드 완료");
     }
@@ -37,7 +41,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
     @Override
     public List<AddressVo> selectAddressList(AddressVo addressVo) {
         List<AddressVo> addressList = new ArrayList<>();
-        String SQL = "SELECT SEQ, NAME, AGE, GENDER, ADDRESS FROM ADDRESSBOOK";
+        String SQL = "SELECT SEQ, NAME, AGE, GENDER, ADDRESS, PHONE FROM TB_ADDRESSBOOK";
 
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
              PreparedStatement psmt = conn.prepareStatement(SQL);
@@ -50,6 +54,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
                 address.setAge(resultSet.getInt("AGE"));
                 address.setGender(Gender.toGender(resultSet.getString("GENDER")));
                 address.setAddress(resultSet.getString("ADDRESS"));
+                address.setPhone(resultSet.getString("PHONE"));
                 addressList.add(address);
             }
             LOGGER.debug("데이터 조회 성공: {} 개의 데이터", addressList.size());
@@ -61,14 +66,15 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
     @Override
     public int insertAddress(AddressVo addressVo) {
-        String SQL = "INSERT INTO ADDRESSBOOK (NAME, AGE, GENDER, ADDRESS) VALUES (?, ?, ?, ?)";
+        String SQL = "INSERT INTO TB_ADDRESSBOOK (NAME, AGE, GENDER, ADDRESS, PHONE) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
              PreparedStatement psmt = conn.prepareStatement(SQL)) {
 
             psmt.setString(1, addressVo.getName());
             psmt.setInt(2, addressVo.getAge());
-            psmt.setString(3, addressVo.getGender().toString());
+            psmt.setString(3, addressVo.getGender().name());
             psmt.setString(4, addressVo.getAddress());
+            psmt.setString(5, addressVo.getPhone());            
             int result = psmt.executeUpdate();
             LOGGER.debug("데이터 삽입 성공: {}", addressVo);
             return result;
@@ -81,14 +87,16 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
     @Override
     public int updateAddress(AddressVo addressVo) {
-        String SQL = "UPDATE ADDRESSBOOK SET AGE = ?, GENDER = ?, ADDRESS = ? WHERE SEQ = ?";
+        String SQL = "UPDATE TB_ADDRESSBOOK SET NAME = ?, AGE = ?, GENDER = ?, ADDRESS = ?, PHONE = ? WHERE SEQ = ?";
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
              PreparedStatement psmt = conn.prepareStatement(SQL)) {
-
-            psmt.setInt(1, addressVo.getAge());
-            psmt.setString(2, addressVo.getGender().toString());
-            psmt.setString(3, addressVo.getAddress());
-            psmt.setInt(4, addressVo.getSeq());  // seq 기준으로 업데이트
+    		
+        	psmt.setString(1, addressVo.getName());
+            psmt.setInt(2, addressVo.getAge());
+            psmt.setString(3, addressVo.getGender().name());
+            psmt.setString(4, addressVo.getAddress());
+            psmt.setString(5, addressVo.getPhone());
+            psmt.setInt(6, addressVo.getSeq());  // seq 기준으로 업데이트
             int result = psmt.executeUpdate();
             LOGGER.debug("데이터 업데이트 성공: {}", addressVo);
             return result;
@@ -101,7 +109,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 
     @Override
     public int deleteAddress(AddressVo addressVo) {
-        String SQL = "DELETE FROM ADDRESSBOOK WHERE SEQ = ?";
+        String SQL = "DELETE FROM TB_ADDRESSBOOK WHERE SEQ = ?";
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
              PreparedStatement psmt = conn.prepareStatement(SQL)) {
 

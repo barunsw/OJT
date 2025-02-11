@@ -29,9 +29,14 @@ import javax.swing.table.JTableHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.mjg.constants.Gender;
+import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.vo.AddressVo;
+import com.barunsw.ojt.constants.Gender;
 
 public class AddressBookLayoutPanel extends JPanel {
+	
+//	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
 	
 	private static final Logger LOGGER = LogManager.getLogger(AddressBookLayoutPanel.class);
 	
@@ -43,10 +48,7 @@ public class AddressBookLayoutPanel extends JPanel {
 	private final int TABLE_CELL_ID_GENDER		= 2;
 	private final int TABLE_CELL_ID_PHONE		= 3;
 	private final int TABLE_CELL_ID_ADDRESS	 	= 4;
-	private final int TABLE_CELL_ID_PERSON		= 5;
-	
-	// AddressBookInterface 구현체(DB 연동)
-	private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
+	private final int TABLE_CELL_ID_PERSON		= 5;	
 	
 	private List<AddressVo> personList = new ArrayList<>();
 	
