@@ -43,6 +43,7 @@ public class ClientSocketHandler extends Thread {
 
 			// 클래스를 동적으로 로드
 			Class<?> clazz = Class.forName(addressIfClassName);
+			
 		}
 		catch (Exception e) {
 			throw new RuntimeException("config.properties 로드 실패", e);
@@ -94,7 +95,8 @@ public class ClientSocketHandler extends Thread {
 	public void run() {
 	    LOGGER.debug("+++ ClientSocketHandler run");
 
-	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	    		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
 	        String readLine = null;
 	        while ((readLine = reader.readLine()) != null) { // 클라이언트의 요청을 계속 읽기
 	            LOGGER.debug(String.format("+++ readLine: %s", readLine));
@@ -107,6 +109,7 @@ public class ClientSocketHandler extends Thread {
 	            String[] cmdSplit = readLine.split(":");
 	            String cmd = cmdSplit[0];
 
+                String result = "OK";
 	            try {
 	                if (cmdSplit.length < 2) {
 	                    if ("SELECT".equals(cmd)) {
@@ -126,7 +129,7 @@ public class ClientSocketHandler extends Thread {
 	                        break;
 	                    case "SELECT":
 	                        LOGGER.debug("Handling SELECT command");
-	                        handleSelect();
+	                        result = handleSelect();
 	                        break;
 	                    case "UPDATE":
 	                        AddressVo addressVo2 = parseCmd(cmdSplit[1]);
@@ -142,6 +145,8 @@ public class ClientSocketHandler extends Thread {
 	            } catch (Exception e) {
 	                LOGGER.error("Error processing command: " + cmd, e);
 	            }
+	            
+	            writer.write(result);
 	        }
 	    } catch (IOException ex) {
 	        LOGGER.error("Error reading from client", ex);
@@ -153,69 +158,36 @@ public class ClientSocketHandler extends Thread {
 	}
 
 
-	private void handleSelect() throws Exception {
+	private String handleSelect() throws Exception {
 		if (addressBookIf == null) {
 			throw new RuntimeException("addressbookinterface가 초기화되지않음");
 		}
 
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-			AddressVo searchCondition = new AddressVo();
-			List<AddressVo> addrList = addressBookIf.selectAddressList(searchCondition);
+		AddressVo searchCondition = new AddressVo();
+		List<AddressVo> addrList = addressBookIf.selectAddressList(searchCondition);
 
-			if (addrList.isEmpty()) {
-				writer.write("NO_RESULT\n");
-			} else {
-				for (AddressVo address : addrList) {
-					writer.append(String.format("NAME=%s, AGE=%d, GENDER=%s, ADDRESS=%s, PHONE=%s\n", address.getName(),
-							address.getAge(), address.getGender(), address.getAddress(), address.getPhone()));
-				}
-			}
-
-			writer.write("END_OF_DATA\n");
-			writer.flush();
+		StringBuffer buffer = new StringBuffer();
+		
+		for (AddressVo address : addrList) {
+			buffer.append(String.format("NAME=%s,AGE=%d,GENDER=%s,ADDRESS=%s,PHONE=%s\n", address.getName(),
+					address.getAge(), address.getGender(), address.getAddress(), address.getPhone()));
 		}
-		catch (IOException e) {
-			LOGGER.error("Error in handleSelect", e);
-		}
+		
+		return buffer.toString();
 	}
 
 	private void handleInsert(AddressVo addressVo) throws Exception {
 		LOGGER.debug(String.format("+++ handleInsert [%s]", addressVo));
 		addressBookIf.insertAddress(addressVo);
-
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-			writer.write("END_OF_DATA\n");
-			writer.flush();
-		}
-		catch (IOException e) {
-			LOGGER.error("Error in handleInsert", e);
-		}
 	}
 
 	private void handleUpdate(AddressVo addressVo) throws Exception {
 		LOGGER.debug(String.format("+++ handleUpdate [%s]", addressVo));
 		addressBookIf.updateAddress(addressVo);
-
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-			writer.write("END_OF_DATA\n");
-			writer.flush();
-		}
-		catch (IOException e) {
-			LOGGER.error("Error in handleUpdate", e);
-		}
 	}
 
 	private void handleDelete(AddressVo addressVo) throws Exception {
 		LOGGER.debug(String.format("+++ handleDelete [%s]", addressVo));
 		addressBookIf.deleteAddress(addressVo);
-
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-			writer.write("END_OF_DATA\n");
-			writer.flush();
-		}
-		catch (IOException e) {
-			LOGGER.error("Error in handleDelete", e);
-		}
 	}
-
 }

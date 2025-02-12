@@ -145,7 +145,14 @@ public class AddressBookLayoutPanel extends JPanel {
                 int serverPort = Integer.parseInt(properties.getProperty("port"));  // 포트
 
                 o = new SocketAddressBookImpl(serverHost, serverPort);  // 직접 생성
-            } 
+                // https://brightstarit.tistory.com/50
+                // Consturctor c = Class.forName().getConstructor(String.class, int.class);
+                //o = c.newInstance(address, port);
+                // 
+            }
+            else {
+                // o = Class.forName().newInstance();
+            }
 
             if (o != null && o instanceof AddressBookInterface) {
                 addressBookInterface = (AddressBookInterface) o;  // 인터페이스로 캐스팅

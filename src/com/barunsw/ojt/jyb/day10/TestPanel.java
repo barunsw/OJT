@@ -60,8 +60,11 @@ public class TestPanel extends JPanel {
 			}
 
 			// 클래스를 동적으로 로드
-			Class<?> clazz = Class.forName(addressIfClassName);
-
+			//Class<?> clazz = Class.forName(addressIfClassName);
+			//clazz.newInstance();
+			
+			//new SocketAddessBookImpl();
+			
 			addressBookInterface = new SocketAddressBookImpl(host, port);
 
 		}
