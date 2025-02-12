@@ -42,6 +42,7 @@ import com.barunsw.ojt.common.AddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.constants.SearchType;
+import com.barunsw.ojt.mjg.day14.SocketAddressBookImpl;
 
 public class AddressBookLayoutPanel extends JPanel {
 	
@@ -116,7 +117,7 @@ public class AddressBookLayoutPanel extends JPanel {
     
     // 기본 헤더 렌더러 가져오기 - 기존 룩앤필 유지
     private DefaultTableCellRenderer defaultHeaderRenderer = (DefaultTableCellRenderer) tableHeader.getDefaultRenderer();
-
+	
     public AddressBookLayoutPanel() {
         try {
         	initAddressBookIf();
@@ -131,32 +132,40 @@ public class AddressBookLayoutPanel extends JPanel {
     }
     
     private void initAddressBookIf() {
-    	Properties properties = new Properties();
-    	try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+        Properties properties = new Properties();
+        try (Reader reader = Resources.getResourceAsReader("config.properties")) {
             properties.load(reader);
-            
-            String addressIfClass = properties.getProperty("address_if_class");
-            
-            
-            Object o = Class.forName(addressIfClass).newInstance();
-            
-            addressBookInterface = (AddressBookInterface)o;
-        }
-        catch (IOException ioe) {
-            throw new RuntimeException("JDBC 설정 로드 실패", ioe);
+
+            String addressIfClass = properties.getProperty("address_socket");
+            Object o = null; // 인스턴스를 저장할 변수
+
+            if (addressIfClass.contains("SocketAddressBookImpl")) {
+                // SocketAddressBookImpl을 위한 host, port 정보 가져오기
+                String serverHost = properties.getProperty("host"); 				// 호스트
+                int serverPort = Integer.parseInt(properties.getProperty("port"));  // 포트
+
+                o = new SocketAddressBookImpl(serverHost, serverPort);  // 직접 생성
+            } 
+
+            if (o != null && o instanceof AddressBookInterface) {
+                addressBookInterface = (AddressBookInterface) o;  // 인터페이스로 캐스팅
+            }
         } 
-    	catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-    	catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-    	catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        catch (IOException ioe) {
+            throw new RuntimeException("설정 파일 로드 실패", ioe);
+        } 
+        catch (ClassNotFoundException cnfe) {
+            throw new RuntimeException("클래스를 찾을 수 없습니다: " + cnfe.getMessage(), cnfe);
+        } 
+        catch (InstantiationException ie) {
+            throw new RuntimeException("클래스 인스턴스 생성 실패: " + ie.getMessage(), ie);
+        } 
+        catch (IllegalAccessException iae) {
+            throw new RuntimeException("클래스에 접근할 수 없습니다: " + iae.getMessage(), iae);
+        } 
+        catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private void initComponent() {
