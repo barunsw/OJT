@@ -2,10 +2,12 @@ package com.barunsw.ojt.jyb.day12;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.Socket;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.ibatis.io.Resources;
@@ -89,42 +91,131 @@ public class ClientSocketHandler extends Thread {
 	}
 
 	@Override
-	public void run() { // 소켓을 통해 클라이언트의 요청 처리
-		LOGGER.debug("+++ ClientSocketHandler run");
+	public void run() {
+	    LOGGER.debug("+++ ClientSocketHandler run");
 
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-			String readLine = null;
-			while ((readLine = reader.readLine()) != null) {
-				LOGGER.debug(String.format("+++ readLine:%s", readLine));
+	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+	        String readLine = null;
+	        while ((readLine = reader.readLine()) != null) { // 클라이언트의 요청을 계속 읽기
+	            LOGGER.debug(String.format("+++ readLine: %s", readLine));
 
-				String[] cmdSplit = readLine.split(":");
+	            if (readLine.isEmpty()) {
+	                LOGGER.warn("Received an empty line from the client");
+	                continue;
+	            }
 
-				String cmd = cmdSplit[0];
-				switch (cmd) {
-				case "INSERT":
-					AddressVo addressVo = parseCmd(cmdSplit[1]);
-					handleInsert(addressVo);
-					break;
-				}
-			}
-		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
-		}
+	            String[] cmdSplit = readLine.split(":");
+	            String cmd = cmdSplit[0];
 
-		LOGGER.debug("--- ClientSocketHandler run");
+	            try {
+	                if (cmdSplit.length < 2) {
+	                    if ("SELECT".equals(cmd)) {
+	                        // SELECT 명령어는 파라미터가 없어도 정상 처리
+	                        handleSelect();
+	                    } else {
+	                        LOGGER.error("Invalid command format received: " + readLine);
+	                    }
+	                    continue; // 파라미터가 없거나 잘못된 형식인 경우, 다른 명령어로 진행
+	                }
+
+	                // 파라미터가 있을 경우 처리
+	                switch (cmd) {
+	                    case "INSERT":
+	                        AddressVo addressVo = parseCmd(cmdSplit[1]);
+	                        handleInsert(addressVo);
+	                        break;
+	                    case "SELECT":
+	                        LOGGER.debug("Handling SELECT command");
+	                        handleSelect();
+	                        break;
+	                    case "UPDATE":
+	                        AddressVo addressVo2 = parseCmd(cmdSplit[1]);
+	                        handleUpdate(addressVo2);
+	                        break;
+	                    case "DELETE":
+	                        AddressVo addressVo3 = parseCmd(cmdSplit[1]);
+	                        handleDelete(addressVo3);
+	                        break;
+	                    default:
+	                        LOGGER.error("Unknown command: " + cmd);
+	                }
+	            } catch (Exception e) {
+	                LOGGER.error("Error processing command: " + cmd, e);
+	            }
+	        }
+	    } catch (IOException ex) {
+	        LOGGER.error("Error reading from client", ex);
+	    } catch (Exception ex) {
+	        LOGGER.error("Error in handling client request", ex);
+	    }
+
+	    LOGGER.debug("--- ClientSocketHandler run");
 	}
+
 
 	private void handleSelect() throws Exception {
+		if (addressBookIf == null) {
+			throw new RuntimeException("addressbookinterface가 초기화되지않음");
+		}
+
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-			// List<AddressBookVo> addrList = addrImpl.selectList();
-			// List -> String
-			// writer.write(message);
+			AddressVo searchCondition = new AddressVo();
+			List<AddressVo> addrList = addressBookIf.selectAddressList(searchCondition);
+
+			if (addrList.isEmpty()) {
+				writer.write("NO_RESULT\n");
+			} else {
+				for (AddressVo address : addrList) {
+					writer.append(String.format("NAME=%s, AGE=%d, GENDER=%s, ADDRESS=%s, PHONE=%s\n", address.getName(),
+							address.getAge(), address.getGender(), address.getAddress(), address.getPhone()));
+				}
+			}
+
+			writer.write("END_OF_DATA\n");
+			writer.flush();
+		}
+		catch (IOException e) {
+			LOGGER.error("Error in handleSelect", e);
 		}
 	}
 
-	private void handleInsert(AddressVo addressVo) throws Exception { // INSERT 명령이 들어왔을 때 호출되는 메소드
+	private void handleInsert(AddressVo addressVo) throws Exception {
 		LOGGER.debug(String.format("+++ handleInsert [%s]", addressVo));
 		addressBookIf.insertAddress(addressVo);
+
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+			writer.write("END_OF_DATA\n");
+			writer.flush();
+		}
+		catch (IOException e) {
+			LOGGER.error("Error in handleInsert", e);
+		}
 	}
+
+	private void handleUpdate(AddressVo addressVo) throws Exception {
+		LOGGER.debug(String.format("+++ handleUpdate [%s]", addressVo));
+		addressBookIf.updateAddress(addressVo);
+
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+			writer.write("END_OF_DATA\n");
+			writer.flush();
+		}
+		catch (IOException e) {
+			LOGGER.error("Error in handleUpdate", e);
+		}
+	}
+
+	private void handleDelete(AddressVo addressVo) throws Exception {
+		LOGGER.debug(String.format("+++ handleDelete [%s]", addressVo));
+		addressBookIf.deleteAddress(addressVo);
+
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+			writer.write("END_OF_DATA\n");
+			writer.flush();
+		}
+		catch (IOException e) {
+			LOGGER.error("Error in handleDelete", e);
+		}
+	}
+
 }

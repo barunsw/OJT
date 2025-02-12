@@ -62,14 +62,7 @@ public class TestPanel extends JPanel {
 			// 클래스를 동적으로 로드
 			Class<?> clazz = Class.forName(addressIfClassName);
 
-			
-			if (clazz == SocketAddressBookImpl.class) {
-				// SocketAddressBookImpl의 생성자를 호출하여 인스턴스를 생성
-				addressBookInterface = new SocketAddressBookImpl(host, port);
-			} else {
-				// 다른 클래스에 대한 처리 (필요시 추가)
-				addressBookInterface = (AddressBookInterface) clazz.getDeclaredConstructor().newInstance();
-			}
+			addressBookInterface = new SocketAddressBookImpl(host, port);
 
 		}
 		catch (Exception e) {
@@ -249,8 +242,13 @@ public class TestPanel extends JPanel {
 			oneUser.setPhone(jTextField_Phone.getText());
 			oneUser.setAddress(jTextField_Address.getText());
 
-			addressBookInterface.insertAddress(oneUser);
-			
+			try {
+			    addressBookInterface.insertAddress(oneUser);
+			} catch (Exception e) {
+			    LOGGER.error("데이터 삽입 중 오류 발생: " + oneUser, e);
+			    JOptionPane.showMessageDialog(TestPanel.this, "삽입 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+			}
+
 			selectedRow = jTable_Result.getSelectedRow();
 
 			initreset();
