@@ -33,54 +33,69 @@ import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.jyb.day12.SocketAddressBookImpl;
 import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
-	
+
 	private static AddressBookInterface addressBookInterface;
-	
+
 	static {
-        try {
-            // config.properties 파일을 읽어들임
-            Properties properties = new Properties();
-            try (Reader reader = Resources.getResourceAsReader("config.properties")) {
-                properties.load(reader);
-            }
+		try {
+			// config.properties 파일을 읽어들임
+			Properties properties = new Properties();
+			try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+				properties.load(reader);
+			}
 
-            // address_if_class 프로퍼티 값을 읽어옴
-            String addressIfClassName = properties.getProperty("address_if_class");
-            
-            if (addressIfClassName == null) {
-                throw new RuntimeException("address_if_class 프로퍼티가 설정되지 않았습니다.");
-            }
-            
-            // 클래스를 동적으로 로드
-            Class<?> clazz = Class.forName(addressIfClassName);
-            
-            // AddressBookInterface로 변환하여 인스턴스 생성
-            addressBookInterface = (AddressBookInterface) clazz.getDeclaredConstructor().newInstance();
+			// address_if_class 프로퍼티 값을 읽어옴
+			String addressIfClassName = properties.getProperty("address_socket");
 
-        } catch (Exception e) {
-            throw new RuntimeException("config.properties 로드 실패", e);
-        }
+			String host = properties.getProperty("host");
+			int port = Integer.parseInt(properties.getProperty("port"));
+
+			if (addressIfClassName == null) {
+				throw new RuntimeException("address_if_class 프로퍼티가 설정되지 않았습니다.");
+			}
+
+			// 클래스를 동적으로 로드
+			Class<?> clazz = Class.forName(addressIfClassName);
+
+			
+			if (clazz == SocketAddressBookImpl.class) {
+				// SocketAddressBookImpl의 생성자를 호출하여 인스턴스를 생성
+				addressBookInterface = new SocketAddressBookImpl(host, port);
+			} else {
+				// 다른 클래스에 대한 처리 (필요시 추가)
+				addressBookInterface = (AddressBookInterface) clazz.getDeclaredConstructor().newInstance();
+			}
+
+		}
+		catch (Exception e) {
+			throw new RuntimeException("config.properties 로드 실패", e);
+		}
 	}
 
-	//private AddressBookInterface addressBookInterface = new MybatisAddressBookImpl();
-	//private AddressBookInterface addressBookInterface = new JdbcAddressBookImpl();
-	//private AddressBookInterface addressBookInterface = new FileAddressBookImpl();
-	//private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new
+	// MybatisAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new
+	// JdbcAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new
+	// FileAddressBookImpl();
+	// private AddressBookInterface addressBookInterface = new
+	// ObjectAddressBookImpl();
 
-	private final int COLUMN_INDEX_NAME 	= 0;
-	private final int COLUMN_INDEX_AGE 		= 1;
-	private final int COLUMN_INDEX_GENDER 	= 2;
-	private final int COLUMN_INDEX_PHONE 	= 3;
-	private final int COLUMN_INDEX_ADDRESS 	= 4;
-	private final int COLUMN_INDEX_PERSON 	= 5;
+	private final int COLUMN_INDEX_NAME = 0;
+	private final int COLUMN_INDEX_AGE = 1;
+	private final int COLUMN_INDEX_GENDER = 2;
+	private final int COLUMN_INDEX_PHONE = 3;
+	private final int COLUMN_INDEX_ADDRESS = 4;
+	private final int COLUMN_INDEX_PERSON = 5;
 
 	private int selectedRow = 0;
-	private final Dimension LABEL_SIZE 	= new Dimension(80, 30);
-	private final Dimension SIZE 		= new Dimension(120, 30);
+	private final Dimension LABEL_SIZE = new Dimension(80, 30);
+	private final Dimension SIZE = new Dimension(120, 30);
 
 	private CommonTableModel tableModel = new CommonTableModel();
 	private CardLayout cardLayout = new CardLayout();
@@ -235,6 +250,7 @@ public class TestPanel extends JPanel {
 			oneUser.setAddress(jTextField_Address.getText());
 
 			addressBookInterface.insertAddress(oneUser);
+			
 			selectedRow = jTable_Result.getSelectedRow();
 
 			initreset();
