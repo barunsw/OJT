@@ -3,6 +3,8 @@ package com.barunsw.ojt.jyb.day10;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,10 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.vo.AddressVo;
 
-public class JdbcAddressBookImpl implements AddressBookInterface {
+public class JdbcAddressBookImpl extends UnicastRemoteObject  implements RmiAddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	private static String DB_URL;
 	private static String USERNAME;
@@ -42,7 +45,7 @@ public class JdbcAddressBookImpl implements AddressBookInterface {
 		LOGGER.debug("JDBC 설정 로드 완료");
 	}
 
-	public JdbcAddressBookImpl() {
+	public JdbcAddressBookImpl() throws RemoteException {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 		}

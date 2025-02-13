@@ -24,7 +24,7 @@ public class ClientSocketHandler extends Thread {
 
 	private Socket clientSocket; // 클라이언트와의 소켓 연결 저장
 
-	private AddressBookInterface addressBookIf = new JdbcAddressBookImpl();
+	private AddressBookInterface addressBookIf;
 
 	static {
 		try {

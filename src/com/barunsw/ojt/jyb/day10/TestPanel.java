@@ -10,6 +10,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -27,45 +32,51 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import org.apache.ibatis.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
-import com.barunsw.ojt.jyb.day12.SocketAddressBookImpl;
 import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 
-	private static AddressBookInterface addressBookInterface;
+	private static RmiAddressBookInterface addressBookInterface;
 
 	static {
 		try {
 			// config.properties 파일을 읽어들임
 			Properties properties = new Properties();
-			try (Reader reader = Resources.getResourceAsReader("config.properties")) {
-				properties.load(reader);
-			}
+//			try (Reader reader = Resources.getResourceAsReader("config.properties")) {
+//				properties.load(reader);
+//			}
 
 			// address_if_class 프로퍼티 값을 읽어옴
-			String addressIfClassName = properties.getProperty("address_socket");
+//			String addressIfClassName = properties.getProperty("address_socket");
+//			Object o = null;
+//			System.out.println(System.getProperty("user.dir"));
+//			String host = properties.getProperty("host");
+//			int port = Integer.parseInt(properties.getProperty("port2"));
 
-			String host = properties.getProperty("host");
-			int port = Integer.parseInt(properties.getProperty("port"));
-
-			if (addressIfClassName == null) {
-				throw new RuntimeException("address_if_class 프로퍼티가 설정되지 않았습니다.");
-			}
+//			if (addressIfClassName == null) {
+//				throw new RuntimeException("address_if_class 프로퍼티가 설정되지 않았습니다.");
+//			}
 
 			// 클래스를 동적으로 로드
-			//Class<?> clazz = Class.forName(addressIfClassName);
-			//clazz.newInstance();
-			
-			//new SocketAddessBookImpl();
-			
-			addressBookInterface = new SocketAddressBookImpl(host, port);
+			// Class<?> clazz = Class.forName(addressIfClassName);
+
+			// addressBookInterface = new SocketAddressBookImpl(host, port);
+			// addressBookInterface = (RmiAddressBookInterface) new RmiAddressBookImpl();
+
+			// Registry registry = LocateRegistry.getRegistry(host, port);
+			Registry registry = LocateRegistry.getRegistry("localhost", 50004);
+			Remote remote = registry.lookup("ADDRESSBOOK");
+			if (remote instanceof RmiAddressBookInterface) {
+				addressBookInterface = (RmiAddressBookInterface) remote;
+			} else {
+				throw new RuntimeException("ADDRESSBOOK이 RmiAddressBookInterface로 등록되지 않았습니다.");
+			}
 
 		}
 		catch (Exception e) {
@@ -246,10 +257,11 @@ public class TestPanel extends JPanel {
 			oneUser.setAddress(jTextField_Address.getText());
 
 			try {
-			    addressBookInterface.insertAddress(oneUser);
-			} catch (Exception e) {
-			    LOGGER.error("데이터 삽입 중 오류 발생: " + oneUser, e);
-			    JOptionPane.showMessageDialog(TestPanel.this, "삽입 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+				addressBookInterface.insertAddress(oneUser);
+			}
+			catch (Exception e) {
+				LOGGER.error("데이터 삽입 중 오류 발생: " + oneUser, e);
+				JOptionPane.showMessageDialog(TestPanel.this, "삽입 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
 			}
 
 			selectedRow = jTable_Result.getSelectedRow();
@@ -263,7 +275,7 @@ public class TestPanel extends JPanel {
 		}
 	}
 
-	private void updateData() {
+	private void updateData() throws Exception {
 		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
 		try {
 			AddressVo onePerson = new AddressVo();
@@ -314,7 +326,7 @@ public class TestPanel extends JPanel {
 		jMenuItem_Delete.addActionListener(new TestPanel_jMenuItem_Delete_ActionListener(this));
 	}
 
-	private void initData() {
+	private void initData() throws Exception {
 		List<AddressVo> userList = addressBookInterface.selectAddressList(new AddressVo());
 		LOGGER.info("user: " + userList);
 		Vector dataVector = new Vector();
@@ -335,7 +347,7 @@ public class TestPanel extends JPanel {
 		jTable_Result.setModel(tableModel);
 	}
 
-	private void deleteData() {
+	private void deleteData() throws Exception {
 		Object value = tableModel.getValueAt(selectedRow, COLUMN_INDEX_PERSON);
 
 		if (value instanceof AddressVo) {
@@ -357,11 +369,11 @@ public class TestPanel extends JPanel {
 
 	}
 
-	void jButton_Update_ActionListener(ActionEvent e) {
+	void jButton_Update_ActionListener(ActionEvent e) throws Exception {
 		updateData();
 	}
 
-	void jTable_Result_MouseListener(MouseEvent e) {
+	void jTable_Result_MouseListener(MouseEvent e) throws Exception {
 		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
 		try {
 			AddressVo onePerson = new AddressVo();
@@ -396,7 +408,7 @@ public class TestPanel extends JPanel {
 	}
 
 	// 삭제 팝업을 눌렀을 때
-	void jMenuItem_Delete_ActionListener(ActionEvent e) {
+	void jMenuItem_Delete_ActionListener(ActionEvent e) throws Exception {
 		if (selectedRow >= 0) {
 			deleteData();
 		}
@@ -426,7 +438,13 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		adaptee.jButton_Update_ActionListener(e);
+		try {
+			adaptee.jButton_Update_ActionListener(e);
+		}
+		catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
 
@@ -439,7 +457,17 @@ class TestPanel_jMenuItem_Delete_ActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		adaptee.jMenuItem_Delete_ActionListener(e);
+		try {
+			adaptee.jMenuItem_Delete_ActionListener(e);
+		}
+		catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
 
@@ -452,6 +480,12 @@ class TestPanel_jTable_Result_MouseListener extends MouseAdapter {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		adaptee.jTable_Result_MouseListener(e);
+		try {
+			adaptee.jTable_Result_MouseListener(e);
+		}
+		catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

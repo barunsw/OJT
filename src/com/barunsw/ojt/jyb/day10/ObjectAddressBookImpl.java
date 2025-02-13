@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
 
-public class ObjectAddressBookImpl implements AddressBookInterface {
+public class ObjectAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectAddressBookImpl.class);
     private static final String FILE_PATH = "src/com/barunsw/ojt/jyb/day10/address_book.dat";
 
     private List<AddressVo> addressList = new ArrayList<>();
 
-    public ObjectAddressBookImpl() {
+    public ObjectAddressBookImpl() throws RemoteException{
         loadFromFile();
     }
 

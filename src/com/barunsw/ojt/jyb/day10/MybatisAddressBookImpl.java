@@ -1,5 +1,7 @@
 package com.barunsw.ojt.jyb.day10;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,22 +9,32 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MybatisAddressBookImpl implements AddressBookInterface {
+public class MybatisAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
+	protected MybatisAddressBookImpl() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final Logger LOGGER = LogManager.getLogger(MybatisAddressBookImpl.class);
 
 	private SqlSessionFactory sqlSessionFactory = SqlSessionFactoryManager.getSqlSessionFactory();
 
 	@Override
-	public List<AddressVo> selectAddressList(AddressVo paramVo){
+	public List<AddressVo> selectAddressList(AddressVo paramVo) {
 		List<AddressVo> resultList = new ArrayList<>();
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			resultList = mapper.selectAddressList(paramVo);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return resultList;
 	}
