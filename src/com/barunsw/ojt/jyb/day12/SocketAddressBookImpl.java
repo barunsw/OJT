@@ -42,26 +42,26 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 		}
 		catch (IOException e) {
 			LOGGER.error("Error writing SELECT command", e);
-			return list; // 오류 발생 시 빈 리스트 반환
+			return list;
 		}
 
 		try {
 			String readLine;
+
 			while ((readLine = reader.readLine()) != null) {
-				if ("END_OF_DATA".equals(readLine.trim())) {
-					break; // END_OF_DATA를 받으면 루프 종료
+				if (readLine.trim().isEmpty()) {
+					break;
 				}
 				LOGGER.debug("received: " + readLine);
 
-				// 데이터를 AddressVo 객체로 변환하여 리스트에 추가
 				AddressVo vo = null;
 				try {
 					vo = parseResponse(readLine);
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LOGGER.error("Error parsing response: " + readLine, e);
 				}
+
 				if (vo != null) {
 					list.add(vo);
 				}
@@ -76,32 +76,32 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 
 	private AddressVo parseResponse(String response) throws Exception {
 		if (response == null || response.trim().isEmpty()) {
-			return null;
+			throw new IllegalArgumentException("Response is empty or null.");
 		}
 
 		AddressVo addressVo = new AddressVo();
+
 		String[] params = response.split(",");
 
 		for (String param : params) {
 			String[] keyValue = param.split("=");
-			if (keyValue.length != 2) {
-				continue;
+
+			if (keyValue.length < 2) { // 배열 길이 체크 추가
+				throw new IllegalArgumentException("Invalid response format: " + param);
 			}
 
 			String key = keyValue[0].trim();
 			String value = keyValue[1].trim();
 
 			switch (key) {
+			case "SEQ":
+				addressVo.setSeq(Integer.parseInt(value));
+				break;
 			case "NAME":
 				addressVo.setName(value);
 				break;
 			case "AGE":
-				try {
-					addressVo.setAge(Integer.parseInt(value));
-				}
-				catch (NumberFormatException e) {
-					LOGGER.error("AGE 변환 오류: {}", value, e);
-				}
+				addressVo.setAge(Integer.parseInt(value));
 				break;
 			case "GENDER":
 				addressVo.setGender(Gender.toGender(value));
@@ -123,23 +123,8 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 				addressVo.getAge(), addressVo.getGender(), addressVo.getAddress(), addressVo.getPhone());
 
 		LOGGER.debug("명령어: " + command);
-
-		try {
-			writer.write(command);
-			writer.flush();
-			LOGGER.debug("서버로 명령어가 전송되었습니다.");
-
-			// END_OF_DATA 추가
-			writer.write("END_OF_DATA\n");
-			writer.flush();
-			LOGGER.debug("END_OF_DATA가 서버로 전송되었습니다.");
-
-		}
-		catch (IOException e) {
-			LOGGER.error("서버로 데이터를 전송하는 중 IOException이 발생했습니다: ", e);
-			throw new Exception("서버로 데이터를 전송하는 중 오류가 발생했습니다.", e);
-		}
-
+		writer.write(command);
+		writer.flush();
 		return 0;
 	}
 
@@ -150,11 +135,6 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 
 		writer.write(command);
 		writer.flush();
-
-		// END_OF_DATA 추가
-		writer.write("END_OF_DATA\n");
-		writer.flush();
-		LOGGER.debug("END_OF_DATA written");
 
 		return 0;
 	}
@@ -167,10 +147,8 @@ public class SocketAddressBookImpl implements AddressBookInterface {
 		writer.write(command);
 		writer.flush();
 
-		// END_OF_DATA 추가
-		writer.write("END_OF_DATA\n");
+		writer.write(command);
 		writer.flush();
-		LOGGER.debug("END_OF_DATA written");
 
 		return 0;
 	}

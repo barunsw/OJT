@@ -43,7 +43,7 @@ public class ClientSocketHandler extends Thread {
 
 			// 클래스를 동적으로 로드
 			Class<?> clazz = Class.forName(addressIfClassName);
-			
+
 		}
 		catch (Exception e) {
 			throw new RuntimeException("config.properties 로드 실패", e);
@@ -93,70 +93,68 @@ public class ClientSocketHandler extends Thread {
 
 	@Override
 	public void run() {
-	    LOGGER.debug("+++ ClientSocketHandler run");
+		LOGGER.debug("+++ ClientSocketHandler run");
 
-	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	    		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-	        String readLine = null;
-	        while ((readLine = reader.readLine()) != null) { // 클라이언트의 요청을 계속 읽기
-	            LOGGER.debug(String.format("+++ readLine: %s", readLine));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+			String readLine = null;
+			while ((readLine = reader.readLine()) != null) { // 클라이언트의 요청을 계속 읽기
+				LOGGER.debug(String.format("+++ readLine: %s", readLine));
+				System.out.println("클라이언트에서 받은 요청 : " + readLine);
 
-	            if (readLine.isEmpty()) {
-	                LOGGER.warn("Received an empty line from the client");
-	                continue;
-	            }
+				String[] cmdSplit = readLine.split(":");
+				String cmd = cmdSplit[0];
 
-	            String[] cmdSplit = readLine.split(":");
-	            String cmd = cmdSplit[0];
+				String result = "OK";
+				try {
+					// 파라미터가 있을 경우 처리
+					switch (cmd) {
+					case "INSERT":
+						System.out.println("INSERT 실행됨");
+						AddressVo addressVo = parseCmd(cmdSplit[1]);
+						handleInsert(addressVo);
+						break;
+					case "SELECT":
+						System.out.println("SELECT 실행됨!!");
+						LOGGER.debug("Handling SELECT command");
+						result = handleSelect();
+						System.out.println("handleSelect 결과 : " + result);
+						System.out.println("응답 전송 완료");
 
-                String result = "OK";
-	            try {
-	                if (cmdSplit.length < 2) {
-	                    if ("SELECT".equals(cmd)) {
-	                        // SELECT 명령어는 파라미터가 없어도 정상 처리
-	                        handleSelect();
-	                    } else {
-	                        LOGGER.error("Invalid command format received: " + readLine);
-	                    }
-	                    continue; // 파라미터가 없거나 잘못된 형식인 경우, 다른 명령어로 진행
-	                }
+						break;
+					case "UPDATE":
+						System.out.println("UPDATE 실행됨");
+						AddressVo addressVo2 = parseCmd(cmdSplit[1]);
+						handleUpdate(addressVo2);
+						break;
+					case "DELETE":
+						System.out.println("DELETE 실행됨");
+						AddressVo addressVo3 = parseCmd(cmdSplit[1]);
+						handleDelete(addressVo3);
+						break;
+					default:
+						LOGGER.error("Unknown command: " + cmd);
+					}
 
-	                // 파라미터가 있을 경우 처리
-	                switch (cmd) {
-	                    case "INSERT":
-	                        AddressVo addressVo = parseCmd(cmdSplit[1]);
-	                        handleInsert(addressVo);
-	                        break;
-	                    case "SELECT":
-	                        LOGGER.debug("Handling SELECT command");
-	                        result = handleSelect();
-	                        break;
-	                    case "UPDATE":
-	                        AddressVo addressVo2 = parseCmd(cmdSplit[1]);
-	                        handleUpdate(addressVo2);
-	                        break;
-	                    case "DELETE":
-	                        AddressVo addressVo3 = parseCmd(cmdSplit[1]);
-	                        handleDelete(addressVo3);
-	                        break;
-	                    default:
-	                        LOGGER.error("Unknown command: " + cmd);
-	                }
-	            } catch (Exception e) {
-	                LOGGER.error("Error processing command: " + cmd, e);
-	            }
-	            
-	            writer.write(result);
-	        }
-	    } catch (IOException ex) {
-	        LOGGER.error("Error reading from client", ex);
-	    } catch (Exception ex) {
-	        LOGGER.error("Error in handling client request", ex);
-	    }
+				}
+				catch (Exception e) {
+					LOGGER.error("Error processing command: " + cmd, e);
+				}
 
-	    LOGGER.debug("--- ClientSocketHandler run");
+				writer.write(result);
+				writer.newLine();
+				writer.flush();
+			}
+		}
+		catch (IOException ex) {
+			LOGGER.error("Error reading from client", ex);
+		}
+		catch (Exception ex) {
+			LOGGER.error("Error in handling client request", ex);
+		}
+
+		LOGGER.debug("--- ClientSocketHandler run");
 	}
-
 
 	private String handleSelect() throws Exception {
 		if (addressBookIf == null) {
@@ -167,12 +165,12 @@ public class ClientSocketHandler extends Thread {
 		List<AddressVo> addrList = addressBookIf.selectAddressList(searchCondition);
 
 		StringBuffer buffer = new StringBuffer();
-		
+
 		for (AddressVo address : addrList) {
-			buffer.append(String.format("NAME=%s,AGE=%d,GENDER=%s,ADDRESS=%s,PHONE=%s\n", address.getName(),
-					address.getAge(), address.getGender(), address.getAddress(), address.getPhone()));
+			buffer.append(String.format("SEQ=%d,NAME=%s,AGE=%d,GENDER=%s,ADDRESS=%s,PHONE=%s\n", address.getSeq(),
+					address.getName(), address.getAge(), address.getGender(), address.getAddress(),
+					address.getPhone()));
 		}
-		
 		return buffer.toString();
 	}
 
