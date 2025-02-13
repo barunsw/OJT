@@ -9,7 +9,7 @@ import javax.swing.UIManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.mjg.day11.TestFrame;
+import com.barunsw.ojt.mjg.day10.TestFrame;
 
 public class ClientMain {
     private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);

@@ -162,11 +162,11 @@ public class ClientSocketHandler extends Thread {
 	    else {
 	        for (AddressVo addressVo : addrList) {
 	            writer.write(String.format("%s,%d,%s,%s,%s\n",
-	                addressVo.getName(),
-	                addressVo.getAge(),
-	                addressVo.getGender(),
-	                addressVo.getPhone(),
-	                addressVo.getAddress()));
+	                addressVo.getName()
+	                , addressVo.getAge()
+	                , addressVo.getGender()
+	                , addressVo.getPhone()
+	                , addressVo.getAddress()));
 	        }
 	        writer.write("END_OF_DATA\n");  // 클라이언트가 정상적으로 읽기 종료할 수 있도록 신호 추가
 	    }
