@@ -154,13 +154,13 @@ public class ClientSocketHandler extends Thread {
 	        throw new RuntimeException("addressBookInterface가 초기화되지 않았습니다.");
 	    }
 	    
-	    List<AddressVo> addrList = addressBookInterface.selectAddressList(new AddressVo());
+	    List<AddressVo> addressList = addressBookInterface.selectAddressList(new AddressVo());
 
-	    if (addrList.isEmpty()) {
-	        writer.write("NO_RESULT\n");
+	    if (addressList.isEmpty()) {
+	        writer.write("SELECT\n");
 	    }
 	    else {
-	        for (AddressVo addressVo : addrList) {
+	        for (AddressVo addressVo : addressList) {
 	            writer.write(String.format("%s,%d,%s,%s,%s\n",
 	                addressVo.getName()
 	                , addressVo.getAge()
@@ -168,7 +168,6 @@ public class ClientSocketHandler extends Thread {
 	                , addressVo.getPhone()
 	                , addressVo.getAddress()));
 	        }
-	        writer.write("END_OF_DATA\n");  // 클라이언트가 정상적으로 읽기 종료할 수 있도록 신호 추가
 	    }
 	    writer.flush();  // 데이터를 즉시 전송
 	}
