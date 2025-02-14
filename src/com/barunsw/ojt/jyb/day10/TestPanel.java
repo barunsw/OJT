@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Reader;
-import java.lang.reflect.Constructor;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,16 +33,16 @@ import javax.swing.SpinnerNumberModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
+import com.barunsw.ojt.jyb.day14.RmiAddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
 
-	private static RmiAddressBookInterface addressBookInterface;
+	private static RmiAddressBookInterface addressBookInterface; //TestPanel.addressBookInterface라고 쓰는 경우에만 선언
 
-	static {
+	static { //연결을 한 번 하고 끊어버리기 때문에 static을 사용하면 안됨
 		try {
 			// config.properties 파일을 읽어들임
 			Properties properties = new Properties();
