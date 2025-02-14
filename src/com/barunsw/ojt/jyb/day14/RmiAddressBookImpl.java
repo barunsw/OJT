@@ -7,8 +7,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.barunsw.ojt.cjs.common.MybatisAddressBookImpl;
-import com.barunsw.ojt.common.AddressBookInterface;
 import com.barunsw.ojt.jyb.day10.FileAddressBookImpl;
 import com.barunsw.ojt.jyb.day10.JdbcAddressBookImpl;
 import com.barunsw.ojt.jyb.day10.ObjectAddressBookImpl;
@@ -48,4 +46,5 @@ public class RmiAddressBookImpl extends UnicastRemoteObject implements RmiAddres
 	public int deleteAddress(AddressVo addressVo) throws Exception {
 		return jdbcAddressBookImpl.deleteAddress(addressVo);
 	}
+
 }

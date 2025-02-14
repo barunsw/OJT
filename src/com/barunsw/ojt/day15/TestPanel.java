@@ -27,14 +27,24 @@ public class TestPanel extends JPanel {
 	
 	private String greetings = "Hello World";
 	
+	private ClientInterface clientIf;
+	
 	public TestPanel() {
 		try {
+			initRmi();
 			initComponent();
 			initData();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
+	}
+	
+	private void initRmi() {
+		// 1. 레지스트리를 가져온다.
+		// 2. 서버쪽 RMI 객체가져온다.
+		// 3. ClientImpl을 생성한다. new ClientImpl(this)
+		// 4. ClientImpl을 서버쪽에 register한다.
 	}
 	
 	private void initComponent() throws Exception {
@@ -66,6 +76,19 @@ public class TestPanel extends JPanel {
 		
 		boardList.add(boardVo3);
 		
+		BoardVo boardVo5 = new BoardVo();
+		boardVo5.setBoardType(BoardType.SALC);
+		boardVo5.setBoardName("SALC03");
+		boardVo5.setBoardId(4);
+		
+		boardList.add(boardVo5);
+		
+		BoardVo boardVo6 = new BoardVo();
+		boardVo6.setBoardType(BoardType.SALC);
+		boardVo6.setBoardName("SALC29");
+		boardVo6.setBoardId(30);
+		
+		boardList.add(boardVo6);
 		
 		BoardVo boardVo4 = new BoardVo();
 		boardVo4.setBoardType(BoardType.SRGU);
@@ -78,7 +101,7 @@ public class TestPanel extends JPanel {
 	}
 	
 	private void initData() {
-		// 연동에 의해 board 정보 조회
+		// 연동에 의해 board 정보 조회. 
 		List<BoardVo> boardList = getBoardData();
 		
 		LOGGER.debug("boardList:" + boardList);
@@ -87,6 +110,8 @@ public class TestPanel extends JPanel {
 			int boardId = oneBoardVo.getBoardId();
 			
 			BoardPanel boardPanel = new BoardPanel(oneBoardVo);
+			
+			// 전역에 boardList를 Map<Board ID, BoardPanel>으로 변환하여 저장한다.
 
 			this.add(boardPanel, null);
 			
@@ -148,5 +173,10 @@ public class TestPanel extends JPanel {
 */
 		g.drawImage(ImageFactory.backgroundImageIcon.getImage(),
 				0, 0, this);
+	}
+
+	public void pushAlarm(BoardVo boardVo) {
+		// ID에 해당하는 BoardVo를 찾아 severity를 바꾼다.
+		// repaint한다.
 	}
 }
