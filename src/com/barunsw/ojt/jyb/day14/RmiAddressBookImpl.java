@@ -28,22 +28,22 @@ public class RmiAddressBookImpl extends UnicastRemoteObject implements RmiAddres
 	}
 
 	@Override
-	public List<AddressVo> selectAddressList(AddressVo addressVo) throws Exception {
+	public List<AddressVo> selectAddressList(AddressVo addressVo) {
 		return jdbcAddressBookImpl.selectAddressList(addressVo);
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws Exception {
+	public int insertAddress(AddressVo addressVo) {
 		return jdbcAddressBookImpl.insertAddress(addressVo);
 	}
 
 	@Override
-	public int updateAddress(AddressVo addressVo) throws Exception {
+	public int updateAddress(AddressVo addressVo) {
 		return jdbcAddressBookImpl.updateAddress(addressVo);
 	}
 
 	@Override
-	public int deleteAddress(AddressVo addressVo) throws Exception {
+	public int deleteAddress(AddressVo addressVo) {
 		return jdbcAddressBookImpl.deleteAddress(addressVo);
 	}
 

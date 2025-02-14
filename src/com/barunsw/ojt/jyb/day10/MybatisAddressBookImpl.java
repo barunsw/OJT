@@ -1,7 +1,5 @@
 package com.barunsw.ojt.jyb.day10;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,16 +7,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.barunsw.ojt.common.AddressBookInterface;
-import com.barunsw.ojt.common.RmiAddressBookInterface;
+import com.barunsw.ojt.jyb.day14.RmiAddressBookInterface;
 import com.barunsw.ojt.vo.AddressVo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MybatisAddressBookImpl implements RmiAddressBookInterface {
-	protected MybatisAddressBookImpl() throws RemoteException {
+	protected MybatisAddressBookImpl() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger(MybatisAddressBookImpl.class);
@@ -33,40 +30,54 @@ public class MybatisAddressBookImpl implements RmiAddressBookInterface {
 			resultList = mapper.selectAddressList(paramVo);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return resultList;
 	}
 
 	@Override
-	public int insertAddress(AddressVo addressVo) throws Exception {
+	public int insertAddress(AddressVo addressVo) {
 		int insertResult = 0;
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
-			insertResult = mapper.insertAddress(addressVo);
+			try {
+				insertResult = mapper.insertAddress(addressVo);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			session.commit();
 		}
 		return insertResult;
 	}
 
 	@Override
-	public int updateAddress(AddressVo addressVo) throws Exception {
+	public int updateAddress(AddressVo addressVo) {
 		int updateResult = 0;
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
-			updateResult = mapper.updateAddress(addressVo);
+			try {
+				updateResult = mapper.updateAddress(addressVo);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			session.commit();
 		}
 		return updateResult;
 	}
 
 	@Override
-	public int deleteAddress(AddressVo addressVo) throws Exception {
+	public int deleteAddress(AddressVo addressVo) {
 		int deleteResult = 0;
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
-			deleteResult = mapper.deleteAddress(addressVo);
+			try {
+				deleteResult = mapper.deleteAddress(addressVo);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			session.commit();
 		}
 		return deleteResult;
