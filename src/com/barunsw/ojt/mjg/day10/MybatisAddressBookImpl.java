@@ -25,6 +25,9 @@ public class MybatisAddressBookImpl implements AddressBookInterface {
 			AddressBookInterface mapper = session.getMapper(AddressBookInterface.class);
 			resultList = mapper.selectAddressList(paramVo);
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return resultList;
 	}
 

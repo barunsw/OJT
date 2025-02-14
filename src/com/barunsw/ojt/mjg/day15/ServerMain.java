@@ -19,26 +19,21 @@ public class ServerMain {
 	
 	private RmiAddressBookInterface rmiAddressBookInterface;
 	
-	public static final int PORT = 50014;
+	public static final int PORT = 50000;
 
 	private boolean runFlag;
 	
 	public void start() {
 		LOGGER.debug(String.format("+++ ServerMain started."));
 		
-		Properties properties = new Properties();
-		try (Reader reader = Resources.getResourceAsReader("config.properties")) {
-            properties.load(reader);
-            
-            String addressIfClass = properties.getProperty("address_if_class");
-            
-            Object o = Class.forName(addressIfClass).newInstance();
-            
-            rmiAddressBookInterface = (RmiAddressBookInterface)o;
+		try {
 			
+			rmiAddressBookInterface = new RmiAddressBookImpl();
+		
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			
 			registry.rebind("ADDRESSBOOK", rmiAddressBookInterface);
+
 		} 
 		catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
