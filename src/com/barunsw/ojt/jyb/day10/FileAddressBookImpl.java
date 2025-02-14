@@ -19,14 +19,14 @@ import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.vo.AddressVo;
 
-public class FileAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
+public class FileAddressBookImpl implements RmiAddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileAddressBookImpl.class);
 	private static final String CSV_FILE_PATH = "src/com/barunsw/ojt/jyb/day10/address_book.csv";
 
 	private List<AddressVo> addressList = new ArrayList<>();
 	private int currentSeq = 1;
 
-	public FileAddressBookImpl() throws RemoteException {
+	public FileAddressBookImpl() {
 		loadFromCsv();
 	}
 

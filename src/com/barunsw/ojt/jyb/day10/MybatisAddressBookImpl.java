@@ -15,7 +15,7 @@ import com.barunsw.ojt.vo.AddressVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MybatisAddressBookImpl extends UnicastRemoteObject implements RmiAddressBookInterface {
+public class MybatisAddressBookImpl implements RmiAddressBookInterface {
 	protected MybatisAddressBookImpl() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub

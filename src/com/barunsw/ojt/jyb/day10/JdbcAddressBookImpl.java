@@ -24,7 +24,7 @@ import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.vo.AddressVo;
 
-public class JdbcAddressBookImpl extends UnicastRemoteObject  implements RmiAddressBookInterface {
+public class JdbcAddressBookImpl implements AddressBookInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
 	private static String DB_URL;
 	private static String USERNAME;
@@ -45,7 +45,7 @@ public class JdbcAddressBookImpl extends UnicastRemoteObject  implements RmiAddr
 		LOGGER.debug("JDBC 설정 로드 완료");
 	}
 
-	public JdbcAddressBookImpl() throws RemoteException {
+	public JdbcAddressBookImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 		}
