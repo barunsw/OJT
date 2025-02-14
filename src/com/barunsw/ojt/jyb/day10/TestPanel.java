@@ -136,6 +136,7 @@ public class TestPanel extends JPanel {
 
 	public TestPanel() {
 		try {
+			initRmi();
 			initComponent();
 			initTable();
 			initreset();
@@ -144,6 +145,10 @@ public class TestPanel extends JPanel {
 		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
+	}
+	
+	private void initRmi() {
+		
 	}
 
 	private void initreset() {
