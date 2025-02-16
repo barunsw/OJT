@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.common.AddressBookInterface;
+import com.barunsw.ojt.common.RmiAddressBookInterface;
 import com.barunsw.ojt.constants.Gender;
 import com.barunsw.ojt.vo.AddressVo;
 
@@ -45,7 +46,7 @@ public class AddressBookLayoutPanel extends JPanel {
 	//private AddressBookInterface addressBookInterface = new ObjectAddressBookImpl();
 	private AddressBookInterface addressBookInterface;
 	
-	private static final Logger LOGGER = LogManager.getLogger(AddressBookLayoutPanel.class);
+	private static final Logger LOGGER = LogManager.getLogger(RmiAddressBookInterface.class);
 	
 	private int selectedRow = 0;
 	private int lastSelectedRow = -1;
@@ -353,7 +354,12 @@ public class AddressBookLayoutPanel extends JPanel {
     // DB or 파일에서 조회한 데이터 테이블에 반영
     private void initData() {
         // DB or 파일에서 전체 목록 조회
-    	personList = addressBookInterface.selectAddressList(new AddressVo());
+    	try {
+			personList = addressBookInterface.selectAddressList(new AddressVo());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
         
     	Vector rowData = new Vector<>();
     	
