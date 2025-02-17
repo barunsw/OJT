@@ -8,6 +8,7 @@ public class ChatPanel extends JPanel implements EventListener {
 	public ChatPanel() {
 		try {
 			initComponent();
+			initEvent();
 			initRmi();
 		}
 		catch (Exception ex) {
@@ -17,6 +18,10 @@ public class ChatPanel extends JPanel implements EventListener {
 	
 	private void initComponent() throws Exception {
 		
+	}
+	
+	private void initEvent() {
+		ClientMain.eventQueueWorker.addEventListener(this);
 	}
 	
 	private void initRmi() throws Exception {

@@ -19,6 +19,10 @@ public class ClientImpl extends UnicastRemoteObject
 		// TODO Auto-generated method stub
 		LOGGER.debug("msg:" + msg);
 		
-		ClientMain.eventQueueWorker.push(msg);
+		EventVo event = new EventVo();
+		event.setType(EventType.MSG);
+		event.setMessage(msg);
+		
+		ClientMain.eventQueueWorker.push(event);
 	}
 }

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 public class ClientMain {
 	private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);
 	
-	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
+	public static EventQueueWorker<EventVo> eventQueueWorker = new EventQueueWorker();
 	
 	public static void main(String[] args) {
 		try {
