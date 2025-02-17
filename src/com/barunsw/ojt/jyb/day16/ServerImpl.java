@@ -36,7 +36,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 		// SRGU 보드 (ID: 18, 36)
 		boardList.add(createBoard(BoardType.SRGU, "SRGU01", 18, Severity.NORMAL));
-		boardList.add(createBoard(BoardType.SRGU, "SRGU02", 36, Severity.NORMAL));
+		boardList.add(createBoard(BoardType.SRGU, "SRGU02", 38, Severity.NORMAL));
 
 		// SALC 보드 (나머지 ID: 2~17, 20~35)
 		for (int i = 2; i < 18; i++) {
