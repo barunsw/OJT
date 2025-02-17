@@ -37,13 +37,19 @@ public class ServerImpl extends UnicastRemoteObject
 
 	@Override
 	public void send(String name, String msg) throws RemoteException {
-		LOGGER.debug(String.format("+++Server send name : [%s] msg : [%s]", name, msg));
-		
-		synchronized (clientRepo) {
-			for (ClientInterface oneClient : clientRepo.values()) {
-				oneClient.push(String.format("[%s]:%s", name, msg));
-			}
-		}
+	    LOGGER.debug(String.format("+++Server send name : [%s] msg : [%s]", name, msg));
+
+	    synchronized (clientRepo) {
+	        for (ClientInterface oneClient : clientRepo.values()) {
+	            if (name == null || name.isEmpty()) {
+	                // 입장 메시지
+	                oneClient.push(msg);
+	            } else {
+	                // 일반 메시지는 기존 형식대로
+	                oneClient.push(String.format("[%s]: %s", name, msg));
+	            }
+	        }
+	    }
 	}
 
 /*

@@ -149,6 +149,10 @@ public class ChatPanel extends JPanel implements EventListener {
 
 			// 5. 서버에 이름 등록한다.
 			serverIf.register(userName, clientIf);
+			
+	        // 입장 메시지를 서버로 전송
+	        String entryMessage = userName + " 님이 입장하셨습니다.";
+	        serverIf.send("", entryMessage);
 
 			LOGGER.info("+++서버에 등록 성공: {}", userName);
 		} 
