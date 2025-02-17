@@ -40,7 +40,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	    boardList.add(createBoard(BoardType.MPU, "MPU01", 0, Severity.NORMAL));
 	    boardList.add(createBoard(BoardType.MPU, "MPU02", 1, Severity.NORMAL));
 
-	    // SRGU 보드 (ID: 18, 36)
+	    // SRGU 보드 (ID: 18, 38)
 	    boardList.add(createBoard(BoardType.SRGU, "SRGU01", 18, Severity.NORMAL));
 	    boardList.add(createBoard(BoardType.SRGU, "SRGU02", 38, Severity.NORMAL));
 
@@ -48,7 +48,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	    for (int i = 2; i < 18; i++) {
 	        boardList.add(createBoard(BoardType.SALC, "SALC" + String.format("%02d", i), i, Severity.NORMAL));
 	    }
-	    for (int i = 20; i < 36; i++) {
+	    for (int i = 20; i < 38; i++) {
 	        boardList.add(createBoard(BoardType.SALC, "SALC" + String.format("%02d", i), i, Severity.NORMAL));
 	    }
 	}
@@ -92,8 +92,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 							}
 						}
 
-						// 5초 간격으로 실행
-						Thread.sleep(5000L);
+						// 10초 간격으로 실행
+						Thread.sleep(10000L);
 					}
 					catch (InterruptedException ie) {
 						ie.printStackTrace();

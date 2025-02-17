@@ -4,13 +4,19 @@ import java.awt.Graphics;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,10 +42,20 @@ public class ShelfPanel extends JPanel {
 	public final int TOP_BOARD_START_Y		= 26;
 	public final int BOTTOM_BOARD_START_Y	= 307;
 	
+    // 알람 테이블 크기 및 중앙 정렬
+    public static final int tableWidth 		= 700;
+    public static final int tableHeight 	= 100;
+    int tableX = (WIDTH - tableWidth) / 2; 			// 중앙 정렬
+    int tableY = BOTTOM_BOARD_START_Y + 300; 		// 보드 아래 여백 추가
+	
 	private String greetings = "Hello World";
 	
 	private ClientInterface clientIf;
 	private ServerInterface serverIf;
+	
+    private JTable jTable_alarm = new JTable();
+    private DefaultTableModel tableModel = new DefaultTableModel();
+    private JScrollPane jScrollPane_alarm = new JScrollPane(jTable_alarm);
 	
 	public ShelfPanel() {
 		try {
@@ -79,6 +95,16 @@ public class ShelfPanel extends JPanel {
 	
 	private void initComponent() throws Exception {
 		this.setLayout(null);
+		
+        // 경보 테이블 초기화
+        String[] columnNames = {"경보 시간", "BoardName", "Severity"};
+        tableModel.setColumnIdentifiers(columnNames);
+        jTable_alarm.setModel(tableModel);
+
+        // 스크롤 패널 위치 조정
+        jScrollPane_alarm.setBounds(tableX, tableY, tableWidth, tableHeight);
+
+        this.add(jScrollPane_alarm);
 	}
 	
 	private List<BoardVo> getBoardData() {
@@ -159,6 +185,11 @@ public class ShelfPanel extends JPanel {
 		// ID에 해당하는 BoardVo를 찾아 severity를 바꾼다.
 		// repaint한다.
 		
+		// NORMAL 상태는 경보 테이블에 추가하지 않음
+	    if (boardVo.getSeverity() == Severity.NORMAL) {
+	        return;
+	    }
+		
 	    // boardMap에서 해당 보드 찾기
 	    BoardPanel boardPanel = boardMap.get(boardVo.getBoardId());
 
@@ -172,6 +203,13 @@ public class ShelfPanel extends JPanel {
 	            
 	            // 전체 ShelfPanel 다시 그리기
 	            repaint();
+	            
+                // 현재 시간 포맷	            
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN);
+	            String timeStamp = sdf.format(new Date());
+
+                // 테이블에 알람 정보 추가
+                tableModel.addRow(new Object[]{timeStamp, boardVo.getBoardName(), Severity.items[boardVo.getSeverity()]});
 	        });
 	    }
 	}

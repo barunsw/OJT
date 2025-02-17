@@ -13,7 +13,7 @@ public class TestFrame extends JFrame {
 	private static final Logger LOGGER = LogManager.getLogger(TestFrame.class);
 	
 	public static final int WIDTH 	= 870;
-	public static final int HEIGHT 	= 635;
+	public static final int HEIGHT 	= 775;
 	
 	private ShelfPanel shelfPanel = new ShelfPanel();
 	

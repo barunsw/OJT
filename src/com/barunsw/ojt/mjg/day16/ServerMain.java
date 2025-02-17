@@ -6,10 +6,12 @@ import java.rmi.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.barunsw.ojt.mjg.day16.ServerImpl;
+
 public class ServerMain {
 	public static final Logger LOGGER = LogManager.getLogger(ServerMain.class);
 
-	public static final int PORT = 50000;
+	public static final int PORT = 50003;
 
 	public void initServerStart() {
 		LOGGER.debug("initServerStart(): +++ServerMain Start...");
