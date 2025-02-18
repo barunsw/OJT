@@ -7,17 +7,17 @@ import com.barunsw.ojt.vo.BoardVo;
 
 public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 	private ShelfPanel shelfPanel;
+	private EventQueueWorker<BoardVo> eventQueueWorker;
 
 	protected ClientImpl(ShelfPanel shelfPanel) throws RemoteException {
 		super();
 
 		this.shelfPanel = shelfPanel;
+		this.eventQueueWorker = shelfPanel.getEventQueueWorker();
 	}
 
 	@Override
 	public void pushAlarm(BoardVo boardVo) throws RemoteException {
-		// 패널에 알림 전달
-		shelfPanel.pushAlarm(boardVo);
+		eventQueueWorker.processObject(boardVo); //큐에 알림 추가
 	}
-
 }

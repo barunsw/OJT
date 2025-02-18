@@ -1,10 +1,7 @@
 package com.barunsw.ojt.jyb.day16;
 
 import java.awt.Graphics;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,154 +9,152 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
+import com.barunsw.ojt.day16.EventListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.barunsw.ojt.vo.BoardVo;
 
-public class ShelfPanel extends JPanel {
-	private static final Logger LOGGER = LogManager.getLogger(ShelfPanel.class);
+public class ShelfPanel extends JPanel implements EventListener {
+    private static final Logger LOGGER = LogManager.getLogger(ShelfPanel.class);
 
-	private List<BoardVo> boardList = new ArrayList<>();
-	private Map<Integer, BoardPanel> boardMap = new HashMap<>();
+    private List<BoardVo> boardList = new ArrayList<>();
+    private Map<Integer, BoardPanel> boardMap = new HashMap<>();
 
-	public static final int WIDTH = 854;
-	public static final int HEIGHT = 604;
+    private RmiControl rmiControl;
+    private ClientInterface clientIf;
+    private ServerInterface serverIf;
 
-	public final int SLOT_NUM = 20;
+    private EventQueueWorker<BoardVo> eventQueueWorker;
 
-	public final int BOARD_START_X = 27;
-	public final int TOP_BOARD_START_Y = 26;
-	public final int BOTTOM_BOARD_START_Y = 307;
+    private MainPanel mainPanel; // MainPanel 인스턴스 추가
 
-	private String greetings = "Hello World";
+    public ShelfPanel(MainPanel mainPanel) { // MainPanel을 인자로 받도록 수정
+        this.mainPanel = mainPanel; // MainPanel 참조 저장
+        try {
+            eventQueueWorker = new EventQueueWorker<>();
+            ClientImpl clientImpl = new ClientImpl(this);
+            rmiControl = new RmiControl(clientImpl);
 
-	private ClientInterface clientIf;
-	private ServerInterface serverIf;
+            serverIf = rmiControl.getServerIf();
+            clientIf = rmiControl.getClientIf();
 
-	public ShelfPanel() {
-		try {
-			initRmi();
-			initComponent();
-			initData();
-		}
-		catch (Exception ex) {
-			LOGGER.error(ex.getMessage(), ex);
-		}
-	}
+            initComponent();
+            initData();
 
-	private void initRmi() throws NotBoundException {
-		// 1. 레지스트리를 가져온다.
-		try {
-			Registry registry = LocateRegistry.getRegistry("localhost", ServerMain.PORT);
-			// 2. 서버쪽 RMI 객체가져온다
-			serverIf = (ServerInterface) registry.lookup("RMIRACKVIEW");
-			// 3. ClientImpl을 생성한다. new ClientImpl(this)
-			clientIf = (ClientInterface) new ClientImpl(this);
-			// 4. ClientImpl을 서버쪽에 register한다.
-			serverIf.register(clientIf);
-			LOGGER.info("RMI 서버 연결 완료");
-		}
-		catch (RemoteException e) {
-			LOGGER.error("RMI 서버 연결 실패");
-		}
+            eventQueueWorker.addEventListener(this); // 이벤트 리스너 등록
+        }
+        catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+    }
 
-	}
+    public EventQueueWorker<BoardVo> getEventQueueWorker() {
+        if (this.eventQueueWorker == null) {
+            LOGGER.error("이벤트 큐 워커가 비어있음");
+        }
+        return eventQueueWorker;
+    }
 
-	private void initComponent() throws Exception {
-		this.setLayout(null);
-	}
+    @Override
+    public void push(Object o) {
+        // o가 BoardVo 타입인지 확인하고 처리
+        if (o instanceof BoardVo) {
+            BoardVo boardVo = (BoardVo) o;
+            SwingUtilities.invokeLater(() -> {
+                updateBoardSeverity(boardVo);
+                // 알람을 테이블에 추가
+                addAlarmToTable(boardVo);
+            });
+        }
+    }
 
-	private List<BoardVo> getBoardData() {
-		// rmi서버에서 보드 리스트 갖고와야함
-		if (serverIf != null) {
-			try {
-				boardList = serverIf.selectBoardList();
-			}
-			catch (RemoteException e) {
-				LOGGER.error("RMI 서버에서 BoardList 가져오기 실패");
-			}
-		}
-		return boardList;
-	}
+    private void updateBoardSeverity(BoardVo boardVo) {
+        // severity 값을 받아서 UI 업데이트하는 코드
+        BoardPanel boardPanel = boardMap.get(boardVo.getBoardId());
+        if (boardPanel != null) {
+            boardPanel.getBoardVo().setSeverity(boardVo.getSeverity());
+            boardPanel.repaint(); // UI 갱신
+        }
+    }
 
-	private void initData() throws RemoteException {
-		// 연동에 의해 board 정보 조회.
-		boardList = getBoardData();
+    private void addAlarmToTable(BoardVo boardVo) {
+        String severity = String.valueOf(boardVo.getSeverity());
+        String boardInfo = "Board " + boardVo.getBoardId(); // 또는 boardVo.getBoardName() 등 사용
+        String time = java.time.LocalTime.now().toString(); // 현재 시간
 
-		LOGGER.debug("boardList:" + boardList);
+        // MainPanel의 addAlarmData 호출하여 테이블에 추가
+        mainPanel.addAlarmData(severity, boardInfo, time);
+    }
 
-		for (BoardVo oneBoardVo : boardList) {
-			int boardId = oneBoardVo.getBoardId();
+    private void initComponent() throws Exception {
+        this.setLayout(null);
+    }
 
-			BoardPanel boardPanel = new BoardPanel(oneBoardVo);
+    private List<BoardVo> getBoardData() {
+        // rmi서버에서 보드 리스트 가져오기
+        if (serverIf != null) {
+            try {
+                boardList = serverIf.selectBoardList();
+            }
+            catch (RemoteException e) {
+                LOGGER.error("RMI 서버에서 BoardList 가져오기 실패");
+            }
+        }
+        return boardList;
+    }
 
-			// 전역에 boardList를 Map<Board ID, BoardPanel>으로 변환하여 저장한다.
+    private void initData() throws RemoteException {
+        // 연동에 의해 board 정보 조회.
+        boardList = getBoardData();
 
-			// BoardPanel을 boardMap에 추가
-			boardMap.put(boardId, boardPanel);
-			this.add(boardPanel, null);
+        LOGGER.debug("boardList:" + boardList);
 
-			LOGGER.debug(String.format("+++ TestPanel에 boardPanel(%s, %s) 추가", boardPanel.getWidth(),
-					boardPanel.getHeight()));
-			boardPanel.repaint();
+        for (BoardVo oneBoardVo : boardList) {
+            int boardId = oneBoardVo.getBoardId();
 
-			int boardWidth = boardPanel.getBoardWidth();
-			int boardHeight = boardPanel.getBoardHeight();
+            BoardPanel boardPanel = new BoardPanel(oneBoardVo);
 
-			LOGGER.debug(String.format("boardId:%s, boardWidth:%s, boardHeight:%s", boardId, boardWidth, boardHeight));
+            // 전역에 boardList를 Map<Board ID, BoardPanel>으로 변환하여 저장한다.
+            boardMap.put(boardId, boardPanel);
+            this.add(boardPanel, null);
 
-			if (boardId < 2) {
-				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)), TOP_BOARD_START_Y,
-						boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
-			} else if (boardId < 20) {
-				LOGGER.debug("startX:" + (BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM))));
+            LOGGER.debug(String.format("+++ TestPanel에 boardPanel(%s, %s) 추가", boardPanel.getWidth(),
+                    boardPanel.getHeight()));
+            boardPanel.repaint();
 
-				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)),
-						BOTTOM_BOARD_START_Y, boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
-			} else {
-				boardPanel.setBounds(BOARD_START_X + (BoardPanel.BOARD_WIDTH * (boardId % SLOT_NUM)), TOP_BOARD_START_Y,
-						boardPanel.getBoardWidth(), boardPanel.getBoardHeight());
-			}
+            int boardWidth = boardPanel.getBoardWidth();
+            int boardHeight = boardPanel.getBoardHeight();
 
-			LOGGER.debug("--- TestPanel에 boardPanel 추가");
-		}
-	}
+            LOGGER.debug(String.format("boardId:%s, boardWidth:%s, boardHeight:%s", boardId, boardWidth, boardHeight));
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		LOGGER.debug("paintComponent");
-		/*
-		 * g.setColor(Color.white); g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		 * 
-		 * g.setColor(Color.black); g.drawOval(100, 100, 300, 200);
-		 * 
-		 * // 문자열을 가운데 쓴다. g.setColor(Color.red); g.setFont(new Font("Tahoma",
-		 * Font.BOLD, 20));
-		 * 
-		 * int stringWidth = g.getFontMetrics().stringWidth(greetings); int stringHeight
-		 * = g.getFontMetrics().getHeight();
-		 * 
-		 * int strX = (this.getWidth() - stringWidth) / 2; int strY = (this.getHeight()
-		 * - stringHeight) / 2;
-		 * 
-		 * g.drawString(greetings, strX, strY);
-		 */
-		g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
-	}
+            if (boardId < 2) {
+                boardPanel.setBounds(27 + (BoardPanel.BOARD_WIDTH * (boardId % 20)), 26, boardPanel.getBoardWidth(),
+                        boardPanel.getBoardHeight());
+            } else if (boardId < 20) {
+                boardPanel.setBounds(27 + (BoardPanel.BOARD_WIDTH * (boardId % 20)), 307, boardPanel.getBoardWidth(),
+                        boardPanel.getBoardHeight());
+            } else {
+                boardPanel.setBounds(27 + (BoardPanel.BOARD_WIDTH * (boardId % 20)), 26, boardPanel.getBoardWidth(),
+                        boardPanel.getBoardHeight());
+            }
+        }
+    }
 
-	public void pushAlarm(BoardVo boardVo) {
-		// ID에 해당하는 BoardVo를 찾아 severity를 바꾼다.
-		BoardPanel boardPanel = boardMap.get(boardVo.getBoardId());
-		if (boardPanel != null) {
-			SwingUtilities.invokeLater(() -> {
-				// 기존 BoardVo의 severity 업데이트
-				boardPanel.getBoardVo().setSeverity(boardVo.getSeverity());
+    @Override
+    protected void paintComponent(Graphics g) {
+        LOGGER.debug("paintComponent");
+        g.drawImage(ImageFactory.backgroundImageIcon.getImage(), 0, 0, this);
+    }
 
-				// 보드 패널 다시 그리기
-				boardPanel.repaint();
-			});
-		}
-	}
+    public void pushAlarm(BoardVo boardVo) {
+        // ID에 해당하는 BoardVo를 찾아 severity를 바꾼다.
+        BoardPanel boardPanel = boardMap.get(boardVo.getBoardId());
+        if (boardPanel != null) {
+            SwingUtilities.invokeLater(() -> {
+                boardPanel.getBoardVo().setSeverity(boardVo.getSeverity());
+                boardPanel.repaint();
+            });
+        }
+    }
 }

@@ -11,12 +11,12 @@ import org.apache.logging.log4j.Logger;
 
 public class TestFrame extends JFrame {
 	private static final Logger LOGGER = LogManager.getLogger(TestFrame.class);
-	
-	public static final int WIDTH 	= 870;
-	public static final int HEIGHT 	= 635;
-	
-	private ShelfPanel testPanel = new ShelfPanel();
-	
+
+	public static final int WIDTH = 870;
+	public static final int HEIGHT = 635;
+
+	private MainPanel mainPanel; // MainPanel로 변경
+
 	public TestFrame() {
 		try {
 			initComponent();
@@ -25,24 +25,27 @@ public class TestFrame extends JFrame {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
-	
+
 	private void initComponent() throws Exception {
+		// MainPanel 생성
+		mainPanel = new MainPanel();
+		ShelfPanel shelfPanel = new ShelfPanel(mainPanel); // ShelfPanel 생성 시 MainPanel을 전달
+
 		// 타이틀
 		this.setTitle("SwingTest");
 		// 기본적인 닫힘 오퍼레이션
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		this.setContentPane(testPanel);
-		
+		this.setContentPane(shelfPanel); // ShelfPanel을 ContentPane으로 설정
+
 		// 윈도우 이벤트
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
 	}
-	
+
 	void windowClosing(WindowEvent e) {
 		LOGGER.debug("windowClosing");
-		
-		int result = JOptionPane.showConfirmDialog(TestFrame.this, 
-				"정말로 종료하시겠습니까?", "종료", JOptionPane.OK_CANCEL_OPTION);
+
+		int result = JOptionPane.showConfirmDialog(TestFrame.this, "정말로 종료하시겠습니까?", "종료", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			System.exit(0);
 		}
@@ -51,11 +54,11 @@ public class TestFrame extends JFrame {
 
 class TestFrame_this_WindowAdapter extends WindowAdapter {
 	private TestFrame adaptee;
-	
+
 	public TestFrame_this_WindowAdapter(TestFrame adaptee) {
 		this.adaptee = adaptee;
 	}
-	
+
 	@Override
 	public void windowClosing(WindowEvent e) {
 		adaptee.windowClosing(e);
