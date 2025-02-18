@@ -1,0 +1,65 @@
+package com.barunsw.ojt.mjg.day18;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class MainFrame extends JFrame {
+	private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
+	
+	public static final int WIDTH 	= 870;
+	public static final int HEIGHT 	= 800;
+	
+	private MainPanel panel = new MainPanel();
+//	private ShelfPanel panel = new ShelfPanel();	
+	
+	public MainFrame() {
+		try {
+			initComponent();
+		}
+		catch (Exception ex) {
+			LOGGER.error(ex.getMessage(), ex);
+		}
+	}
+	
+	private void initComponent() throws Exception {
+		// 타이틀
+		this.setTitle("RackView");
+		
+		// 기본적인 닫힘 오퍼레이션
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		this.setContentPane(panel);
+		
+		// 윈도우 이벤트
+		this.addWindowListener(new TestFrame_this_WindowAdapter(this));
+	}
+	
+	void windowClosing(WindowEvent e) {
+		LOGGER.debug("windowClosing");
+		
+		int result = JOptionPane.showConfirmDialog(MainFrame.this, 
+				"정말로 종료하시겠습니까?", "종료", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			System.exit(0);
+		}
+	}
+}
+
+class TestFrame_this_WindowAdapter extends WindowAdapter {
+	private MainFrame adaptee;
+	
+	public TestFrame_this_WindowAdapter(MainFrame adaptee) {
+		this.adaptee = adaptee;
+	}
+	
+	@Override
+	public void windowClosing(WindowEvent e) {
+		adaptee.windowClosing(e);
+	}
+}
