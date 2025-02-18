@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 public class ClientMain {
 	private static final Logger LOGGER = LogManager.getLogger(ClientMain.class);
+	public static final int WIDTH = 864;
+	public static final int HEIGHT = 1000;
 
 	public static void main(String[] args) {
 		try {
@@ -30,9 +32,8 @@ public class ClientMain {
 
 		// 화면 크기에 맞게 창 크기 조절
 		Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = 870;
-		int height = 1000;
-		frame.setSize(width, height);
+
+		frame.setSize(WIDTH, HEIGHT);
 		frame.setLocationRelativeTo(null); // 화면 중앙 정렬
 
 		frame.setVisible(true);
