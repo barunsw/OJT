@@ -5,10 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -21,8 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ChatPanel extends JPanel implements EventListener {
 	private static final Logger LOGGER = LogManager.getLogger(ChatPanel.class);
-	private ServerInterface serverIf;
-	private ClientInterface clientIf;
 
 	private String userName;
 
@@ -34,12 +29,14 @@ public class ChatPanel extends JPanel implements EventListener {
 	private JButton jButton_Send = new JButton("Send");
 
 	private GridBagLayout gridBagLayout = new GridBagLayout();
+	
+	private RmiControl serverControl = new RmiControl();
 
 	public ChatPanel() {
 		try {
 			initComponent();
 			initEvent();
-			initRmi();
+			initControl();
 		}
 		catch (Exception ex) {
 			LOGGER.error(ex);
@@ -74,9 +71,7 @@ public class ChatPanel extends JPanel implements EventListener {
 		String msg = jTextArea_Input.getText();
 		if (msg != null && !msg.isEmpty()) {
 			try {
-				serverIf.register(userName.toString(), clientIf);
-				serverIf.send(userName, msg);
-
+				serverControl.send(userName, msg);
 			}
 			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
@@ -86,24 +81,14 @@ public class ChatPanel extends JPanel implements EventListener {
 		}
 	}
 
-	private void initRmi() throws Exception {
+	private void initControl() throws Exception {
 		String name = JOptionPane.showInputDialog(this, "이름을 입력하세요", "이름", JOptionPane.QUESTION_MESSAGE);
 
 		if (name == null || name.isEmpty()) {
 			System.exit(0);
 		}
 
-		Registry registry = LocateRegistry.getRegistry(ServerMain.PORT);
-
-		Remote remote = registry.lookup(ServerMain.BIND_NAME);
-		if (remote instanceof ServerInterface) {
-			serverIf = (ServerInterface) remote;
-		}
-
-		clientIf = new ClientImpl();
-		this.userName = name;
-
-		serverIf.register(userName, clientIf);
+		serverControl.register(name);
 
 		LOGGER.info("rmi 서버에 등록", userName);
 	}
