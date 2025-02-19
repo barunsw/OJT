@@ -18,16 +18,12 @@ public class MainPanel extends JPanel {
 	private void initComponents() {
 		this.setLayout(new BorderLayout());
 
-		shelfPanel = new ShelfPanel(this);
+		shelfPanel = new ShelfPanel();
 		alarmPanel = new AlarmPanel();
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, shelfPanel, alarmPanel);
 		splitPane.setDividerLocation(ALL_BOARD_HEIGHT);
 		splitPane.setResizeWeight(0.7);
 		this.add(splitPane, BorderLayout.CENTER);
-	}
-
-	public void addAlarmData(String severity, String boardInfo, String time) {
-		alarmPanel.addAlarmData(severity, boardInfo, time);
 	}
 }

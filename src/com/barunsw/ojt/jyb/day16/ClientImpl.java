@@ -6,18 +6,12 @@ import java.rmi.server.UnicastRemoteObject;
 import com.barunsw.ojt.vo.BoardVo;
 
 public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
-	private ShelfPanel shelfPanel;
-	private EventQueueWorker<BoardVo> eventQueueWorker;
-
-	protected ClientImpl(ShelfPanel shelfPanel) throws RemoteException {
+	protected ClientImpl() throws RemoteException {
 		super();
-
-		this.shelfPanel = shelfPanel;
-		this.eventQueueWorker = shelfPanel.getEventQueueWorker();
 	}
 
 	@Override
 	public void pushAlarm(BoardVo boardVo) throws RemoteException {
-		eventQueueWorker.processObject(boardVo); // 큐에 알림 추가
+		ClientMain.eventQueueWorker.push(boardVo); // 큐에 알림 추가
 	}
 }

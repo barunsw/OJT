@@ -15,6 +15,8 @@ public class ClientMain {
 	public static final int WIDTH = 864;
 	public static final int HEIGHT = 1000;
 
+	public static EventQueueWorker eventQueueWorker = new EventQueueWorker();
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -22,6 +24,8 @@ public class ClientMain {
 		catch (Exception ex) {
 			LOGGER.error("LookAndFeel 설정 실패", ex);
 		}
+		
+		eventQueueWorker.start();
 
 		JFrame frame = new JFrame("Client Application");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -6,8 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.barunsw.ojt.day16.EventListener;
-
 public class EventQueueWorker<T> extends QueueWorker<T> {
 	private static final Logger LOGGER = LogManager.getLogger(EventQueueWorker.class);
 

@@ -29,14 +29,13 @@ public class TestFrame extends JFrame {
 	private void initComponent() throws Exception {
 		// MainPanel 생성
 		mainPanel = new MainPanel();
-		ShelfPanel shelfPanel = new ShelfPanel(mainPanel); // ShelfPanel 생성 시 MainPanel을 전달
 
 		// 타이틀
 		this.setTitle("SwingTest");
 		// 기본적인 닫힘 오퍼레이션
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		this.setContentPane(shelfPanel); // ShelfPanel을 ContentPane으로 설정
+		this.setContentPane(mainPanel); // ShelfPanel을 ContentPane으로 설정
 
 		// 윈도우 이벤트
 		this.addWindowListener(new TestFrame_this_WindowAdapter(this));

@@ -15,6 +15,8 @@ public class AlarmPanel extends JPanel implements EventListener {
 	private JTable alarmTable;
 
 	public AlarmPanel() {
+		ClientMain.eventQueueWorker.addEventListener(this);
+		
 		Vector<String> columnNames = new Vector<>();
 		columnNames.add("Severity");
 		columnNames.add("Board Info");
@@ -26,7 +28,15 @@ public class AlarmPanel extends JPanel implements EventListener {
 		this.setLayout(new java.awt.BorderLayout());
 		this.add(new JScrollPane(alarmTable), java.awt.BorderLayout.CENTER);
 	}
+	
+	private void initComponent() {
+		
+	}
 
+	private void initTable() {
+		
+	}
+	
 	@Override
 	public void push(Object o) {
 		if (o instanceof BoardVo) {
@@ -44,15 +54,4 @@ public class AlarmPanel extends JPanel implements EventListener {
 			tableModel.fireTableDataChanged();
 		}
 	}
-
-	public void addAlarmData(String severity, String boardInfo, String time) {
-		Vector<String> rowData = new Vector<>();
-		rowData.add(severity);
-		rowData.add(boardInfo);
-		rowData.add(time);
-
-		tableModel.addDataToTop(rowData);
-		tableModel.fireTableDataChanged();
-	}
-
 }

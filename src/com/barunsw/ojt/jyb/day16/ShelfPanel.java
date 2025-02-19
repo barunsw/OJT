@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import com.barunsw.ojt.day16.EventListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,15 +24,9 @@ public class ShelfPanel extends JPanel implements EventListener {
     private ClientInterface clientIf;
     private ServerInterface serverIf;
 
-    private EventQueueWorker<BoardVo> eventQueueWorker;
-
-    private MainPanel mainPanel; // MainPanel 인스턴스 추가
-
-    public ShelfPanel(MainPanel mainPanel) { // MainPanel을 인자로 받도록 수정
-        this.mainPanel = mainPanel; // MainPanel 참조 저장
+    public ShelfPanel() {
         try {
-            eventQueueWorker = new EventQueueWorker<>();
-            ClientImpl clientImpl = new ClientImpl(this);
+            ClientImpl clientImpl = new ClientImpl();
             rmiControl = new RmiControl(clientImpl);
 
             serverIf = rmiControl.getServerIf();
@@ -42,18 +35,11 @@ public class ShelfPanel extends JPanel implements EventListener {
             initComponent();
             initData();
 
-            eventQueueWorker.addEventListener(this); // 이벤트 리스너 등록
+            ClientMain.eventQueueWorker.addEventListener(this); // 이벤트 리스너 등록
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
-    }
-
-    public EventQueueWorker<BoardVo> getEventQueueWorker() {
-        if (this.eventQueueWorker == null) {
-            LOGGER.error("이벤트 큐 워커가 비어있음");
-        }
-        return eventQueueWorker;
     }
 
     @Override
@@ -61,11 +47,7 @@ public class ShelfPanel extends JPanel implements EventListener {
         // o가 BoardVo 타입인지 확인하고 처리
         if (o instanceof BoardVo) {
             BoardVo boardVo = (BoardVo) o;
-            SwingUtilities.invokeLater(() -> {
-                updateBoardSeverity(boardVo);
-                // 알람을 테이블에 추가
-                addAlarmToTable(boardVo);
-            });
+            updateBoardSeverity(boardVo);
         }
     }
 
@@ -76,15 +58,6 @@ public class ShelfPanel extends JPanel implements EventListener {
             boardPanel.getBoardVo().setSeverity(boardVo.getSeverity());
             boardPanel.repaint(); // UI 갱신
         }
-    }
-
-    private void addAlarmToTable(BoardVo boardVo) {
-        String severity = String.valueOf(boardVo.getSeverity());
-        String boardInfo = "Board " + boardVo.getBoardId(); // 또는 boardVo.getBoardName() 등 사용
-        String time = java.time.LocalTime.now().toString(); // 현재 시간
-
-        // MainPanel의 addAlarmData 호출하여 테이블에 추가
-        mainPanel.addAlarmData(severity, boardInfo, time);
     }
 
     private void initComponent() throws Exception {
