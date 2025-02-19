@@ -18,6 +18,6 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 
 	@Override
 	public void pushAlarm(BoardVo boardVo) throws RemoteException {
-		eventQueueWorker.processObject(boardVo); //큐에 알림 추가
+		eventQueueWorker.processObject(boardVo); // 큐에 알림 추가
 	}
 }
