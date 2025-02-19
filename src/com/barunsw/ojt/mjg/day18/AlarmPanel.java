@@ -23,9 +23,9 @@ public class AlarmPanel extends JPanel implements EventListener {
 
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 
-	private JTable jTable_alarm = new JTable();
+	private JTable jTable_Alarm = new JTable();
 	private CommonTableModel tableModel = new CommonTableModel();
-	private JScrollPane jScrollPane_alarm = new JScrollPane(jTable_alarm);
+	private JScrollPane jScrollPane_Alarm = new JScrollPane(jTable_Alarm);
 
 	private final int TABLE_CELL_ID_SEVERITY = 0;
 	private final int TABLE_CELL_ID_BOARDNAME_BOARDID = 1;
@@ -51,13 +51,13 @@ public class AlarmPanel extends JPanel implements EventListener {
 	private void initComponent() {
 		this.setLayout(gridBagLayout);
 
-		this.add(jScrollPane_alarm, new GridBagConstraints(
+		this.add(jScrollPane_Alarm, new GridBagConstraints(
 				0, 0, 1, 1, 1.0, 1.0, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 0), 0, 0
 				));
 
-		jScrollPane_alarm.getViewport().add(jTable_alarm);
+		jScrollPane_Alarm.getViewport().add(jTable_Alarm);
 	}
 	
 	// QueueWorker에서 push 해주는 정보가 ShelfPanel이랑 같아서 서버 연동부를 다시 사용하지 않아도 됨
@@ -88,23 +88,23 @@ public class AlarmPanel extends JPanel implements EventListener {
 		tableModel.setColumn(columnData);
 
 		// JTable에 테이블 모델 설정하여 테이블 구성
-		jTable_alarm.setModel(tableModel);
+		jTable_Alarm.setModel(tableModel);
 
 		// 각 컬럼에 대해 width, 렌더러 설정
-		for (int i = 0; i < jTable_alarm.getColumnCount(); i++) {
+		for (int i = 0; i < jTable_Alarm.getColumnCount(); i++) {
 			switch (i) {
 			case TABLE_CELL_ID_SEVERITY:
-				jTable_alarm.getColumnModel().getColumn(i).setPreferredWidth(50);
+				jTable_Alarm.getColumnModel().getColumn(i).setPreferredWidth(50);
 				break;
 			case TABLE_CELL_ID_BOARDNAME_BOARDID:
-				jTable_alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
+				jTable_Alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
 				break;
 			case TABLE_CELL_ID_TIME:
-				jTable_alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
+				jTable_Alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
 				break;
 			default:
 				// 추가 컬럼이 있다면 기본값
-				jTable_alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
+				jTable_Alarm.getColumnModel().getColumn(i).setPreferredWidth(100);
 				break;
 			}
 		}
