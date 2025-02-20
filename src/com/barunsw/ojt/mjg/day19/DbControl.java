@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ServerControl {
-	private static final Logger LOGGER = LogManager.getLogger(ServerControl.class);
+public class DbControl {
+	private static final Logger LOGGER = LogManager.getLogger(DbControl.class);
 
 	private static final String MARIA_DB_DRIVER = "org.mariadb.jdbc.Driver";
 	private static final String DB_URL_PREFIX = "jdbc:mariadb://";
@@ -16,7 +16,19 @@ public class ServerControl {
 	private static final String DB_URL_SUFFIX = "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&autoReconnect=true";
 	private static final int DB_PORT = 3306;
 
-	private static ServerControl instance = new ServerControl();
+	private static DbControl instance;
+	
+	private DbControl() {
+		
+	}
+	
+	public static DbControl getInstance() {
+		
+		if (instance == null ) {
+			instance = new DbControl();
+		}
+		return instance;
+	}
 	
 	// DB Connection 보관용
 	private Connection conn = null;
@@ -25,10 +37,7 @@ public class ServerControl {
 	private String currentPw;
 	private String currentDb;
 
-	public static ServerControl getInstance() {
-		return instance;
-	}
-	
+
     // getConnection()이 항상 유효한 Connection을 반환하도록 수정
     public synchronized Connection getConnection() {
         try {
@@ -42,6 +51,7 @@ public class ServerControl {
                 }
             }
         } catch (SQLException e) {
+        	instance = null;
             LOGGER.error("DB 연결 체크 중 오류 발생: {}", e.getMessage(), e);
             return null;
         }
@@ -90,4 +100,17 @@ public class ServerControl {
             throw new RuntimeException("DB 연결 오류", e);
         }
     }
+
+    public synchronized String getCurrentDb() {
+        return currentDb;
+    }
+
+    public synchronized String getCurrentId() {
+        return currentId;
+    }
+
+    public synchronized String getCurrentPw() {
+        return currentPw;
+    }
+
 }
