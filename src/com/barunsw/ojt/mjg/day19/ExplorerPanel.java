@@ -9,12 +9,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -72,6 +74,11 @@ public class ExplorerPanel extends JPanel {
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 5, 5, 5), 0, 0
 		));
+		
+        // F5 키 바인딩: F5 키를 누르면 refreshTables_ActionListener()가 호출되도록 분리된 이벤트 클래스로 처리
+        jTree.getInputMap(JTree.WHEN_IN_FOCUSED_WINDOW)
+            .put(KeyStroke.getKeyStroke("F5"), "refreshTables_ActionListener");
+        jTree.getActionMap().put("refreshTables_ActionListener", new ExplorerPanel_RefreshTablesAction(this));
 	}
 
 	private void initTree() {
@@ -129,7 +136,6 @@ public class ExplorerPanel extends JPanel {
 	    });
 	}
 
-
 	// ID, PW, DB를 입력받는 팝업
 	void jMenuItem_Create_ActionListener(ActionEvent e) {
 	    if (dbConnectionDialog == null) {
@@ -170,13 +176,13 @@ public class ExplorerPanel extends JPanel {
                         treeModel.reload(rootTreeNode);
                     }
                 } 
-                catch (RuntimeException ex) {
-                    LOGGER.error("DB 연결 예외: {}", ex.getMessage());
-                    JOptionPane.showMessageDialog(this, "DB 연결 예외\n" + ex.getMessage());
+                catch (RuntimeException re) {
+                    LOGGER.error("DB 연결 예외: {}", re.getMessage());
+                    JOptionPane.showMessageDialog(this, "DB 연결 예외\n" + re.getMessage());
                 } 
-                catch (SQLException ex) {
-                	LOGGER.error("테이블 로드 오류: {}", ex.getMessage());
-                    JOptionPane.showMessageDialog(this, "테이블 로드 오류\n" + ex.getMessage());
+                catch (SQLException sqle) {
+                	LOGGER.error("테이블 로드 오류: {}", sqle.getMessage());
+                    JOptionPane.showMessageDialog(this, "테이블 로드 오류\n" + sqle.getMessage());
                 }
             } 
 		} 
@@ -184,6 +190,32 @@ public class ExplorerPanel extends JPanel {
 			LOGGER.debug("연결 취소");
 		}
 	}
+	
+	public void refreshTables_ActionListener() {
+	    try {
+	        Connection connection = DbControl.getInstance().getConnection();
+	        if (connection == null) {
+	            LOGGER.error("DB 연결이 없습니다. 새로고침 실패");
+	            return;
+	        }
+	        // 현재 연결 DB에서 테이블 목록 재조회
+	        Vector<String> tableNames = DBQueryManager.getTableNames(connection);
+	        // 기존 트리의 모든 DB 노드를 제거하고 새로 구성
+	        rootTreeNode.removeAllChildren();
+	        // DB 이름은 현재 연결된 DB로 가정
+	        String currentDb = DbControl.getInstance().getCurrentDb();
+	        DefaultMutableTreeNode dbNode = new DefaultMutableTreeNode(currentDb);
+	        for (String tableName : tableNames) {
+	            dbNode.add(new DefaultMutableTreeNode(tableName));
+	        }
+	        rootTreeNode.add(dbNode);
+	        ((DefaultTreeModel) jTree.getModel()).reload();
+	    } 
+	    catch (SQLException sqle) {
+	        LOGGER.error("테이블 새로고침 중 오류 발생: {}", sqle.getMessage(), sqle);
+	    }
+	}
+
 }
 
 class ExplorerPanel_jMenuItem_Create_ActionListener implements ActionListener {
@@ -196,5 +228,18 @@ class ExplorerPanel_jMenuItem_Create_ActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         adaptee.jMenuItem_Create_ActionListener(e);
+    }
+}
+
+class ExplorerPanel_RefreshTablesAction extends AbstractAction {
+    private ExplorerPanel adaptee;
+    
+    public ExplorerPanel_RefreshTablesAction(ExplorerPanel adaptee) {
+        this.adaptee = adaptee;
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	adaptee.refreshTables_ActionListener();
     }
 }

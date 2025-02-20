@@ -102,6 +102,7 @@ public class DBQueryManager {
      *    - INSERT: N개의 row를 추가했습니다.
      *    - UPDATE: N개의 row를 수정했습니다.
      *    - DELETE: N개의 row를 삭제했습니다.
+     *    - CREATE: 테이블이 생성되었습니다.
      */
     public static QueryResultEvent executeQuery(Connection connection, String query) throws SQLException {
         query = query.trim();
@@ -136,7 +137,7 @@ public class DBQueryManager {
             return new QueryResultEvent(columnNames, tableData);
         }
         else {
-            // SELECT가 아닌 쿼리 처리 (INSERT, UPDATE, DELETE 등)
+            // SELECT가 아닌 쿼리 처리 (INSERT, UPDATE, DELETE, CREATE 등)
             LOGGER.debug("Executing update query: {}", query);
             int updateCount = 0;
             try (PreparedStatement psmt = connection.prepareStatement(query)) {
@@ -153,6 +154,9 @@ public class DBQueryManager {
             }
             else if (queryUpper.startsWith("DELETE")) {
                 message = updateCount + "개의 row를 삭제했습니다.";
+            }
+            else if (queryUpper.startsWith("CREATE")) {
+                message = "테이블이 생성되었습니다.";
             }
             else {
                 message = "영향받은 행 수: " + updateCount;

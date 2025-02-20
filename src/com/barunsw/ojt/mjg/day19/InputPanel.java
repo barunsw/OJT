@@ -126,6 +126,9 @@ public class InputPanel extends JPanel implements EventListener {
             else if (queryUpper.startsWith("DELETE")) {
                 descriptionMessage = resultEvent.getTableData().get(0).get(0).toString();
             }
+            else if (queryUpper.startsWith("CREATE")) {
+                descriptionMessage = resultEvent.getTableData().get(0).get(0).toString();
+            }
             else {
                 descriptionMessage = resultEvent.getTableData().get(0).get(0).toString();
             }
